@@ -1,0 +1,19 @@
+.button{
+    width: 90%;
+    height: 200px;
+    margin-left: 5%;
+    margin-top: 5%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.bestuurders, .voertuigen, .tankkaarten{
+    text-decoration: none;
+    margin:10px;
+    border-radius: 25px;
+    background-color: #2397d3;
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
