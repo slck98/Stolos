@@ -8,19 +8,19 @@ namespace BussinessLayer.Model
 {
     public partial class Vehicle
     {
-        public Vehicle(string vinNumber, string numberPlate, string brandModel, VehicleType categorie, string? color, int? doors, FuelType feul)
+        public Vehicle(string vinNumber, string licensePlate, string brandModel, VehicleType categorie, string? color, int? doors, FuelType fuel)
         {
             VinNumber = vinNumber;
-            NumberPlate = numberPlate;
+            LicensePlate = licensePlate;
             BrandModel = brandModel;
             Categorie = categorie;
             Color = color;
             Doors = doors;
-            Fuel = feul;
+            Fuel = fuel;
         }
 
         public string VinNumber { get; private set; }
-        public string NumberPlate { get; set; }
+        public string LicensePlate { get; set; }
         public string BrandModel { get; set; }
         public VehicleType Categorie { get; set; }
         public string? Color { get; set; }
