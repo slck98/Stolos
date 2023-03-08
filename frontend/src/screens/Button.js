@@ -12,7 +12,6 @@ const Button = props => {
             <a href="#" className="tankkaarten">
                 <p>TANKKAARTEN</p>
             </a>
-            
         </div>
     )
 }
