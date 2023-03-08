@@ -51,8 +51,8 @@ ALTER TABLE GasCard ADD CONSTRAINT fk_gascarddriverid_driverid FOREIGN KEY (Driv
 
 /*
 /* INSERT INTO TESTS */
-INSERT INTO Driver(ID, FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, TankCardID, VehicleVIN, Deleted) VALUES (1, 'John', 'Doe', '123 Lexington Av., NYC, NY, USA', CURDATE(), '85.12.31-123.12', 'AM,B,C1E', NULL, NULL, 0);
-INSERT INTO Vehicle (VIN, BrandModel, LicnsePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('0123456789ABCDEFG', 'VW Polo', '1-ABC-123', 1, 1, NULL, NULL, NULL, 0);
-INSERT INTO Gascard (ID, CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES (1, '1234567890ABCDEFGHIJ', '2024-12-31', 1234, 'Benzine,Diesel,Elektrisch', NULL, 0, 0);
+INSERT INTO Driver(ID, FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, GascardID, VehicleVIN, Deleted) VALUES (1, 'John', 'Doe', '123 Lexington Av., NYC, NY, USA', CURDATE(), '85.12.31-123.12', 'AM,B,C1E', NULL, NULL, 0);
+INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('0123456789ABCDEFG', 'VW Polo', '1-ABC-123', 1, 1, NULL, NULL, NULL, 0);
+INSERT INTO GasCard (ID, CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES (1, '1234567890ABCDEFGHIJ', '2024-12-31', 1234, 'Benzine,Diesel,Elektrisch', NULL, 0, 0);
 /*
 /* To drop tables: DROP TABLE Driver, Vehicle, Gascard; */
