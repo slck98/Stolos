@@ -44,15 +44,13 @@ CREATE TABLE `GasCard` (
 /* ADD CONSTRAINTS*/
 ALTER TABLE Driver ADD CONSTRAINT fk_drivergascardid_gascardid FOREIGN KEY (GascardID) REFERENCES GasCard(ID) ON DELETE SET NULL;
 ALTER TABLE Driver ADD CONSTRAINT fk_drivervehiclevin_vehiclevin FOREIGN KEY (VehicleVIN) REFERENCES Vehicle(VIN) ON DELETE SET NULL;
-
 ALTER TABLE Vehicle ADD CONSTRAINT fk_vehicledriverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
-
 ALTER TABLE GasCard ADD CONSTRAINT fk_gascarddriverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
 
-/*
-/* INSERT INTO TESTS */
-INSERT INTO Driver(ID, FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, GascardID, VehicleVIN, Deleted) VALUES (1, 'John', 'Doe', '123 Lexington Av., NYC, NY, USA', CURDATE(), '85.12.31-123.12', 'AM,B,C1E', NULL, NULL, 0);
-INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('0123456789ABCDEFG', 'VW Polo', '1-ABC-123', 1, 1, NULL, NULL, NULL, 0);
-INSERT INTO GasCard (ID, CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES (1, '1234567890ABCDEFGHIJ', '2024-12-31', 1234, 'Benzine,Diesel,Elektrisch', NULL, 0, 0);
-/*
+ALTER TABLE Driver ADD CONSTRAINT uc_driver UNIQUE (NationalRegistrationNumber);
+ALTER TABLE Vehicle ADD CONSTRAINT uc_vehicle UNIQUE (LicensePlate);
+ALTER TABLE GasCard ADD CONSTRAINT uc_gascard UNIQUE (CardNumber);
+
+
+
 /* To drop tables: DROP TABLE Driver, Vehicle, Gascard; */
