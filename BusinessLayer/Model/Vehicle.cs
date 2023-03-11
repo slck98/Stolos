@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLayer.Exceptions;
 
 namespace BussinessLayer.Model
 {
     public partial class Vehicle
     {
+        private string _vinNumber;
+        private string _licensePlate;
+        private string _brandModel;
+        private string _color;
+        private int _doors;
+
         public Vehicle(string vinNumber, string licensePlate, string brandModel, VehicleType categorie, string? color, int? doors, FuelType fuel)
         {
             VinNumber = vinNumber;
@@ -19,12 +26,48 @@ namespace BussinessLayer.Model
             Fuel = fuel;
         }
 
-        public string VinNumber { get; private set; }
-        public string LicensePlate { get; set; }
-        public string BrandModel { get; set; }
+        public string VinNumber 
+        { 
+            get { return _vinNumber; } 
+            set 
+            {
+                if (value == null) throw new DomainException("Vehicle: set-VinNumber: NULL value");
+                _vinNumber = value; 
+            } 
+        }
+        public string LicensePlate 
+        { 
+            get { return _licensePlate; } 
+            set 
+            { 
+                if (value == null) throw new DomainException("Vehicle: set-LicensePlate: NULL value"); 
+                _licensePlate = value; 
+            } 
+        }
+        public string BrandModel 
+        {
+            get { return _brandModel; }
+            set { if (value == null) throw new DomainException("Vehicle: set-BrandModel: NULL value");
+                _brandModel = value;
+            } 
+        }
         public VehicleType Categorie { get; set; }
-        public string? Color { get; set; }
-        public int? Doors { get; set; }
+        public string? Color 
+        {
+            get { return _color; }
+            set { if (value == null) throw new DomainException("Vehicle: set-Color: NULL value");
+            _color = value;
+            } 
+        }
+        public int? Doors 
+        {
+            get { return _doors; }
+            set
+            {
+                if (value == null) throw new DomainException("Vehicle: set-Doors: NULL value");
+                _doors = (int)value;
+            }
+        }
         public FuelType Fuel { get; set; }
     }
 }
