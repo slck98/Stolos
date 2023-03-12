@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessLayer.Exceptions;
 
-namespace BussinessLayer.Model
+namespace BusinessLayer.Model
 {
     public partial class Driver
     {
@@ -80,5 +80,8 @@ namespace BussinessLayer.Model
             }
         }
         public List<DriversLicense> Licenses { get; set; }
+
+        public Vehicle? Vehicle { get; set; }
+        public GasCard? GasCard { get; set; }
     }
 }

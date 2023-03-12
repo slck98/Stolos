@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BusinessLayer.Exceptions;
 
-namespace BussinessLayer.Model
+namespace BusinessLayer.Model
 {
     public partial class Vehicle
     {
@@ -14,6 +14,18 @@ namespace BussinessLayer.Model
         private string _brandModel;
         private string _color;
         private int _doors;
+
+        public Vehicle()
+        {
+        }
+
+        public Vehicle(string vinNumber, string licensePlate, VehicleType categorie, FuelType fuel)
+        {
+            VinNumber = vinNumber;
+            LicensePlate = licensePlate;
+            Categorie = categorie;
+            Fuel = fuel;
+        }
 
         public Vehicle(string vinNumber, string licensePlate, string brandModel, VehicleType categorie, string? color, int? doors, FuelType fuel)
         {
@@ -69,5 +81,7 @@ namespace BussinessLayer.Model
             }
         }
         public FuelType Fuel { get; set; }
+
+        public Driver? Driver { get; set; }
     }
 }

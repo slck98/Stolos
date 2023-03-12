@@ -1,7 +1,7 @@
 ﻿using BusinessLayer.Exceptions;
-using static BussinessLayer.Model.Vehicle;
+using static BusinessLayer.Model.Vehicle;
 
-namespace BussinessLayer.Model;
+namespace BusinessLayer.Model;
 
 /*
  * Adrian B on 10/03

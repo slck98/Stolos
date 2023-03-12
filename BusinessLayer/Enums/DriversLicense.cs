@@ -1,4 +1,4 @@
-﻿namespace BussinessLayer.Model
+﻿namespace BusinessLayer.Model
 {
     public partial class Driver
     {
