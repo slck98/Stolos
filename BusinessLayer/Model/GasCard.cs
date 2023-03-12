@@ -63,4 +63,6 @@ public class GasCard
     }
     public bool Blocked { get; set; }
     public List<FuelType> Fuel { get; set; }
+
+    public Driver? Driver { get; set; }
 }
