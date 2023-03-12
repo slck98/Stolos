@@ -9,21 +9,27 @@ namespace BusinessLayer.Model;
 
 public class GasCard
 {
+    #region attrib
     //attrib
     private string _cardNumber;
     private DateTime _expiringDate;
     private int? _pincode;
+    #endregion
 
+    #region ctor
     //ctor
-    public GasCard(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
+    public GasCard(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel, Driver? driver)
     {
         CardNumber = cardNumber;
         ExpiringDate = expiringDate;
         Pincode = pincode;
         Blocked = blocked;
         Fuel = fuel;
+        Driver = driver;
     }
+    #endregion
 
+    #region prop
     //prop
     public string CardNumber
     {
@@ -65,4 +71,5 @@ public class GasCard
     public List<FuelType> Fuel { get; set; }
 
     public Driver? Driver { get; set; }
+    #endregion
 }
