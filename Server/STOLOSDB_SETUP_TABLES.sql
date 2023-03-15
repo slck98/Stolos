@@ -42,15 +42,26 @@ CREATE TABLE `GasCard` (
 );
 
 /* ADD CONSTRAINTS*/
-ALTER TABLE Driver ADD CONSTRAINT fk_drivergascardid_gascardid FOREIGN KEY (GascardID) REFERENCES GasCard(ID) ON DELETE SET NULL;
-ALTER TABLE Driver ADD CONSTRAINT fk_drivervehiclevin_vehiclevin FOREIGN KEY (VehicleVIN) REFERENCES Vehicle(VIN) ON DELETE SET NULL;
-ALTER TABLE Vehicle ADD CONSTRAINT fk_vehicledriverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
-ALTER TABLE GasCard ADD CONSTRAINT fk_gascarddriverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
+/* FK */
+ALTER TABLE Driver ADD CONSTRAINT fk_driver_gascardid_gascardid FOREIGN KEY (GascardID) REFERENCES GasCard(ID) ON DELETE SET NULL;
+ALTER TABLE Driver ADD CONSTRAINT fk_driver_vehiclevin_vehiclevin FOREIGN KEY (VehicleVIN) REFERENCES Vehicle(VIN) ON DELETE SET NULL;
+ALTER TABLE Vehicle ADD CONSTRAINT fk_vehicle_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
+ALTER TABLE GasCard ADD CONSTRAINT fk_gascard_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
 
-ALTER TABLE Driver ADD CONSTRAINT uc_driver UNIQUE (NationalRegistrationNumber);
-ALTER TABLE Vehicle ADD CONSTRAINT uc_vehicle UNIQUE (LicensePlate);
-ALTER TABLE GasCard ADD CONSTRAINT uc_gascard UNIQUE (CardNumber);
+/* UQ */
+ALTER TABLE Driver ADD CONSTRAINT uc_driver_natregnum UNIQUE (NationalRegistrationNumber);
+ALTER TABLE Driver ADD CONSTRAINT uc_driver_vehiclevin UNIQUE (VehicleVIN);
+ALTER TABLE Driver ADD CONSTRAINT uc_driver_tankcardid UNIQUE (GasCardID);
+
+ALTER TABLE Vehicle ADD CONSTRAINT uc_vehicle_licenseplate UNIQUE (LicensePlate);
+ALTER TABLE Vehicle ADD CONSTRAINT uc_vehicle_driverid UNIQUE (DriverID);
 
 
+ALTER TABLE GasCard ADD CONSTRAINT uc_gascard_cardnum UNIQUE (CardNumber);
+ALTER TABLE GasCard ADD CONSTRAINT uc_gascard_driverid UNIQUE (DriverID);
 
-/* To drop tables: DROP TABLE Driver, Vehicle, Gascard; */
+/* CHK */
+ALTER TABLE Driver ADD CONSTRAINT chk_birthdate_natregnum CHECK (concat(substring(BirthDate, 3, 2), substring(BirthDate, 6, 2), substring(BirthDate, 9, 2)) LIKE concat(substring(NationalRegistrationNumber, 1, 2), substring(NationalRegistrationNumber, 4, 2), substring(NationalRegistrationNumber, 7, 2)));
+
+
+/* To drop tables: DROP TABLE Driver, Vehicle, GasCard; */
