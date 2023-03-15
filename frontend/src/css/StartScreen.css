@@ -1,8 +1,17 @@
 .startscreen{
     width: 80%;
-    overflow: auto;
+    position: relative;
+    overflow:visible;
     background-color: #ccc;
     margin-left: 10%;
     border-radius: 25px;
-    padding-bottom: 0%;
+    height: 24vw;
+    margin-top: 2vw;
+}
+
+@media (max-width: 800px) {
+    .startscreen {
+        position: relative;
+        height: auto;
+    }
 }

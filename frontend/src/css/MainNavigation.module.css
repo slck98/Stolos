@@ -1,18 +1,18 @@
 .header {
-  padding: 1rem;
-  margin: 2rem auto;
-  max-width: 40rem;
+  padding: 2vw;
+  margin-top: 1vw;
 }
 
 .header ul {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 5vw;
   justify-content: center;
   align-items: center;
 }
 
 .header a {
-  font-size: 1.25rem;
+  font-size: 1.5vw;
   text-decoration: none;
   color: #2397d3;
 }
