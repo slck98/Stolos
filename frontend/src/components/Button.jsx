@@ -3,7 +3,7 @@ import '../css/Button.css';
 
 const Button = props => {
   return (
-    <div class="button">
+    <div className="button">
       <Link to="drivers" className="bestuurders">
         <p>BESTUURDERS</p>
       </Link>
