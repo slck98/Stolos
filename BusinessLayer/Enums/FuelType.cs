@@ -1,4 +1,4 @@
 ﻿namespace BusinessLayer.Model
 {
-    public enum FuelType { Benzine, Diesel, LPG, BenzineHybride, DieselHybride, Elektrisch }
+    public enum FuelType { Onbekend, Benzine, Diesel, Elektrisch, LPG, BenzineHybride, DieselHybride }
 }
