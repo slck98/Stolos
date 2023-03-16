@@ -1,5 +1,5 @@
 import '../css/Hero.css';
-import logo from '../logoShort.png';
+import logo from '../images/logoShort.png';
 
 const Hero = props => {
   return (
