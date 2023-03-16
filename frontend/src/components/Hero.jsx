@@ -1,13 +1,13 @@
-import '../css/Hero.css';
+import classes from '../css/Hero.module.css';
 import logo from '../images/logoShort.png';
 
 const Hero = props => {
   return (
-    <header className="header">
+    <header className={classes.header}>
       <div>
-        <img src={logo} alt="logo" />
+        <img  className={classes.headerLogo} src={logo} alt="logo" />
       </div>
-      <div>
+      <div className={classes.headerTitle}>
         <h1>FLEET MANAGEMENT</h1>
         <h2>Klik op een knop om te starten</h2>
       </div>

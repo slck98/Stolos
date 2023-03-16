@@ -3,19 +3,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { faGasPump } from '@fortawesome/free-solid-svg-icons';
-import '../css/Button.css';
+import classes from '../css/Button.module.css';
 
 
 const Button = props => {
   return (
-    <div className="button">
-      <Link to="drivers" className="bestuurders">
+    <div className={classes.button}>
+      <Link to="drivers" className={classes.bestuurders}>
         <p><FontAwesomeIcon icon={faUser} /> BESTUURDERS</p>
       </Link>
-      <Link to="vehicles" className="voertuigen">
+      <Link to="vehicles" className={classes.voertuigen}>
         <p><FontAwesomeIcon icon={faCar} /> VOERTUIGEN</p>
       </Link>
-      <Link to="gascards" className="tankkaarten">
+      <Link to="gascards" className={classes.tankkaarten}>
         <p><FontAwesomeIcon icon={faGasPump}/> TANKKAARTEN</p>
       </Link>
     </div>
