@@ -20,7 +20,7 @@ const DriverPage = () => {
   }, []);
   return (
     <div className="container">
-      <div className="header">
+      <div className="headerDriver">
         <h1>Bestuurders</h1>
         <img src={logo} alt="logo"></img>
       </div>

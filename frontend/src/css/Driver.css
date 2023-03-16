@@ -4,12 +4,12 @@
     margin: auto;
     }
     
-    .header{
+    .headerDriver{
         display: flex;
         align-items: end;
     }
     
-    img{
+    .headerDriver img{
         height: 50px;
         margin-right: 0;
         margin-left: auto;
@@ -32,7 +32,7 @@
     }
     
     
-    li{
+    .two li{
         border: #000 1px solid;
         border-radius: 5px;
         margin: 5px;
@@ -41,7 +41,7 @@
         display: flex;
     }
     
-    li:hover{
+    .two li:hover{
         background-color: lightgrey;
     }
     .icons{
