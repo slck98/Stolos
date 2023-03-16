@@ -1,0 +1,51 @@
+.container{
+    background-color: #ccc;
+    width: 80%;
+    margin: auto;
+    }
+    
+    .header{
+        display: flex;
+        align-items: end;
+    }
+    
+    img{
+        height: 50px;
+        margin-right: 0;
+        margin-left: auto;
+    }
+    
+    .line{
+        border-top: 3px solid #000;
+    }
+    
+    .one{
+        margin: 3px;
+    }
+    #searchTxtbox{
+        width: 70%;
+        border-radius: 5px;
+    }
+    
+    button{
+        margin: 5px;
+    }
+    
+    
+    li{
+        border: #000 1px solid;
+        border-radius: 5px;
+        margin: 5px;
+        padding: 5px;
+        list-style: none;
+        display: flex;
+    }
+    
+    li:hover{
+        background-color: lightgrey;
+    }
+    .icons{
+        margin-left: auto;
+        margin-right: 0;
+        margin: 5;
+    }
