@@ -150,7 +150,9 @@ public class Driver
                 bool valid = false;
                 //control check double -> once in case pre 2000, 2nd time incase 2000 or later
                 string allButControl = year + month + day + id;
-                int res = 97 - (int.Parse(allButControl) % 97);
+                int a = int.Parse(allButControl);
+                int b = a % 97;
+                int res = 97 - b;
                 if (controlNum == res) valid = true;
                 if (!valid)
                 {

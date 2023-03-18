@@ -12,6 +12,6 @@ namespace BusinessLayer.Interfaces;
  */
 public interface IGasCardRepository
 {
-    List<GasCard> GetGasCards();
+    List<GasCard> GetAllGasCards();
     GasCard GetGasCard(string cardNum);
 }

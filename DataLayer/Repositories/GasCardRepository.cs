@@ -33,7 +33,7 @@ namespace DataLayer.Repositories
                 {
                     conn.Open();
 
-                    cmd = new("SELECT * FROM GasCard WHERE CardNumber = " + cardNum + " AND WHERE Deleted=0;", conn);
+                    cmd = new("SELECT * FROM GasCard WHERE CardNumber = " + cardNum + " AND Deleted=0;", conn);
 
                     using (reader = cmd.ExecuteReader())
                     {
@@ -42,14 +42,22 @@ namespace DataLayer.Repositories
                             int id = (int)reader[0];
                             string cardnumber = (string)reader[1];
                             DateTime expiringdate = (DateTime)reader[2];
-                            int? pincode = (int?)((reader[3] is DBNull) ? "" : reader[3]);
-                            List<FuelType> fuel = (List<FuelType>)reader[4];
-                            Driver? driver = (Driver)reader[5];
-                            bool blocked = (bool)reader[6];
-                            int deleted = (int)reader[7];
+                            int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
+                            List<FuelType> fuels = new List<FuelType>();
+                            string fuelsDB = (string?)((reader[4] is DBNull) ? null : reader[4]);
+                            if (fuelsDB != null)
+                            {
+                                string[] fArrStrs = fuelsDB.Split(",");
+                                foreach (string fArrStr in fArrStrs)
+                                {
+                                    fuels.Add((FuelType)Enum.Parse(typeof(FuelType), fArrStr));
+                                }
+                            }
+                            //Driver? driver = (Driver)reader[5];
+                            bool blocked = Convert.ToBoolean(reader[6]);
 
 
-                            card = new(cardnumber, expiringdate, pincode, blocked, fuel, driver);
+                            card = new(cardnumber, expiringdate, pincode, blocked, fuels, null);
                         }
                         reader.Close();
                     }
@@ -65,7 +73,7 @@ namespace DataLayer.Repositories
             return card;
         }
 
-        public List<GasCard> GetGasCards()
+        public List<GasCard> GetAllGasCards()
         {
             List<GasCard> cards = new List<GasCard>();
             MySqlConnection conn;
@@ -87,14 +95,22 @@ namespace DataLayer.Repositories
                             int id = (int)reader[0];
                             string cardnumber = (string)reader[1];
                             DateTime expiringdate = (DateTime)reader[2];
-                            int? pincode = (int?)((reader[3] is DBNull) ? "" : reader[3]);
-                            List<FuelType> fuel = (List<FuelType>)reader[4];
-                            Driver? driver = (Driver)reader[5];
-                            bool blocked = (bool)reader[6];
-                            int deleted = (int)reader[7];
+                            int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
+                            List<FuelType> fuels = new List<FuelType>();
+                            string fuelsDB = (string?)((reader[4] is DBNull)?null:reader[4]);
+                            if(fuelsDB!=null)
+                            {
+                                string[] fArrStrs = fuelsDB.Split(",");
+                                foreach (string fArrStr in fArrStrs)
+                                {
+                                    fuels.Add((FuelType)Enum.Parse(typeof(FuelType), fArrStr));
+                                }
+                            }
+                            //Driver? driver = (Driver)reader[5];
+                            bool blocked = Convert.ToBoolean(reader[6]);
 
 
-                            GasCard gc = new(cardnumber, expiringdate, pincode, blocked, fuel, driver);
+                            GasCard gc = new(cardnumber, expiringdate, pincode, blocked, fuels, null);
                             cards.Add(gc);
                         }
                         reader.Close();
