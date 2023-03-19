@@ -15,7 +15,7 @@ namespace API.Controllers
 
         private readonly List<Driver> _driver = new()
         {
-            new Driver(2, "Doe", "John", new DateTime(1985-12-31), "85.12.31-123.12", _licenses)
+            new Driver(2, "Doe", "John", "85.12.31-123.40", _licenses)
         };
 
         public DriverController(ILogger<DriverController> logger)
