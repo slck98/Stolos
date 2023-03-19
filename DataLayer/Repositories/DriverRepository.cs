@@ -91,7 +91,7 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM Driver WHERE ID='" + id.ToString() + "' AND Deleted=0;", conn);
+                cmd = new("SELECT * FROM Driver WHERE ID=" + id.ToString() + " AND Deleted=0;", conn);
 
                 using (reader = cmd.ExecuteReader())
                 {
