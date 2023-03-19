@@ -63,7 +63,7 @@ public class DriverRepository : IDriverRepository
                         //todo gascard (id/cardnum?)
 
 
-                        Driver d = new(id, lName, fName, birthDate, natRegNum, licenseList, address, null, null);
+                        Driver d = new(id, lName, fName, natRegNum, licenseList, address, null, null);
                         drivers.Add(d);
                     }
                     reader.Close();
@@ -116,7 +116,7 @@ public class DriverRepository : IDriverRepository
                         //todo gascard (id/cardnum?)
 
 
-                        d = new(id, lName, fName, birthDate, natRegNum, licenseList, address, null, null);
+                        d = new(id, lName, fName, natRegNum, licenseList, address, null, null);
                     }
                     reader.Close();
                 }
