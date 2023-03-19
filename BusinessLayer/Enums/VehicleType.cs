@@ -1,4 +1,4 @@
 ﻿namespace BusinessLayer.Model
 {
-    public enum VehicleType { Personenwagen, Bestelwagen, Vrachtwagen, Bus }
+    public enum VehicleType { Onbekend, Personenwagen, Bestelwagen, Vrachtwagen, Bus }
 }
