@@ -1,7 +1,7 @@
 ﻿namespace BusinessLayer.Exceptions;
 
-internal class DomainException : Exception
+public class DomainException : Exception
 {
-    internal DomainException(string message) : base(message) { }
-    internal DomainException(string message, Exception inner) : base(message, inner) { }
+    public DomainException(string message) : base(message) { }
+    public DomainException(string message, Exception inner) : base(message, inner) { }
 }
