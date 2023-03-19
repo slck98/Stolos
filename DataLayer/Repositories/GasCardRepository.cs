@@ -33,7 +33,7 @@ namespace DataLayer.Repositories
                 {
                     conn.Open();
 
-                    cmd = new("SELECT * FROM GasCard WHERE CardNumber = " + cardNum + " AND Deleted=0;", conn);
+                    cmd = new("SELECT * FROM GasCard WHERE CardNumber = '" + cardNum.ToString() + "' AND Deleted=0;", conn);
 
                     using (reader = cmd.ExecuteReader())
                     {

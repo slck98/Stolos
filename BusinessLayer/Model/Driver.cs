@@ -33,7 +33,7 @@ public class Driver
         get { return _id; } 
         set 
         { 
-            if(value == default || value < 1) throw new DomainException("Driver: set-Id: NULL value");
+            if(value == default || value < 1) throw new DomainException("Driver: set-Id: Invalid value (NULL or <=0)");
             _id = value;
         }
     }
@@ -150,13 +150,12 @@ public class Driver
                 bool valid = false;
                 //control check double -> once in case pre 2000, 2nd time incase 2000 or later
                 string allButControl = year + month + day + id;
-                int a = int.Parse(allButControl);
-                int b = a % 97;
-                int res = 97 - b;
+                int res = 97 - (int.Parse(allButControl) % 97);
                 if (controlNum == res) valid = true;
                 if (!valid)
                 {
-                    res = 97 - ((2000000000 + int.Parse(allButControl)) % 97);
+                    int magicNum = 2000000000; // gebruikt voor mensen die in/na 2000 zijn geboren
+                    res = 97 - ((magicNum + int.Parse(allButControl)) % 97);
                     if (controlNum == res) valid = true;
                 }
 
@@ -181,10 +180,11 @@ public class Driver
                 Example: A man is born op 1 feb 1990, possible RRN/NatRegNum 90.02.01-997-04. 900201997 % 97 = 93. 97-93 = 04. RRN is correct.
                  */
 
-                if (valid) // value from control num check
+                if (!valid) // value from control num check
                 {
-                    _natRegNumber = value;
+                    throw new DomainException("Driver: Set-RanRegNumber: Incorrect control number");
                 }
+                _natRegNumber = value;
             }
             catch (Exception ex)
             {
