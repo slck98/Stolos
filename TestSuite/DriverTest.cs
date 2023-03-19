@@ -35,5 +35,26 @@ namespace TestSuite {
             licenses.Add(DriversLicense.B);
             Assert.Throws<DomainException>(() => new Driver(1, firstname, "achternaam", geboortedatum, "75.10.23-059.39", licenses));
         }
+
+        //TODO: Extract birthdate from RRN then this test can be refactored to check if Birthdate == birthdate in RRN
+        /* [Fact]
+        public void TestDriver_InvalidBirthDateToRRN_ThrowException() {
+            DateTime geboortedatum = new DateTime(1976, 10, 23);
+            List<DriversLicense> licenses = new List<DriversLicense>();
+            licenses.Add(DriversLicense.B);
+            Assert.Throws<DomainException>(() => new Driver(1, "voornaam", "achternaam", geboortedatum, "75.10.23-059.39", licenses));
+        }
+        */
+
+        [Theory]
+        [InlineData(null)]
+        // [InlineData("0.0.0-000.00")] // TODO: this should not work
+        // [InlineData("00.00.00-000.00")] // TODO: this should not work
+        public void TestDriver_InvalidRRN_ThrowException(string rrn) {
+            DateTime geboortedatum = new DateTime(1976, 10, 23);
+            List<DriversLicense> licenses = new List<DriversLicense>();
+            licenses.Add(DriversLicense.B);
+            Assert.Throws<DomainException>(() => new Driver(1, "voornaam", "achternaam", geboortedatum, rrn, licenses));
+        }
     }
 }
