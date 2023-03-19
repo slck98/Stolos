@@ -33,7 +33,7 @@ public class Driver
         get { return _id; } 
         set 
         { 
-            if(value == default(int)) throw new DomainException("Driver: set-Id: NULL value");
+            if(value == default || value < 1) throw new DomainException("Driver: set-Id: NULL value");
             _id = value;
         }
     }
