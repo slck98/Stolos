@@ -19,8 +19,13 @@
   max-width: 500px;
   background-color: #fff;
   display: table;
+  border-radius: 10px;
 }
 
 .popupInner .close {
   border-radius: 5px;
+}
+
+.btnAddPage {
+  display: flex;
 }
