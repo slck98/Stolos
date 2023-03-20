@@ -21,25 +21,6 @@ public class Driver
     private string _natRegNumber;
     #endregion
 
-    #region ctor
-    public Driver(int id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null, Vehicle vehicle = null, GasCard gasCard = null)
-    {
-        Id= id;
-        LastName = lastName;
-        FirstName = firstName;
-        Licenses = licenses;
-
-        DateTime correctDate;
-        _validNatRegNum = NatRegNumCheck(natRegNumber, out _validNatRegNum, out _, out _, out correctDate);
-        NatRegNumber = natRegNumber;
-        BirthDate = new DateTime(correctDate.Year, correctDate.Month, correctDate.Day);
-
-        Address = address;
-        Vehicle = vehicle;
-        GasCard = gasCard;
-    }
-    #endregion
-
     #region prop
     public int Id 
     {
@@ -102,6 +83,31 @@ public class Driver
 
     public Vehicle? Vehicle { get; set; }
     public GasCard? GasCard { get; set; }
+    #endregion
+
+    #region ctor
+    public Driver(int id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null, Vehicle vehicle = null, GasCard gasCard = null)
+    {
+        Id = id;
+        LastName = lastName;
+        FirstName = firstName;
+        Licenses = licenses;
+
+        DateTime correctDate;
+        _validNatRegNum = NatRegNumCheck(natRegNumber, out _validNatRegNum, out _, out _, out correctDate);
+        NatRegNumber = natRegNumber;
+        BirthDate = new DateTime(correctDate.Year, correctDate.Month, correctDate.Day);
+
+        Address = address;
+        Vehicle = vehicle;
+        GasCard = gasCard;
+    }
+
+    public Driver(int id, string lastName, string firstName, DateTime birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null, Vehicle vehicle = null, GasCard gasCard = null) : this(id, lastName, firstName, natRegNumber, licenses, address, vehicle, gasCard)
+    {
+        //gets filled in in shorter ctor by NatRegNumCheck, but just to be sure / to allow multiple ctor
+        BirthDate = birthDate;
+    }
     #endregion
 
     #region methods
