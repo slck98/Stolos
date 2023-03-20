@@ -9,14 +9,19 @@ namespace BusinessLayer.Model;
 
 public class Driver
 {
+    #region local attrib
     private bool _validNatRegNum = false;
+    #endregion
 
+    #region prop/model attrib
     private int _id;
     private string _lastName;
     private string _firstName;
     private DateTime _birthDate;
     private string _natRegNumber;
+    #endregion
 
+    #region ctor
     public Driver(int id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null, Vehicle vehicle = null, GasCard gasCard = null)
     {
         Id= id;
@@ -24,16 +29,18 @@ public class Driver
         FirstName = firstName;
         Licenses = licenses;
 
-        bool pre = NatRegNumPre2000Check(natRegNumber, out _validNatRegNum, out pre);
-        string yearBeginning = (pre == true ? "19" : "20");
+        DateTime correctDate;
+        _validNatRegNum = NatRegNumCheck(natRegNumber, out _validNatRegNum, out _, out _, out correctDate);
         NatRegNumber = natRegNumber;
-        BirthDate = new DateTime(int.Parse(yearBeginning + NatRegNumber.Substring(0, 2)), int.Parse(NatRegNumber.Substring(3, 2)), int.Parse(NatRegNumber.Substring(6, 2)));
+        BirthDate = new DateTime(correctDate.Year, correctDate.Month, correctDate.Day);
 
         Address = address;
         Vehicle = vehicle;
         GasCard = gasCard;
     }
+    #endregion
 
+    #region prop
     public int Id 
     {
         get { return _id; } 
@@ -67,7 +74,7 @@ public class Driver
         get { return _birthDate; }
         set
         {
-            if (value == default(DateTime)) throw new DomainException("Driver: set-BirthDate: NULL value");
+            if (value == default(DateTime) || value > DateTime.Now) throw new DomainException("Driver: set-BirthDate: Incorrect value");
             _birthDate = value;
         }
     }
@@ -95,10 +102,11 @@ public class Driver
 
     public Vehicle? Vehicle { get; set; }
     public GasCard? GasCard { get; set; }
+    #endregion
 
-
+    #region methods
     //check for NatRegNum pre/post 2000 (written for testing ease of use)
-    private static bool NatRegNumPre2000Check(string natRegNum, out bool valid, out bool pre)
+    private bool NatRegNumCheck(string natRegNum, out bool valid, out bool pre, out string sexe, out DateTime correctDate)
     {
         /*
          * Adrian B on 19/03
@@ -155,6 +163,7 @@ public class Driver
                 {
                     // refugee with unknown birth date
                     monthRes = 1;
+                    
                     break;
                 }
                 throw new DomainException("Driver: NatRegNumber: Refugee error");
@@ -177,18 +186,17 @@ public class Driver
         #endregion
 
         #region check id / gender
-        string geslacht;
         switch (monthRes)
         {
             case 1:
             case 2:
                 // gender unkown (refugee/BIS gender unknown)
-                geslacht = "onbekend";
+                sexe = "onbekend";
                 break;
             case 3:
             case 4:
                 // gender known
-                geslacht = dayNum % 2 == 0 ? "vrouw" : "man";
+                sexe = dayNum % 2 == 0 ? "vrouw" : "man";
                 break;
             //incorrect data entry
             default: throw new DomainException("Driver: NatRegNumber: Incorrect ID");
@@ -200,17 +208,34 @@ public class Driver
         pre = true;
         //control check double -> once in case pre 2000, 2nd time incase 2000 or later
         string allButControl = year + month + day + id;
-        int res = 97 - (int.Parse(allButControl) % 97);
-        if (controlNum == res) valid = true;
+        uint res = (uint)(97 - (int.Parse(allButControl) % 97));
+        if (controlNum == (int)res) valid = true;
         if (!valid)
         {
-            int magicNum = 2000000000; // gebruikt voor mensen die in/na 2000 zijn geboren
-            res = 97 - ((magicNum + int.Parse(allButControl)) % 97);
-            if (controlNum == res) valid = true;
+            const uint magicNum = 2000000000; // gebruikt voor mensen die in/na 2000 zijn geboren
+            res = 97 - ((magicNum + uint.Parse(allButControl)) % 97);
+            if (controlNum == (int)res) valid = true;
             pre = false;
         }
-
         #endregion
-        return pre;
+
+        #region setCorrectDate
+        correctDate = DateTime.UnixEpoch;
+        string yearBeginning = (pre == true ? "19" : "20");
+        int x = 0;
+        switch (monthRes)
+        {
+            case 2:
+                x = -20;
+                break;
+            case 4:
+                x = -40;
+                break;
+        }
+        correctDate = new DateTime(int.Parse(yearBeginning + year), monthNum + x, dayNum);
+        #endregion
+
+        return valid;
     }
+    #endregion
 }
