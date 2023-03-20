@@ -20,5 +20,10 @@ namespace BusinessLayer.Managers
         {
             return _repo.GetAllGasCards();
         }
+
+        public GasCard GetGasCard(string cn)
+        {
+            return _repo.GetGasCard(cn);
+        }
     }
 }

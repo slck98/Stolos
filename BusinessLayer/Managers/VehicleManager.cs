@@ -20,5 +20,10 @@ namespace BusinessLayer.Managers
         {
             return _repo.GetAllVehicles();
         }
+
+        public Vehicle GetVehicle(string vin)
+        {
+            return _repo.GetVehicle(vin);
+        }
     }
 }
