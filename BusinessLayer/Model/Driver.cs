@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BusinessLayer.Exceptions;
 
@@ -64,7 +65,6 @@ public class Driver
         get { return _natRegNumber; }
         set
         {
-            if (string.IsNullOrWhiteSpace(value)) throw new DomainException("Driver: set-NatRegNumber: NULL value");
             try
             {
                 /*
@@ -137,6 +137,11 @@ public class Driver
         for people born in 2000 or after, must add a 2 before modulating (+ 2000000000)
         Example: A man is born op 1 feb 1990, possible RRN/NatRegNum 90.02.01-997-04. 900201997 % 97 = 93. 97-93 = 04. RRN is correct.
          */
+        #endregion
+
+        #region initial check
+        if (string.IsNullOrWhiteSpace(natRegNum)) throw new DomainException("Driver: NatRegNumber: NULL value");
+        if (!Regex.Match(natRegNum, @"(\d{2})\.(\d{2})\.(\d{2})-(\d{3})\.(\d{2})").Success) throw new DomainException("Driver: NatRegNum: Incorrect format");
         #endregion
 
         #region split and get individual values
