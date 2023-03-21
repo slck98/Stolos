@@ -6,9 +6,9 @@ const DetailPopUp = (props) => {
     <div className={classes.popup}>
       <div className={classes.popupInner}>
         {props.children}
-        <button className="close-btn" onClick={() => props.setTrigger(false)}>
-          Sluiten
-        </button>
+        <div className="closeBtn">
+          <button onClick={() => props.setTrigger(false)}>Sluiten</button>
+        </div>
       </div>
     </div>
   ) : (

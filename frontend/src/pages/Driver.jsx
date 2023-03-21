@@ -5,6 +5,7 @@ import logo from "../images/logoLong.png";
 import DetailPopup from "../components/DetailPopup";
 import AddPopup from "../components/AddPopup";
 import UpdatePopup from "../components/UpdatePopup";
+import DeletePopup from "../components/DeletePopup";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { BsFillPencilFill } from "react-icons/bs";
 import { TiArrowRightThick } from "react-icons/ti";
@@ -14,6 +15,7 @@ const DriverPage = () => {
   const [detailPopup, setDetailPopup] = useState(false);
   const [addPopup, setAddPopup] = useState(false);
   const [updatePopup, setUpdatePopup] = useState(false);
+  const [deletePopup, setDeletePopup] = useState(false);
 
   const fetchData = () => {
     axios.get("https://swapi.dev/api/people").then((response) => {
@@ -49,7 +51,10 @@ const DriverPage = () => {
               <li key={drivers.name}>
                 <p>{drivers.name} </p>
                 <p className={classes.icons}>
-                  <RiDeleteBin5Line size={"30px"} />
+                  <RiDeleteBin5Line
+                    size={"30px"}
+                    onClick={() => setDeletePopup(true)}
+                  />
                   <BsFillPencilFill
                     size={"30px"}
                     onClick={() => setUpdatePopup(true)}
@@ -75,30 +80,89 @@ const DriverPage = () => {
       </DetailPopup>
 
       <AddPopup trigger={addPopup} setTrigger={setAddPopup}>
-        <p>Naam: </p>
-        <input type="text" id="name" name="name"></input>
-        <p>Voornaam: </p>
-        <input type="text" id="firstname" name="firstname"></input>
-        <p>Adres: </p>
-        <input type="text" id="address" name="address"></input>
-        <p>Geboortedatum:</p>
-        <input type="date" id="birthdate" name="birthdate"></input>
-        <p>Rijkregisternummer:</p>
-        <input type="text" id="rrn" name="rrn"></input>
-        <p>Type rijbewijs:</p>
-        <input type="text" id="drivinglicense" name="drivinglicense"></input>
-        <p>Voertuig:</p>
-        <input type="text" id="vehicle" name="vehicle"></input>
-        <p>Tankkaart:</p>
-        <input type="text" id="fuelcard" name="fuelcard"></input>
+        <div className={classes.addPopup}>
+          <span>
+            <p>Naam: </p>
+            <input type="text" id="name" name="name" />
+          </span>
+          <span>
+            <p>Voornaam:</p>{" "}
+            <input type="text" id="firstname" name="firstname" />
+          </span>
+          <span>
+            <p>Adres:</p>
+            <input type="text" id="address" name="address" />
+          </span>
+          <span>
+            <p>Geboortedatum:</p>
+            <input type="date" id="birthdate" name="birthdate" />
+          </span>
+          <span>
+            <p>Rijkregisternummer:</p>
+            <input type="text" id="rrn" name="rrn" />
+          </span>
+          <span>
+            <p>Type rijbewijs:</p>
+            <input type="text" id="drivinglicense" name="drivinglicense" />
+          </span>
+          <span>
+            <p>Voertuig:</p>
+            <input type="text" id="vehicle" name="vehicle" />
+          </span>
+          <span>
+            <p>Tankkaart:</p>
+            <input type="text" id="gascard" name="gascard" />
+          </span>
+        </div>
       </AddPopup>
 
       <UpdatePopup trigger={updatePopup} setTrigger={setUpdatePopup}>
-        <p>Naam: </p>
-        <input type="text" id="name" name="name">
-          {drivers.name}
-        </input>
+        <div className={classes.addPopup}>
+          <span>
+            <p>Naam: </p>
+            <input type="text" id="name" name="name" />
+          </span>
+          <span>
+            <p>Voornaam:</p>{" "}
+            <input type="text" id="firstname" name="firstname" />
+          </span>
+          <span>
+            <p>Adres:</p>
+            <input type="text" id="address" name="address" />
+          </span>
+          <span>
+            <p>Geboortedatum:</p>
+            <input type="date" id="birthdate" name="birthdate" />
+          </span>
+          <span>
+            <p>Rijkregisternummer:</p>
+            <input type="text" id="rrn" name="rrn" />
+          </span>
+          <span>
+            <p>Type rijbewijs:</p>
+            <input type="text" id="drivinglicense" name="drivinglicense" />
+          </span>
+          <span>
+            <p>Voertuig:</p>
+            <input type="text" id="vehicle" name="vehicle" />
+          </span>
+          <span>
+            <p>Tankkaart:</p>
+            <input type="text" id="gascard" name="gascard" />
+          </span>
+        </div>
       </UpdatePopup>
+
+      <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
+        <p>Naam: </p>
+        <p>Voornaam: </p>
+        <p>Adres: </p>
+        <p>Geboortedatum:</p>
+        <p>Rijkregisternummer:</p>
+        <p>Type rijbewijs:</p>
+        <p>Voertuig:</p>
+        <p>Tankkaart:</p>
+      </DeletePopup>
     </div>
   );
 };

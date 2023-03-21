@@ -8,7 +8,7 @@
 
 .headerDriver {
   display: flex;
-  align-items:flex-end;
+  align-items: flex-end;
 }
 
 .headerDriver h1 {
@@ -33,7 +33,6 @@
   border-radius: 5px;
 }
 
-
 .one button {
   margin: 5px;
 }
@@ -55,3 +54,9 @@
   margin-right: 0;
   margin: 5;
 }
+
+.addPopup span {
+  display: inline-block;
+  margin: 15px;
+}
+
