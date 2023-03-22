@@ -26,15 +26,19 @@
 }
 
 .one {
-  margin: 10px;
+  margin: 5px;
+  margin-right: 0;
 }
-.one #searchTxtbox {
-  width: 70%;
-  border-radius: 5px;
+.one input[type=text] {
+  width: 64vw;
+  height: 2vw;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .one button {
   margin: 5px;
+  font-size: 1.2vw;
 }
 
 .two li {

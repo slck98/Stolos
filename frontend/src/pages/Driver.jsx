@@ -36,7 +36,7 @@ const DriverPage = () => {
       <hr className={classes.line} />
 
       <div className={classes.one}>
-        <input type="text" id="searchTxtbox" name="searchTxtBox"></input>
+        <input type="text" className="searchTxtbox" placeholder="Zoeken..."></input>
         <button type="button">Zoek</button>
         <button type="button" onClick={() => setAddPopup(true)}>
           Toevoegen
