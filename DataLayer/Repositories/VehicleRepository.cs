@@ -101,8 +101,6 @@ public class VehicleRepository : IVehicleRepository
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
                         int? driverId = (int?)((reader[7] is DBNull) ? null: reader[7]);
 
-                        //todo driver (id/natregnum?)
-
                         v = new Vehicle(vinDB, plate, brandModel, vehicleType, fuelType, color, doors, null);
                     }
                     reader.Close();

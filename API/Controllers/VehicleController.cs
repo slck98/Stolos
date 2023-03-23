@@ -12,11 +12,6 @@ public class VehicleController : ControllerBase
     private readonly ILogger<VehicleController> logger;
     private VehicleManager _vehicleManager;
 
-    //private readonly List<Vehicle> _vehicles = new()
-    //{
-    //    new Vehicle("0123456789ABCDEFF", "1-ABC-123", "VW Polo", (VehicleType)1, (FuelType)1)
-    //};
-
     public VehicleController(ILogger<VehicleController> logger, IConfiguration iConfig)
     {
         this.logger = logger;
