@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BusinessLayer.Exceptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BusinessLayer.Model;
 
@@ -70,7 +71,8 @@ public class Driver
                 /*
                  * Adrian B on 12/03
                  */
-                if (!_validNatRegNum) { throw new DomainException("Driver: Set-NatRegNumber: Not Valid Control Num"); }
+                bool valid = NatRegNumCheck(value, out valid, out _, out _, out _);
+                if (!valid) { throw new DomainException("Driver: Set-NatRegNumber: Not Valid Control Num"); }
                 _natRegNumber = value;
             }
             catch (Exception ex)
@@ -86,31 +88,63 @@ public class Driver
     #endregion
 
     #region ctor
-    public Driver(int id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null, Vehicle vehicle = null, GasCard gasCard = null)
+    public Driver(int id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null) : this(id, lastName, firstName, null, natRegNumber, licenses, address){ }
+
+    public Driver(int id, string lastName, string firstName, DateTime? birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null)
     {
         Id = id;
         LastName = lastName;
         FirstName = firstName;
         Licenses = licenses;
 
-        DateTime correctDate;
-        _validNatRegNum = NatRegNumCheck(natRegNumber, out _validNatRegNum, out _, out _, out correctDate);
         NatRegNumber = natRegNumber;
-        BirthDate = new DateTime(correctDate.Year, correctDate.Month, correctDate.Day);
-
+        BirthDate = ((birthDate is null) ? GetDateFromRRN(NatRegNumber) : (DateTime)birthDate);
         Address = address;
-        Vehicle = vehicle;
-        GasCard = gasCard;
-    }
-
-    public Driver(int id, string lastName, string firstName, DateTime birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null, Vehicle vehicle = null, GasCard gasCard = null) : this(id, lastName, firstName, natRegNumber, licenses, address, vehicle, gasCard)
-    {
-        //gets filled in in shorter ctor by NatRegNumCheck, but just to be sure / to allow multiple ctor
-        BirthDate = birthDate;
     }
     #endregion
 
     #region methods
+    private DateTime GetDateFromRRN(string natRegNum)
+    {
+        DateTime birthDate;
+        string fullDate = natRegNum.Split("-")[0];
+        string idAndControl = natRegNum.Split("-")[1];
+        string year = fullDate.Split(".")[0];
+        string month = fullDate.Split(".")[1];
+        string day = fullDate.Split(".")[2];
+        string id = idAndControl.Split(".")[0];
+        string control = idAndControl.Split('.')[1];
+        int yearNum = int.Parse(year);
+        int monthNum = int.Parse(month);
+        int dayNum = int.Parse(day);
+        int idNum = int.Parse(id);
+        int controlNum = int.Parse(control);
+        if (monthNum < 1 || monthNum > 12) throw new DomainException("Driver: GetDateFromRRN: Invalid month");
+        if (dayNum < 1 || dayNum > 31) throw new DomainException("Driver: GetDateFromRRN: Invalid day");
+        try
+        {
+            bool pre = false;
+            bool valid = false;
+            string allButControl = year + month + day + id;
+            uint res = (uint)(97 - (int.Parse(allButControl) % 97));
+            if (controlNum == (int)res) valid = true;
+            if (!valid)
+            {
+                const uint magicNum = 2000000000; // gebruikt voor mensen die in/na 2000 zijn geboren
+                res = 97 - ((magicNum + uint.Parse(allButControl)) % 97);
+                if (controlNum == (int)res) valid = true;
+                pre = false;
+            }
+            string yearBeginning = (pre == true ? "19" : "20");
+            birthDate = new DateTime(int.Parse(yearBeginning+year), monthNum, dayNum);
+        }
+        catch (Exception ex)
+        {
+            throw new DomainException("Driver: GetDateFromRRN", ex);
+        }
+        return birthDate;
+    }
+
     //check for NatRegNum pre/post 2000 (written for testing ease of use)
     private bool NatRegNumCheck(string natRegNum, out bool valid, out bool pre, out string sexe, out DateTime correctDate)
     {

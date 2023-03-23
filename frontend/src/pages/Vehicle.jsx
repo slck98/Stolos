@@ -1,16 +1,11 @@
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
+import VehicleList from '../components/VehicleList';
 
 const VehiclePage = () => {
   const vehicles = useLoaderData();
-  console.log(vehicles);
-  return (
-    <ul>
-      {vehicles.map(vehicle => (
-        <li key={vehicle.vinNumber}>{vehicle.licensePlate}</li>
-      ))}
-    </ul>
-  );
+
+  return <VehicleList vehicles={vehicles} />;
 };
 
 export default VehiclePage;
