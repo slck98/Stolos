@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         loader: loadVehicles,
         children: [
           {
-            path: ':vehicleId',
+            path: ':vinNumber',
             children: [
               {
                 index: true,
