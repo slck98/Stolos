@@ -4,7 +4,7 @@ import DriverPage from './pages/Driver';
 import GascardPage from './pages/Gascard';
 import RootLayout from './pages/Root';
 import StartScreen from './pages/Start';
-import VehiclePage from './pages/Vehicle';
+import VehiclePage, { loadVehicles } from './pages/Vehicle';
 import VehicleDetailPage from './pages/VehicleDetail';
 import EditVehiclePage from './pages/EditVehicle';
 
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       {
         path: 'vehicles',
         element: <VehiclePage />,
-        loader: '',
+        loader: loadVehicles,
         children: [
           {
             path: ':vehicleId',

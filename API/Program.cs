@@ -3,16 +3,17 @@ using BusinessLayer.Interfaces;
 using BusinessLayer.Managers;
 using System.Configuration;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "localhost",
-        builder =>
+    options.AddPolicy(name: "_myAllowSpecificOrigins",
+        policy =>
         {
-            builder.WithOrigins("http://localhost");
+            policy.WithOrigins("http://localhost","https://localhost","http://localhost:3000","http://localhost:3001");
         });
 });
 
@@ -33,6 +34,8 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
