@@ -12,29 +12,34 @@ namespace API.Controllers
     {
         private readonly ILogger<DriverController> logger;
         private IConfiguration iConfig;
+        private DriverManager _driverManager;
 
         //private static List<DriversLicense> _licenses = new List<DriversLicense> { DriversLicense.B, DriversLicense.C1};
-        
+
 
         //private readonly List<Driver> _driver = new()
         //{
         //    new Driver(2, "Doe", "John", "85.12.31-123.40", _licenses)
         //};
 
-        private List<Driver> _drivers;
-
         public DriverController(ILogger<DriverController> logger, IConfiguration iConfig)
         {
             this.logger = logger;
             this.iConfig = iConfig;
 
-            _drivers = new List<Driver>(new DriverManager(new DriverRepository(iConfig.GetValue<string>("ConnectionStrings:stolos"))).GetAllDrivers());
+            _driverManager = new DriverManager(new DriverRepository(iConfig.GetValue<string>("ConnectionStrings:stolos")));
         }
 
         [HttpGet(Name = "GetDrivers")]
         public List<Driver> Get()
         {
-            return _drivers;
+            return _driverManager.GetAllDrivers();
+        }
+
+        [HttpGet("{id}", Name = "GetDriver")]
+        public Driver Get(int id)
+        {
+            return _driverManager.GetDriverById(id);
         }
     }
 }

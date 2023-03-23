@@ -79,7 +79,7 @@ public class DriverRepository : IDriverRepository
         return drivers;
     }
 
-    public Driver GetDriver(int id)
+    public Driver GetDriverById(int id)
     {
         Driver d = null;
         MySqlConnection conn;
