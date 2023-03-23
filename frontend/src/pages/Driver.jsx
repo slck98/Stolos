@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import classes from "../css/Driver.module.css";
-import logo from "../images/logoLong.png";
-import DetailPopup from "../components/DetailPopup";
-import AddPopup from "../components/AddPopup";
-import UpdatePopup from "../components/UpdatePopup";
-import DeletePopup from "../components/DeletePopup";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { BsFillPencilFill } from "react-icons/bs";
-import { TiArrowRightThick } from "react-icons/ti";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import classes from '../css/Driver.module.css';
+import logo from '../images/logoLong.png';
+import DetailPopup from '../components/DetailPopup';
+import AddPopup from '../components/AddPopup';
+import UpdatePopup from '../components/UpdatePopup';
+import DeletePopup from '../components/DeletePopup';
+import { RiDeleteBin5Line } from 'react-icons/ri';
+import { BsFillPencilFill } from 'react-icons/bs';
+import { TiArrowRightThick } from 'react-icons/ti';
 
 const DriverPage = () => {
   const [drivers, setDrivers] = useState([]);
@@ -18,7 +18,7 @@ const DriverPage = () => {
   const [deletePopup, setDeletePopup] = useState(false);
 
   const fetchData = () => {
-    axios.get("https://swapi.dev/api/people").then((response) => {
+    axios.get('https://swapi.dev/api/people').then(response => {
       setDrivers(response.data.results);
     });
   };
@@ -36,7 +36,11 @@ const DriverPage = () => {
       <hr className={classes.line} />
 
       <div className={classes.one}>
-        <input type="text" className="searchTxtbox" placeholder="Zoeken..."></input>
+        <input
+          type="text"
+          className="searchTxtbox"
+          placeholder="Zoeken..."
+        ></input>
         <button type="button">Zoek</button>
         <button type="button" onClick={() => setAddPopup(true)}>
           Toevoegen
@@ -47,20 +51,20 @@ const DriverPage = () => {
         <>
           {drivers &&
             drivers.length > 0 &&
-            drivers.map((drivers) => (
+            drivers.map(drivers => (
               <li key={drivers.name}>
                 <p>{drivers.name} </p>
                 <p className={classes.icons}>
                   <RiDeleteBin5Line
-                    size={"30px"}
+                    size={'30px'}
                     onClick={() => setDeletePopup(true)}
                   />
                   <BsFillPencilFill
-                    size={"30px"}
+                    size={'30px'}
                     onClick={() => setUpdatePopup(true)}
                   />
                   <TiArrowRightThick
-                    size={"30px"}
+                    size={'30px'}
                     onClick={() => setDetailPopup(true)}
                   />
                 </p>
@@ -86,7 +90,7 @@ const DriverPage = () => {
             <input type="text" id="name" name="name" />
           </span>
           <span>
-            <p>Voornaam:</p>{" "}
+            <p>Voornaam:</p>{' '}
             <input type="text" id="firstname" name="firstname" />
           </span>
           <span>
@@ -123,7 +127,7 @@ const DriverPage = () => {
             <input type="text" id="name" name="name" />
           </span>
           <span>
-            <p>Voornaam:</p>{" "}
+            <p>Voornaam:</p>{' '}
             <input type="text" id="firstname" name="firstname" />
           </span>
           <span>
