@@ -74,7 +74,7 @@ public class VehicleRepository : IVehicleRepository
         return vehicles;
     }
 
-    public Vehicle GetVehicle(string vin)
+    public Vehicle GetVehicleByVIN(string vin)
     {
         Vehicle v = null;
         MySqlConnection conn;
@@ -99,7 +99,7 @@ public class VehicleRepository : IVehicleRepository
                         VehicleType vehicleType = (VehicleType)reader[4];
                         string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
-                        int driverId = (int)reader[7];
+                        int? driverId = (int?)((reader[7] is DBNull) ? null: reader[7]);
 
                         //todo driver (id/natregnum?)
 

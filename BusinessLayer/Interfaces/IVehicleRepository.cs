@@ -13,5 +13,5 @@ namespace BusinessLayer.Interfaces;
 public interface IVehicleRepository
 {
     List<Vehicle> GetAllVehicles();
-    Vehicle GetVehicle(string vin);
+    Vehicle GetVehicleByVIN(string vin);
 }
