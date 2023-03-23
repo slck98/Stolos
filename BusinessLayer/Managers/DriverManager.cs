@@ -21,4 +21,9 @@ public class DriverManager
 	{
 		return _repo.GetAllDrivers();
 	}
+
+	public Driver GetDriver(int id)
+	{
+		return _repo.GetDriver(id);
+	}
 }

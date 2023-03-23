@@ -56,14 +56,12 @@ public class DriverRepository : IDriverRepository
                         {
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
-                        int? gasCardId = (int?)((reader[7] is DBNull) ? null : reader[7]);
-                        string? vehicleVIN = (string?)((reader[8] is DBNull) ? "" : reader[8]);
 
                         //todo vehicle (vin)
                         //todo gascard (id/cardnum?)
 
 
-                        Driver d = new(id, lName, fName, birthDate, natRegNum, licenseList, address, null, null);
+                        Driver d = new(id, lName, fName, birthDate, natRegNum, licenseList, address);
                         drivers.Add(d);
                     }
                     reader.Close();
@@ -109,14 +107,12 @@ public class DriverRepository : IDriverRepository
                         {
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
-                        int? gasCardId = (int?)((reader[7] is DBNull) ? null : reader[7]);
-                        string? vehicleVIN = (string?)((reader[8] is DBNull) ? "" : reader[8]);
 
                         //todo vehicle (vin)
                         //todo gascard (id/cardnum?)
 
 
-                        d = new(id, lName, fName, birthDate, natRegNum, licenseList, address, null, null);
+                        d = new(id, lName, fName, birthDate, natRegNum, licenseList, address);
                     }
                     reader.Close();
                 }
