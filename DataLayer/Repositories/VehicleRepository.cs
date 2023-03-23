@@ -118,4 +118,10 @@ public class VehicleRepository : IVehicleRepository
         return v;
     }
     #endregion
+
+    #region put
+    #endregion
+
+    #region update
+    #endregion
 }

@@ -7,6 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "localhost",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost");
+        });
+});
+
 builder.Services.AddControllers();
 // add singletons
 //builder.Services.AddSingleton<>();
