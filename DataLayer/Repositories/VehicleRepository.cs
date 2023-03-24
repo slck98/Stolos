@@ -121,7 +121,6 @@ public class VehicleRepository : IVehicleRepository
     public void AddVehicle(Vehicle vehicle)
     {
         MySqlConnection conn;
-        MySqlDataReader reader;
         MySqlCommand cmd;
         try
         {
