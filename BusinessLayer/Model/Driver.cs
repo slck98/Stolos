@@ -104,9 +104,9 @@ public class Driver
     #endregion
 
     #region ctor
-    public Driver(int id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null) : this(id, lastName, firstName, null, natRegNumber, licenses, address){ }
+    public Driver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null) : this(id, lastName, firstName, null, natRegNumber, licenses, address){ }
 
-    public Driver(int id, string lastName, string firstName, DateTime? birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null)
+    public Driver(int? id, string lastName, string firstName, DateTime? birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null)
     {
         Id = id;
         LastName = lastName;
