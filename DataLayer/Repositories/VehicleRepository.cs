@@ -117,9 +117,40 @@ public class VehicleRepository : IVehicleRepository
     }
     #endregion
 
-    #region put
+    #region post
+    public void AddVehicle(Vehicle vehicle)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new MySqlConnection())
+            {
+                conn.Open();
+
+                cmd = new($"INSERT INTO db_allphifm.Vehicle (VIN, BrandModel, LicensePlate, FeulType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
+
+                cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
+                cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
+                cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
+                cmd.Parameters.AddWithValue("@ft", vehicle.Fuel);
+                cmd.Parameters.AddWithValue("@vt", vehicle.Category);
+                cmd.Parameters.AddWithValue("@clr", vehicle.Color);
+                cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
+                cmd.Parameters.AddWithValue("@did", vehicle.Driver.Id);
+
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("VehicleRepo-AddVehicle: " + ex);
+        }
+    }
+
     #endregion
 
-    #region update
+    #region patch
     #endregion
 }

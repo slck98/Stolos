@@ -25,5 +25,17 @@ namespace BusinessLayer.Managers
         {
             return _repo.GetVehicleByVIN(vin);
         }
+
+        public void AddVehicle(Vehicle vehicle)
+        {
+            _repo.AddVehicle(vehicle);
+            if(vehicle.Driver != null)
+            {
+                if(vehicle.Driver.Vehicle == null)
+                {
+                    vehicle.Driver.Vehicle = vehicle;
+                }
+            }
+        }
     }
 }
