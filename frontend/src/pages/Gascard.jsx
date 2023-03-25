@@ -1,7 +1,7 @@
 import React from 'react';
 
 const GascardPage = () => {
-  return <h1>Gascards</h1>;
+  return <h1>Tankkaarten</h1>;
 };
 
 export default GascardPage;

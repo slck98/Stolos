@@ -1,7 +1,7 @@
 import React from 'react';
 
 const EditVehiclePage = () => {
-  return <div>EditVehicle</div>;
+  return <div>Bewerk Voertuig formulier</div>;
 };
 
 export default EditVehiclePage;

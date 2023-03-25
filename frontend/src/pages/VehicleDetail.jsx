@@ -32,7 +32,10 @@ export default VehicleDetailPage;
 async function loadVehicle(vinNumber) {
   const response = await fetch('https://localhost:7144/vehicle/' + vinNumber);
   if (!response.ok) {
-    throw json({ message: 'Could not fetch vehicle details' }, { status: 500 });
+    throw json(
+      { message: 'Kon de details van het voertuig niet ophalen' },
+      { status: 500 }
+    );
   } else {
     const resData = await response.json();
     return resData;
@@ -43,7 +46,7 @@ async function loadVehicles() {
   const response = await fetch('https://localhost:7144/vehicle');
 
   if (!response.ok) {
-    return json({ message: 'Could not fetch vehicles.' }, { status: 500 });
+    return json({ message: 'Voertuigen ophalen mislukt.' }, { status: 500 });
   } else {
     const resData = await response.json();
     return resData.vehicles;

@@ -19,7 +19,7 @@ export default VehiclesPage;
 const loadVehicles = async () => {
   const response = await fetch('https://localhost:7144/vehicle');
   if (!response.ok) {
-    return json({ message: 'Voertuigen ophalen gefaald.' }, { status: 500 });
+    return json({ message: 'Voertuigen ophalen mislukt.' }, { status: 500 });
   } else {
     const res = await response.json();
     return res;
