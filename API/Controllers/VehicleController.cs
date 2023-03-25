@@ -31,9 +31,11 @@ public class VehicleController : ControllerBase
         return _vehicleManager.GetVehicleByVIN(vin);
     }
 
-    [HttpPost("{vehicle}", Name = "AddVehicle")]
-    public void Post(Vehicle vehicle)
+
+    [HttpPost, Route("addVehicle")]
+    public ActionResult<Vehicle> Add(Vehicle vehicle)
     {
         _vehicleManager.AddVehicle(vehicle);
+        return Ok();
     }
 }

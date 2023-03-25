@@ -31,7 +31,7 @@ namespace BusinessLayer.Managers
             _repo.AddVehicle(vehicle);
             if(vehicle.Driver != null)
             {
-                if(vehicle.Driver.Vehicle == null)
+                if (vehicle.Driver.Vehicle == null)
                 {
                     vehicle.Driver.Vehicle = vehicle;
                 }

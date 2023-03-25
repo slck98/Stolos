@@ -124,11 +124,11 @@ public class VehicleRepository : IVehicleRepository
         MySqlCommand cmd;
         try
         {
-            using (conn = new MySqlConnection())
+            using (conn = new(_connectionString))
             {
                 conn.Open();
 
-                cmd = new($"INSERT INTO db_allphifm.Vehicle (VIN, BrandModel, LicensePlate, FeulType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
+                cmd = new("INSERT INTO db_allphifm.Driver (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
 
                 cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
                 cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
@@ -141,14 +141,14 @@ public class VehicleRepository : IVehicleRepository
 
                 cmd.ExecuteNonQuery();
 
+                conn.Close();
             }
         }
         catch (Exception ex)
         {
-            throw new DataException("VehicleRepo-AddVehicle: " + ex);
+            throw new DataException("VehicleRepo-AddVehicle", ex);
         }
     }
-
     #endregion
 
     #region patch
