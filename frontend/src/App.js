@@ -1,11 +1,16 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import ErrorPage from './pages/Error';
 import DriverPage from './pages/Driver';
 import GascardPage from './pages/Gascard';
 import RootLayout from './pages/Root';
 import StartScreen from './pages/Start';
-import VehiclePage, { loadVehicles } from './pages/Vehicle';
-import VehicleDetailPage from './pages/VehicleDetail';
+import VehiclesRootLayout from './pages/VehiclesRoot';
+import VehiclesPage, { loader as vehiclesLoader } from './pages/Vehicles';
+import VehicleDetailPage, {
+  loader as vehicleDetailLoader,
+  action as deleteVehicleAction,
+} from './pages/VehicleDetail';
 import EditVehiclePage from './pages/EditVehicle';
 
 // Router
@@ -13,6 +18,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -20,15 +26,22 @@ const router = createBrowserRouter([
       },
       {
         path: 'vehicles',
-        element: <VehiclePage />,
-        loader: loadVehicles,
+        element: <VehiclesRootLayout />,
         children: [
           {
+            index: true,
+            element: <VehiclesPage />,
+            loader: vehiclesLoader,
+          },
+          {
             path: ':vinNumber',
+            id: 'vehicle-detail',
+            loader: vehicleDetailLoader,
             children: [
               {
                 index: true,
                 element: <VehicleDetailPage />,
+                action: deleteVehicleAction,
               },
               {
                 path: 'edit',
