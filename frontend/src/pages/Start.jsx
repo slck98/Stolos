@@ -1,12 +1,12 @@
 import '../css/StartScreen.css';
 import Hero from '../components/Hero';
-import Button from '../components/Button.jsx';
+import Buttons from '../components/Buttons.jsx';
 
 const StartPage = props => {
   return (
     <div className="startscreen">
       <Hero />
-      <Button />
+      <Buttons />
     </div>
   );
 };

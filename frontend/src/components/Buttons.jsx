@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar, faUser, faGasPump } from '@fortawesome/free-solid-svg-icons';
-import classes from '../css/Button.module.css';
+import classes from '../css/Buttons.module.css';
 
-const Button = props => {
+const Buttons = props => {
   return (
     <div className={classes.button}>
       <Link to="drivers" className={classes.bestuurders}>
@@ -25,4 +25,4 @@ const Button = props => {
   );
 };
 
-export default Button;
+export default Buttons;
