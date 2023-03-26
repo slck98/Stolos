@@ -137,7 +137,7 @@ public class VehicleRepository : IVehicleRepository
                 cmd.Parameters.AddWithValue("@vt", vehicle.Category);
                 cmd.Parameters.AddWithValue("@clr", vehicle.Color);
                 cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
-                cmd.Parameters.AddWithValue("@did", vehicle.Driver.Id);
+                //cmd.Parameters.AddWithValue("@did", vehicle.Driver.Id);
 
                 cmd.ExecuteNonQuery();
 

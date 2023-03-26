@@ -57,7 +57,7 @@ namespace DataLayer.Repositories
                             bool blocked = Convert.ToBoolean(reader[6]);
 
 
-                            card = new(cardnumber, expiringdate, pincode, blocked, fuels, null);
+                            card = null; //new(cardnumber, expiringdate, pincode, blocked, fuels, null);
                         }
                         reader.Close();
                     }
@@ -110,7 +110,7 @@ namespace DataLayer.Repositories
                             bool blocked = Convert.ToBoolean(reader[6]);
 
 
-                            GasCard gc = new(cardnumber, expiringdate, pincode, blocked, fuels, null);
+                            GasCard gc = null;// new(cardnumber, expiringdate, pincode, blocked, fuels, null);
                             cards.Add(gc);
                         }
                         reader.Close();

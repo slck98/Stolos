@@ -1,10 +1,13 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer;
+using BusinessLayer.DTO;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Model;
 using DataLayer.Exceptions;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,8 +64,94 @@ public class DriverRepository : IDriverRepository
                         //todo gascard (id/cardnum?)
 
 
-                        Driver d = new(id, lName, fName, birthDate, natRegNum, licenseList, address);
+                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);//new(id, lName, fName, birthDate, natRegNum, licenseList, address);
                         drivers.Add(d);
+                    }
+                    reader.Close();
+                }
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("DriverRepo-GetAllDrivers", ex);
+        }
+        return drivers;
+    }
+
+    public List<DriverInfo> GetAllDriverInfos()
+    {
+        List<DriverInfo> drivers = new List<DriverInfo>();
+        MySqlConnection conn;
+        MySqlDataReader reader;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+
+            {
+                conn.Open();
+
+                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON d.DriverID = v.DriverID;", conn);
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //driver
+                        int id = (int)reader[8];
+                        string fName = (string)reader["FirstName"];
+                        string lName = (string)reader["LastName"];
+                        string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
+                        DateTime birthDate = (DateTime)reader["BirthDate"];
+                        string natRegNum = (string)reader["NationalRegistrationNumber"];
+                        List<DriversLicense> licenseList = new List<DriversLicense>();
+                        string licensesDB = (string)reader["DriversLicenses"];
+                        string[] lArrStrs = licensesDB.Split(",");
+                        foreach (string lArrStr in lArrStrs)
+                        {
+                            licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
+                        }
+
+                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);
+                        Vehicle v = null;
+                        GasCard gc = null;
+
+                        if (reader["VIN"] is not DBNull)
+                        {
+                            //vehicle
+                            string vin = (string)reader["VIN"];
+                            string brandModel = (string)reader["BrandModel"];
+                            string licensePlate = (string)reader["LicensePlate"];
+                            FuelType fuelType = (FuelType)reader["FuelType"];
+                            VehicleType vehicleType = (VehicleType)reader["VehicleType"];
+                            string? color = (string)reader["Color"];
+                            int? doors = (int?)reader["Doors"];
+                            v = new(vin, licensePlate, brandModel, vehicleType, fuelType, color, doors);
+                        }
+                        if (reader[0] is not DBNull)
+                        {
+                            //gascard
+                            int gasCardId = (int)reader[0];
+                            string cardNum = (string)reader["CardNumber"];
+                            DateTime expiringDate = (DateTime)reader["ExpiringDate"];
+                            int? pin = (int)reader["Pincode"];
+                            List<FuelType> fuelTypeList = new List<FuelType>();
+                            string fuelTypesDB = (string)reader["FuelTypes"];
+                            string[] ftsArrStrs = fuelTypesDB.Split(",");
+                            foreach (string ftsArrStr in ftsArrStrs)
+                            {
+                                fuelTypeList.Add((FuelType)Enum.Parse(typeof(FuelType), ftsArrStr));
+                            }
+                            bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
+                            gc = new(gasCardId, cardNum, expiringDate, pin, blocked, fuelTypeList, null);
+                        }
+
+                        DriverInfo driverInfo = new(d, v, gc);
+                        drivers.Add(driverInfo);
+                        //Driver d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);
+                        //drivers.Add(d);
                     }
                     reader.Close();
                 }
@@ -112,7 +201,7 @@ public class DriverRepository : IDriverRepository
                         //todo gascard (id/cardnum?)
 
 
-                        d = new(id, lName, fName, birthDate, natRegNum, licenseList, address);
+                        d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);// new(id, lName, fName, birthDate, natRegNum, licenseList, address);
                     }
                     reader.Close();
                 }

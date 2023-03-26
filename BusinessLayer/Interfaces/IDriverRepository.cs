@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Model;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,4 +15,6 @@ public interface IDriverRepository
 {
     List<Driver> GetAllDrivers();
     Driver GetDriverById(int id);
+
+    List<DriverInfo> GetAllDriverInfos();
 }

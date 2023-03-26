@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,10 @@ public class DriverManager
 	public Driver GetDriverById(int id)
 	{
 		return _repo.GetDriverById(id);
+	}
+
+	public List<DriverInfo> GetDriverInfos()
+	{
+		return _repo.GetAllDriverInfos();
 	}
 }

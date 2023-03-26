@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS GasCard;
 
 /* CREATE TABLES */
 CREATE TABLE `Driver` (
-	`ID` INT(255) NOT NULL AUTO_INCREMENT,
+	`DriverID` INT(255) NOT NULL AUTO_INCREMENT,
 	`FirstName` VARCHAR(20) NOT NULL,
 	`LastName` VARCHAR(20) NOT NULL,
 	`Address` VARCHAR(50),
@@ -15,7 +15,7 @@ CREATE TABLE `Driver` (
 --	`GasCardID` INT(255),
 --	`VehicleVIN` VARCHAR(17),
 	`Deleted` INT(1) NOT NULL,
-	PRIMARY KEY (`ID`)
+	PRIMARY KEY (`DriverID`)
 );
 CREATE TABLE `Vehicle` (
 	`VIN` VARCHAR(17) NOT NULL,
@@ -30,23 +30,23 @@ CREATE TABLE `Vehicle` (
 	PRIMARY KEY (`VIN`)
 );
 CREATE TABLE `GasCard` (
-	`ID` INT(255) NOT NULL AUTO_INCREMENT,
+	`GasCardID` INT(255) NOT NULL AUTO_INCREMENT,
 	`CardNumber` VARCHAR(20) NOT NULL,
 	`ExpiringDate` DATE NOT NULL,
 	`Pincode` INT(4),
-	`FuelType` VARCHAR(100),
+	`FuelTypes` VARCHAR(100),
 	`DriverID` INT(255),
 	`Blocked` INT(1) NOT NULL,
 	`Deleted` INT(1) NOT NULL,
-	PRIMARY KEY (`ID`)
+	PRIMARY KEY (`GasCardID`)
 );
 
 /* ADD CONSTRAINTS*/
 /* FK */
 -- ALTER TABLE Driver ADD CONSTRAINT fk_driver_gascardid_gascardid FOREIGN KEY (GascardID) REFERENCES GasCard(ID) ON DELETE SET NULL;
 -- ALTER TABLE Driver ADD CONSTRAINT fk_driver_vehiclevin_vehiclevin FOREIGN KEY (VehicleVIN) REFERENCES Vehicle(VIN) ON DELETE SET NULL;
-ALTER TABLE Vehicle ADD CONSTRAINT fk_vehicle_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
-ALTER TABLE GasCard ADD CONSTRAINT fk_gascard_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(ID) ON DELETE SET NULL;
+ALTER TABLE Vehicle ADD CONSTRAINT fk_vehicle_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(DriverID) ON DELETE SET NULL;
+ALTER TABLE GasCard ADD CONSTRAINT fk_gascard_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(DriverID) ON DELETE SET NULL;
 
 /* UQ */
 ALTER TABLE Driver ADD CONSTRAINT uc_driver_natregnum UNIQUE (NationalRegistrationNumber);

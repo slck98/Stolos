@@ -16,13 +16,13 @@ INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color
 INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('01234567890000004', 'Kia EV6', '1-AIK-667', 3, 1, 'cherry', 5, NULL, 0);
 INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('01234567890000005', 'Tesla Model 3', '2-TXT-555', 3, 1, 'white', 5, NULL, 0);
 
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000000', '2023-12-31', NULL, NULL, NULL, 0, 0);
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000001', '2023-12-31', 5555, '1,3', NULL, 0, 0);
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000002', '2024-12-31', 9876, '1,2', NULL, 0, 0);
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000003', '2026-12-31', 1234, '1,2', NULL, 0, 0);
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000004', '2026-12-31', 6336, '1,2,3', NULL, 0, 0);
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000005', '2026-12-31', 9753, '3', NULL, 0, 0);
-INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelType, DriverID, Blocked, Deleted) VALUES ('12345678900000000006', '2026-12-31', NULL, '3', NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000000', '2023-12-31', NULL, NULL, NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000001', '2023-12-31', 5555, '1,3', NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000002', '2024-12-31', 9876, '1,2', NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000003', '2026-12-31', 1234, '1,2', NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000004', '2026-12-31', 6336, '1,2,3', NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000005', '2026-12-31', 9753, '3', NULL, 0, 0);
+INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000006', '2026-12-31', NULL, '3', NULL, 0, 0);
 
 
 

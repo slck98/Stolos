@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Exceptions;
+using System.Security.Cryptography;
 using static BusinessLayer.Model.Vehicle;
 
 namespace BusinessLayer.Model;
@@ -11,6 +12,7 @@ public class GasCard
 {
     #region attrib
     //attrib
+    private int? _id;
     private string _cardNumber;
     private DateTime _expiringDate;
     private int? _pincode;
@@ -18,19 +20,29 @@ public class GasCard
 
     #region ctor
     //ctor
-    public GasCard(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel, Driver? driver)
+    public GasCard(int? id, string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel, Driver? driver)
     {
+        Id=id;
         CardNumber = cardNumber;
         ExpiringDate = expiringDate;
         Pincode = pincode;
         Blocked = blocked;
         Fuel = fuel;
-        Driver = driver;
+        //Driver = driver;
     }
     #endregion
 
     #region prop
     //prop
+    public int? Id
+    {
+        get { return _id; }
+        set
+        {
+            if (value == default || value < 1) throw new DomainException("GasCard: set-Id: Invalid value (val < 1)");
+            _id = value;
+        }
+    }
     public string CardNumber
     {
         /*
@@ -70,6 +82,6 @@ public class GasCard
     public bool Blocked { get; set; }
     public List<FuelType> Fuel { get; set; }
 
-    public Driver? Driver { get; set; }
+    //public Driver? Driver { get; set; }
     #endregion
 }

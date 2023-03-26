@@ -22,7 +22,7 @@ public class Vehicle
         Color = color;
         Doors = doors;
         Fuel = fuel;
-        Driver = driver;
+        //Driver = driver;
     }
 
     public string VinNumber 
@@ -54,5 +54,5 @@ public class Vehicle
     public FuelType Fuel { get; set; }
     public string? Color { get; set; }
     public int? Doors { get; set; }
-    public Driver? Driver { get; set; }
+    //public Driver? Driver { get; set; }
 }

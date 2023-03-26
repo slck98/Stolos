@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Managers;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,11 @@ namespace API.Controllers
         }
 
         [HttpGet(Name = "GetDrivers")]
-        public List<Driver> Get()
+        public List<DriverInfo> Get()
         {
-            return _driverManager.GetAllDrivers();
+            List<DriverInfo> driverInfos = _driverManager.GetDriverInfos();
+            int a = 5;
+            return driverInfos;
         }
 
         [HttpGet("{id}", Name = "GetDriver")]
