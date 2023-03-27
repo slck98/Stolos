@@ -93,7 +93,7 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON d.DriverID = v.DriverID;", conn);
+                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0;", conn);
 
                 using (reader = cmd.ExecuteReader())
                 {
@@ -145,7 +145,7 @@ public class DriverRepository : IDriverRepository
                                 fuelTypeList.Add((FuelType)Enum.Parse(typeof(FuelType), ftsArrStr));
                             }
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = new(gasCardId, cardNum, expiringDate, pin, blocked, fuelTypeList, null);
+                            gc = DomainFactory.ExistingGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }
 
                         DriverInfo driverInfo = new(d, v, gc);

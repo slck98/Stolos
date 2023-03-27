@@ -35,7 +35,7 @@ public class DomainFactory
         }
     }
 
-    //public static Driver NewVehicle()
+    //public static Vehicle NewVehicle()
     //{
     //    try
     //    {
@@ -43,11 +43,11 @@ public class DomainFactory
     //    }
     //    catch (Exception ex)
     //    {
-    //        throw new DomainException("DomainFactory - NewDriver", ex);
+    //        throw new DomainException("DomainFactory - NewVehicle", ex);
     //    }
     //}
 
-    //public static Driver ExistingVehicle()
+    //public static Vehicle ExistingVehicle()
     //{
     //    try
     //    {
@@ -55,31 +55,31 @@ public class DomainFactory
     //    }
     //    catch (Exception ex)
     //    {
-    //        throw new DomainException("DomainFactory - NewDriver", ex);
+    //        throw new DomainException("DomainFactory - NewVehicle", ex);
     //    }
     //}
 
-    //public static Driver NewGasCard()
-    //{
-    //    try
-    //    {
+    public static GasCard NewGasCard(GasCardInfo gasCardInfo)
+    {
+        try
+        {
+            return new GasCard(gasCardInfo.GasCardID, gasCardInfo.CardNumber, gasCardInfo.ExpiringDate, gasCardInfo.Pincode, gasCardInfo.Blocked, gasCardInfo.FuelTypes);
+        }
+        catch (Exception ex)
+        {
+            throw new DomainException("DomainFactory - NewGasCard", ex);
+        }
+    }
 
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new DomainException("DomainFactory - NewDriver", ex);
-    //    }
-    //}
-
-    //public static Driver ExistingGasCard()
-    //{
-    //    try
-    //    {
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new DomainException("DomainFactory - NewDriver", ex);
-    //    }
-    //}
+    public static GasCard ExistingGasCard(int? id, string cardNum, DateTime expiringDate, int? pin, List<FuelType> fuelTypes, bool blocked)
+    {
+        try
+        {
+            return new GasCard(id, cardNum, expiringDate, pin, blocked, fuelTypes);
+        }
+        catch (Exception ex)
+        {
+            throw new DomainException("DomainFactory - NewGasCard", ex);
+        }
+    }
 }

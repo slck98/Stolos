@@ -1,5 +1,9 @@
-﻿using BusinessLayer.Model;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Managers;
+using BusinessLayer.Model;
+using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace API.Controllers
 {
@@ -8,27 +12,18 @@ namespace API.Controllers
     public class GasCardController : Controller
     {
         private readonly ILogger<GasCardController> logger;
+        private GasCardManager _gasCardManager;
 
-        private static List<DriversLicense> _licenses = new List<DriversLicense> { DriversLicense.B, DriversLicense.C1 };
-
-        private static Driver _driver = null;//new Driver(2, "Doe", "John", "85.12.31-123.40", _licenses);
-        
-        private static List<FuelType> _fuelTypes = new List<FuelType> { FuelType.Benzine, FuelType.Diesel };
-
-        private readonly List<GasCard> _gascard = new()
-        {
-           // new GasCard("12345678900000000001", new DateTime(2023-12-31), 1234, false, _fuelTypes, _driver)
-        };
-
-        public GasCardController(ILogger<GasCardController> logger)
+        public GasCardController(ILogger<GasCardController> logger, IConfiguration config)
         {
             this.logger = logger;
+            _gasCardManager = new GasCardManager(new GasCardRepository(config.GetValue<string>("ConnectionStrings:stolos")));
         }
 
         [HttpGet(Name = "GetGasCards")]
-        public List<GasCard> Get()
+        public List<GasCardInfo> Get()
         {
-            return _gascard;
+            return _gasCardManager.GetAllGasCardsInfos();
         }
     }
 }

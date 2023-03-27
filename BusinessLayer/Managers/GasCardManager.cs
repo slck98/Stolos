@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,11 @@ namespace BusinessLayer.Managers
         public GasCard GetGasCard(string cn)
         {
             return _repo.GetGasCard(cn);
+        }
+
+        public List<GasCardInfo> GetAllGasCardsInfos()
+        {
+            return _repo.GetGasCardInfos();
         }
     }
 }

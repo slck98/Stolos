@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Model;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,4 +15,5 @@ public interface IGasCardRepository
 {
     List<GasCard> GetAllGasCards();
     GasCard GetGasCard(string cardNum);
+    List<GasCardInfo> GetGasCardInfos();
 }
