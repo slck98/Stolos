@@ -17,4 +17,5 @@ public interface IDriverRepository
     Driver GetDriverById(int id);
 
     List<DriverInfo> GetAllDriverInfos();
+    DriverInfo GetDriverInfoById(int id);
 }

@@ -152,7 +152,7 @@ namespace DataLayer.Repositories
                             DateTime expiringdate = (DateTime)reader[2];
                             int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
                             List<FuelType> fuels = new List<FuelType>();
-                            string fuelsDB = (string?)((reader[4] is DBNull) ? null : reader[4]);
+                            string fuelsDB = (string)((reader[4] is DBNull) ? null : reader[4]);
                             if (fuelsDB != null)
                             {
                                 string[] fArrStrs = fuelsDB.Split(",");

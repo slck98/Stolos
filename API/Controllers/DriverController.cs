@@ -31,18 +31,22 @@ namespace API.Controllers
             _driverManager = new DriverManager(new DriverRepository(iConfig.GetValue<string>("ConnectionStrings:stolos")));
         }
 
-        [HttpGet(Name = "GetDrivers")]
+        [HttpGet(Name = "GetDriverInfos")]
         public List<DriverInfo> Get()
         {
-            List<DriverInfo> driverInfos = _driverManager.GetDriverInfos();
-            int a = 5;
-            return driverInfos;
+            return _driverManager.GetDriverInfos();
         }
 
-        [HttpGet("{id}", Name = "GetDriver")]
-        public Driver Get(int id)
+        //[HttpGet("{id}", Name = "GetDriver")]
+        //public Driver Get(int id)
+        //{
+        //    return _driverManager.GetDriverById(id);
+        //}
+
+        [HttpGet("{id}", Name = "GetDriverInfo")]
+        public DriverInfo Get(int id)
         {
-            return _driverManager.GetDriverById(id);
+            return _driverManager.GetDriverInfoById(id);
         }
     }
 }
