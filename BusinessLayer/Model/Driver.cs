@@ -98,15 +98,10 @@ public class Driver
         }
     }
     public List<DriversLicense> Licenses { get; set; }
-
-    //public Vehicle? Vehicle { get; set; }
-    //public GasCard? GasCard { get; set; }
     #endregion
 
     #region ctor
-    internal Driver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, string address = null) : this(id, lastName, firstName, null, natRegNumber, licenses, address){ }
-
-    internal Driver(int? id, string lastName, string firstName, DateTime? birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null)
+    internal Driver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, DateTime? birthDate = null, string? address = null)
     {
         Id = id;
         LastName = lastName;

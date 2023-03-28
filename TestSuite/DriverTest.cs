@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Exceptions;
+﻿using BusinessLayer;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Model;
 
 namespace TestSuite;
@@ -13,7 +14,7 @@ public class DriverTest {
         List<DriversLicense> licenses = new() {
             DriversLicense.B
         };
-        Driver d = new(1, lastName, firstName, rrn, licenses);
+        Driver d = DomainFactory.ExistingDriver(1, lastName, firstName, rrn, licenses);
 
         Assert.Equal(1, d.Id);
         Assert.Equal(rrn, d.NatRegNumber);
@@ -32,14 +33,14 @@ public class DriverTest {
             DriversLicense.B
         };
         DateTime geboortedatum = new DateTime(1985, 10, 23);
-        Driver d = new(1, lastName, firstName, rrn, licenses);
+        Driver d = DomainFactory.ExistingDriver(1, lastName, firstName, rrn, licenses);
 
         Assert.Equal(geboortedatum, d.BirthDate);
     }
 
     [Fact]
     public void TestDriver_NullValuesForFields_ThrowExcepion() {
-        Assert.Throws<DomainException>(() => new Driver(1, null, null, null, null));
+        Assert.Throws<DomainException>(() => DomainFactory.ExistingDriver(1, null, null, null, null));
     }
 
     [Theory]
@@ -49,7 +50,7 @@ public class DriverTest {
     public void TestDriver_InvalidId_ThrowException(int id) {
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
-        Assert.Throws<DomainException>(() => new Driver(id, "voornaam", "achternaam", "75.10.23-059.39", licenses));
+        Assert.Throws<DomainException>(() => DomainFactory.ExistingDriver(id, "voornaam", "achternaam", "75.10.23-059.39", licenses));
     }
 
     [Theory]
@@ -63,7 +64,7 @@ public class DriverTest {
     public void TestDriver_InvalidNames_ThrowException(string firstname, string lastname) {
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
-        Assert.Throws<DomainException>(() => new Driver(1, firstname, lastname, "75.10.23-059.39", licenses));
+        Assert.Throws<DomainException>(() => DomainFactory.ExistingDriver(1, firstname, lastname, "75.10.23-059.39", licenses));
     }
 
     [Fact]
@@ -71,7 +72,7 @@ public class DriverTest {
         DateTime geboortedatum = new DateTime(1976, 10, 23);
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
-        Assert.Throws<DomainException>(() => new Driver(1, "voornaam", "achternaam", geboortedatum, "75.10.23-059.39", licenses));
+        Assert.Throws<DomainException>(() => DomainFactory.ExistingDriver(1, "voornaam", "achternaam", "75.10.23-059.39", licenses, geboortedatum));
     }
 
     [Theory]
@@ -81,6 +82,6 @@ public class DriverTest {
     public void TestDriver_InvalidRRN_ThrowException(string rrn) {
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
-        Assert.Throws<DomainException>(() => new Driver(1, "voornaam", "achternaam", rrn, licenses));
+        Assert.Throws<DomainException>(() => DomainFactory.ExistingDriver(1, "voornaam", "achternaam", rrn, licenses));
     }
 }

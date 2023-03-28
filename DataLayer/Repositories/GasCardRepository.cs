@@ -182,7 +182,7 @@ namespace DataLayer.Repositories
                                 {
                                     licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                                 }
-                                d = DomainFactory.ExistingDriver(driverID, lName, fName, birthDate, natRegNum, licenseList, address);
+                                d = DomainFactory.ExistingDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
                             }
 
                             GasCardInfo cardInfo = new(gc, d);

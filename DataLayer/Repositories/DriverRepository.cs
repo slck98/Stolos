@@ -49,7 +49,7 @@ public class DriverRepository : IDriverRepository
                         int id = (int)reader[0];
                         string fName = (string)reader[1];
                         string lName = (string)reader[2];
-                        string? address = (string?)((reader[3] is DBNull)?"": reader[3]);
+                        string? address = (string?)((reader[3] is DBNull)?null: reader[3]);
                         DateTime birthDate = (DateTime)reader[4];
                         string natRegNum = (string)reader[5];
                         List<DriversLicense> licenseList = new List<DriversLicense>();
@@ -60,11 +60,8 @@ public class DriverRepository : IDriverRepository
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
 
-                        //todo vehicle (vin)
-                        //todo gascard (id/cardnum?)
 
-
-                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);//new(id, lName, fName, birthDate, natRegNum, licenseList, address);
+                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);//new(id, lName, fName, birthDate, natRegNum, licenseList, address);
                         drivers.Add(d);
                     }
                     reader.Close();
@@ -114,9 +111,9 @@ public class DriverRepository : IDriverRepository
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
 
-                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);
-                        Vehicle v = null;
-                        GasCard gc = null;
+                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        Vehicle? v = null;
+                        GasCard? gc = null;
 
                         if (reader["VIN"] is not DBNull)
                         {
@@ -150,8 +147,6 @@ public class DriverRepository : IDriverRepository
 
                         DriverInfo driverInfo = new(d, v, gc);
                         drivers.Add(driverInfo);
-                        //Driver d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);
-                        //drivers.Add(d);
                     }
                     reader.Close();
                 }
@@ -168,7 +163,7 @@ public class DriverRepository : IDriverRepository
 
     public Driver GetDriverById(int id)
     {
-        Driver d = null;
+        Driver? d = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -186,7 +181,7 @@ public class DriverRepository : IDriverRepository
                     {
                         string fName = (string)reader[1];
                         string lName = (string)reader[2];
-                        string? address = (string?)((reader[3] is DBNull) ? "" : reader[3]);
+                        string? address = (string?)((reader[3] is DBNull) ? null : reader[3]);
                         DateTime birthDate = (DateTime)reader[4];
                         string natRegNum = (string)reader[5];
                         List<DriversLicense> licenseList = new List<DriversLicense>();
@@ -197,11 +192,8 @@ public class DriverRepository : IDriverRepository
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
 
-                        //todo vehicle (vin)
-                        //todo gascard (id/cardnum?)
 
-
-                        d = DomainFactory.ExistingDriver(id, lName, fName, birthDate, natRegNum, licenseList, address);// new(id, lName, fName, birthDate, natRegNum, licenseList, address);
+                        d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);// new(id, lName, fName, birthDate, natRegNum, licenseList, address);
                     }
                     reader.Close();
                 }

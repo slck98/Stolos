@@ -15,7 +15,7 @@ public class DomainFactory
     {
         try
         {
-            return new Driver(di.DriverID, di.LastName, di.FirstName, di.BirthDate, di.NatRegNum, di.Licenses, di.Address);
+            return new Driver(di.DriverID, di.LastName, di.FirstName, di.NatRegNum, di.Licenses, di.BirthDate, di.Address);
         }
         catch (Exception ex)
         {
@@ -23,11 +23,11 @@ public class DomainFactory
         }
     }
 
-    public static Driver ExistingDriver(int? id, string lastName, string firstName, DateTime? birthDate, string natRegNumber, List<DriversLicense> licenses, string address = null)
+    public static Driver ExistingDriver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, DateTime? birthDate = null, string? address = null)
     {
         try
         {
-            return new Driver(id, lastName, firstName, birthDate, natRegNumber, licenses, address);
+            return new Driver(id, lastName, firstName, natRegNumber, licenses, birthDate, address);
         }
         catch (Exception ex)
         {
