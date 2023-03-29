@@ -1,0 +1,26 @@
+.container {
+  background-color: #ccc;
+  width: 80%;
+  margin: auto;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.container li {
+  margin: 10px;
+}
+
+.headerPage {
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .headerPage h1 {
+    margin-bottom: 0;
+  }
+  
+  .headerPage img {
+    height: 50px;
+    margin-right: 0;
+    margin-left: auto;
+  }

@@ -1,22 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import classes from "../css/VehicleList.module.css";
+import classes from "../css/DriverList.module.css";
 import logo from "../images/logoLong.png";
+import { Link } from "react-router-dom";
 
-const VehicleList = ({ vehicles }) => {
-
+const DriverList = ({ drivers }) => {
   return (
     <article className={classes.container}>
       <article className={classes.headerPage}>
-        <h1>Voertuigen</h1>
+        <h1>Bestuurders</h1>
         <img src={logo} alt="logo"></img>
       </article>
 
       <hr className={classes.line} />
       <ul>
-        {vehicles.map((vehicle) => (
-          <li key={vehicle.vinNumber}>
-            <Link to={vehicle.vinNumber}>{vehicle.licensePlate}</Link>
+        {drivers.map((driver) => (
+          <li key={driver.natRegNum}>
+            <Link to={driver.natRegNum}>{driver.firstName}</Link>
           </li>
         ))}
       </ul>
@@ -24,4 +23,4 @@ const VehicleList = ({ vehicles }) => {
   );
 };
 
-export default VehicleList;
+export default DriverList;
