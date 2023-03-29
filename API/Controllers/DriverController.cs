@@ -1,4 +1,5 @@
-﻿using BusinessLayer.DTO;
+﻿using API.Exceptions;
+using BusinessLayer.DTO;
 using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
@@ -15,14 +16,6 @@ namespace API.Controllers
         private IConfiguration iConfig;
         private DriverManager _driverManager;
 
-        //private static List<DriversLicense> _licenses = new List<DriversLicense> { DriversLicense.B, DriversLicense.C1};
-
-
-        //private readonly List<Driver> _driver = new()
-        //{
-        //    new Driver(2, "Doe", "John", "85.12.31-123.40", _licenses)
-        //};
-
         public DriverController(ILogger<DriverController> logger, IConfiguration iConfig)
         {
             this.logger = logger;
@@ -34,19 +27,27 @@ namespace API.Controllers
         [HttpGet(Name = "GetDriverInfos")]
         public List<DriverInfo> Get()
         {
-            return _driverManager.GetDriverInfos();
+            try
+            {
+                return _driverManager.GetDriverInfos();
+            }
+            catch (Exception ex)
+            {
+                throw new APIException("DriverController GetDriverInfos", ex);
+            }
         }
-
-        //[HttpGet("{id}", Name = "GetDriver")]
-        //public Driver Get(int id)
-        //{
-        //    return _driverManager.GetDriverById(id);
-        //}
 
         [HttpGet("{id}", Name = "GetDriverInfo")]
         public DriverInfo Get(int id)
         {
-            return _driverManager.GetDriverInfoById(id);
+            try
+            {
+                return _driverManager.GetDriverInfoById(id);
+            }
+            catch (Exception ex)
+            {
+                throw new APIException("DriverController GetDriverInfoById(id)", ex);
+            }
         }
     }
 }

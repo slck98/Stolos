@@ -42,7 +42,7 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM Vehicle v JOIN Driver d WHERE v.Deleted=0;", conn);
+                cmd = new("SELECT * FROM Vehicle v LEFT JOIN Driver d ON v.DriverID=d.DriverID WHERE v.Deleted=0;", conn);
 
                 using (reader = cmd.ExecuteReader())
                 {
@@ -156,12 +156,12 @@ public class VehicleRepository : IVehicleRepository
 
                 conn.Close();
             }
-            vehicle = new VehicleInfo(v, d);
         }
         catch (Exception ex)
         {
             throw new DataException("VehicleRepo-GetVehicle", ex);
         }
+        vehicle = new VehicleInfo(v, d);
         return vehicle;
     }
     #endregion

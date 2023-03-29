@@ -1,4 +1,5 @@
-﻿using BusinessLayer.DTO;
+﻿using API.Exceptions;
+using BusinessLayer.DTO;
 using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
@@ -23,7 +24,14 @@ namespace API.Controllers
         [HttpGet(Name = "GetGasCards")]
         public List<GasCardInfo> Get()
         {
-            return _gasCardManager.GetAllGasCardsInfos();
+            try
+            {
+                return _gasCardManager.GetAllGasCardsInfos();
+            }
+            catch (Exception ex)
+            {
+                throw new APIException("GasCardController GetAllGasCardInfos", ex);
+            }
         }
     }
 }
