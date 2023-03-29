@@ -22,7 +22,7 @@ namespace BusinessLayer.Managers
             return _repo.GetAllVehicleInfos();
         }
 
-        public Vehicle GetVehicleByVIN(string vin)
+        public VehicleInfo GetVehicleByVIN(string vin)
         {
             return _repo.GetVehicleByVIN(vin);
         }

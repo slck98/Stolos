@@ -28,7 +28,7 @@ public class VehicleController : ControllerBase
     }
 
     [HttpGet("{vin}", Name = "GetVehicleByVin")]
-    public Vehicle Get(string vin)
+    public VehicleInfo Get(string vin)
     {
         return _vehicleManager.GetVehicleByVIN(vin);
     }
