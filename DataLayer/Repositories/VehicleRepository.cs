@@ -1,4 +1,6 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer;
+using BusinessLayer.DTO;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Model;
 using DataLayer.Exceptions;
 using MySql.Data;
@@ -28,42 +30,64 @@ public class VehicleRepository : IVehicleRepository
     #endregion
 
     #region get
-    public List<Vehicle> GetAllVehicles()
+    public List<VehicleInfo> GetAllVehicleInfos()
     {
-        List<Vehicle> vehicles = new List<Vehicle>();
+        List<VehicleInfo> vehicles = new();
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
         try
         {
-            using (conn= new(_connectionString))
-
+            using (conn = new(_connectionString))
             {
                 conn.Open();
 
-                cmd = new ("SELECT * FROM Vehicle WHERE Deleted=0;", conn);
+                cmd = new("SELECT * FROM Vehicle v JOIN Driver d WHERE v.Deleted=0;", conn);
+                // "SELECT * FROM Vehicle v LEFT JOIN Driver d ON v.DriverID = d.DriverID WHERE d.Deleted=0;
 
                 using (reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        string vin = (string)reader[0];
+                        //vehicle
+                        string vinDB = (string)reader[0];
                         string brandModel = (string)reader[1];
                         string plate = (string)reader[2];
                         FuelType fuelType = (FuelType)reader[3];
                         VehicleType vehicleType = (VehicleType)reader[4];
-                        string? color = (string?)((reader[5] is DBNull)?"":reader[5]);
+                        string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
                         int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
 
-                        //todo driver (id/natregnum?)
+                        Vehicle v = DomainFactory.ExistingVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
+                        Driver? d = null;
 
-                        Vehicle v = new Vehicle(vin, plate, brandModel, vehicleType, fuelType, color, doors, null);
-                        vehicles.Add(v);
+                        if (reader["DriverId"] is not DBNull)
+                        {
+                            //Driver
+                            int id = (int)reader["DriverId"];
+                            string fName = (string)reader["FirstName"];
+                            string lName = (string)reader["LastName"];
+                            string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
+                            DateTime birthDate = (DateTime)reader["BirthDate"];
+                            string natRegNum = (string)reader["NationalRegistrationNumber"];
+                            List<DriversLicense> licenseList = new();
+                            string licensesDB = (string)reader["DriversLicenses"];
+                            string[] lArrStrs = licensesDB.Split(",");
+                            foreach (string lArrStr in lArrStrs)
+                            {
+                                licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
+                            }
+
+                            d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        }
+
+                        VehicleInfo vehicleInfo = new(v, d);
+                        vehicles.Add(vehicleInfo);
                     }
                     reader.Close();
                 }
-                
+
                 conn.Close();
             }
         }

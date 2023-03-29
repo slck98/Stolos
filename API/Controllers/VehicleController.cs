@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Managers;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,10 @@ public class VehicleController : ControllerBase
     }
 
     [HttpGet(Name = "GetVehicles")]
-    public List<Vehicle> Get()
+    public List<VehicleInfo> Get()
     {
-        return _vehicleManager.GetAllVehicles();
+        //return _vehicleManager.GetAllVehicles();
+        return _vehicleManager.GetAllVehicleInfos();
     }
 
     [HttpGet("{vin}", Name = "GetVehicleByVin")]

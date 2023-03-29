@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Model;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace BusinessLayer.Interfaces;
  */
 public interface IVehicleRepository
 {
-    List<Vehicle> GetAllVehicles();
+    List<VehicleInfo> GetAllVehicleInfos();
     Vehicle GetVehicleByVIN(string vin);
     void AddVehicle(Vehicle vehicle);
 }

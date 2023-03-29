@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer.DTO;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace BusinessLayer.Managers
             _repo = repo;
         }
 
-        public List<Vehicle> GetAllVehicles()
+        public List<VehicleInfo> GetAllVehicleInfos()
         {
-            return _repo.GetAllVehicles();
+            return _repo.GetAllVehicleInfos();
         }
 
         public Vehicle GetVehicleByVIN(string vin)
@@ -26,6 +27,7 @@ namespace BusinessLayer.Managers
             return _repo.GetVehicleByVIN(vin);
         }
 
+       
         public void AddVehicle(Vehicle vehicle)
         {
             _repo.AddVehicle(vehicle);

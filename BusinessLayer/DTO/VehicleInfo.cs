@@ -13,6 +13,7 @@ public class VehicleInfo
 	{
 		VIN = v.VinNumber;
 		BrandModel = v.BrandModel;
+		LicensePlate = v.LicensePlate;
 		FuelType = v.Fuel;
 		VehicleType = v.Category;
 		Color = v.Color;

@@ -1,8 +1,10 @@
 ﻿using BusinessLayer.DTO;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Model;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,29 +37,29 @@ public class DomainFactory
         }
     }
 
-    //public static Vehicle NewVehicle()
-    //{
-    //    try
-    //    {
+    public static Vehicle NewVehicle(VehicleInfo vi)
+    {
+        try
+        {
+            return new Vehicle(vi.VIN, vi.BrandModel, vi.LicensePlate, vi.VehicleType, vi.FuelType, vi.Color, vi.Doors);
+        }
+        catch (Exception ex)
+        {
+            throw new DomainException("DomainFactory - NewVehicle", ex);
+        }
+    }
 
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new DomainException("DomainFactory - NewVehicle", ex);
-    //    }
-    //}
-
-    //public static Vehicle ExistingVehicle()
-    //{
-    //    try
-    //    {
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new DomainException("DomainFactory - NewVehicle", ex);
-    //    }
-    //}
+    public static Vehicle ExistingVehicle(string vin, string brandModel, string plate, VehicleType vehicleType, FuelType fuelType, string? color, int? doors)
+    {
+        try
+        {
+            return new(vin, brandModel, plate, vehicleType, fuelType, color, doors);
+        }
+        catch (Exception ex)
+        {
+            throw new DomainException("DomainFactory - NewVehicle", ex);
+        }
+    }
 
     public static GasCard NewGasCard(GasCardInfo gasCardInfo)
     {
