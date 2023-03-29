@@ -1,7 +1,10 @@
-﻿using BusinessLayer.Managers;
+﻿using BusinessLayer;
+using BusinessLayer.DTO;
+using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace API.Controllers;
 
@@ -20,22 +23,30 @@ public class VehicleController : ControllerBase
     }
 
     [HttpGet(Name = "GetVehicles")]
-    public List<Vehicle> Get()
+    public List<VehicleInfo> Get()
     {
-        return _vehicleManager.GetAllVehicles();
+        //return _vehicleManager.GetAllVehicles();
+        return _vehicleManager.GetAllVehicleInfos();
     }
 
     [HttpGet("{vin}", Name = "GetVehicleByVin")]
-    public Vehicle Get(string vin)
+    public VehicleInfo Get(string vin)
     {
         return _vehicleManager.GetVehicleByVIN(vin);
     }
 
-
     [HttpPost, Route("addVehicle")]
-    public ActionResult<Vehicle> Add(Vehicle vehicle)
+    public OkResult Add(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
     {
-        _vehicleManager.AddVehicle(vehicle);
+        if (string.IsNullOrEmpty(vin)) throw new Exception();
+        Vehicle v = DomainFactory.CreateVehicle(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
+        Driver? d = null;
+        if (driverId != null)
+        {
+            d = DomainFactory.CreateDriver(driverId, lname, fname, natRegNum, driversLicenses, birthDate, address);
+        }
+        VehicleInfo vi = new(v, d);
+        _vehicleManager.AddVehicle(vi);
         return Ok();
     }
 }

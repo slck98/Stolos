@@ -152,7 +152,7 @@ namespace DataLayer.Repositories
                             DateTime expiringdate = (DateTime)reader[2];
                             int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
                             List<FuelType> fuels = new List<FuelType>();
-                            string fuelsDB = (string)((reader[4] is DBNull) ? null : reader[4]);
+                            string? fuelsDB = (string?)((reader[4] is DBNull) ? null : reader[4]);
                             if (fuelsDB != null)
                             {
                                 string[] fArrStrs = fuelsDB.Split(",");
@@ -163,7 +163,7 @@ namespace DataLayer.Repositories
                             }
                             bool blocked = Convert.ToBoolean(reader[6]);
 
-                            GasCard gc = DomainFactory.ExistingGasCard(id, cardnumber, expiringdate, pincode, fuels, blocked);
+                            GasCard gc = DomainFactory.CreateGasCard(id, cardnumber, expiringdate, pincode, fuels, blocked);
                             Driver d = null;
 
                             if (reader[8] is not DBNull)
@@ -182,7 +182,7 @@ namespace DataLayer.Repositories
                                 {
                                     licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                                 }
-                                d = DomainFactory.ExistingDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
+                                d = DomainFactory.CreateDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
                             }
 
                             GasCardInfo cardInfo = new(gc, d);
