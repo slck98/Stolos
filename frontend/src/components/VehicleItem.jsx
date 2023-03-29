@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import classes from "../css/VehicleItem.module.css";
-import foto from "../images/notAvailable.png";
-import DeletePopup from "./DeletePopup";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import classes from '../css/VehicleItem.module.css';
+import foto from '../images/notAvailable.png';
+import DeletePopup from './DeletePopup';
 
 const VehicleItem = ({ vehicle }) => {
   const [deletePopup, setDeletePopup] = useState(false);
@@ -19,14 +19,14 @@ const VehicleItem = ({ vehicle }) => {
         <article className={classes.one}>
           <h4>{vehicle.brandModel}</h4>
           <p>Kenteken: {vehicle.licensePlate}</p>
-          <p>Chassisnummer: {vehicle.vinNumber}</p>
+          <p>Chassisnummer: {vehicle.vin}</p>
           {/* <p> {vehicle.fuel}</p> */}
           <p>Kleur: {vehicle.color}</p>
           <p>Aantal deuren: {vehicle.doors}</p>
         </article>
 
         <article className={classes.two}>
-          <p onClick={() => navigate(`/vehicles/${vehicle.vinNumber}/edit`)}>
+          <p onClick={() => navigate(`/vehicles/${vehicle.vin}/edit`)}>
             Bewerken
           </p>
           <p onClick={() => setDeletePopup(true)}>Verwijderen</p>

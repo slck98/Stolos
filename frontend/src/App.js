@@ -1,28 +1,28 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import ErrorPage from "./pages/Error";
-import DriversPage, { loader as driversLoader } from "./pages/Drivers";
+import ErrorPage from './pages/Error';
+import DriversPage, { loader as driversLoader } from './pages/Drivers';
 import DriverDetailPage, {
   loader as driverDetailLoader,
   action as deleteDriverAction,
-} from "./pages/DriverDetail";
-import EditDriverPage from "./pages/EditDriver";
-import GascardPage from "./pages/Gascards";
-import RootLayout from "./pages/Root";
-import StartScreen from "./pages/Start";
-import VehiclesRootLayout from "./pages/VehiclesRoot";
-import DriversRootLayout from "./pages/DriversRoot";
-import VehiclesPage, { loader as vehiclesLoader } from "./pages/Vehicles";
+} from './pages/DriverDetail';
+import EditDriverPage from './pages/EditDriver';
+import GascardPage from './pages/Gascards';
+import RootLayout from './pages/Root';
+import StartScreen from './pages/Start';
+import VehiclesRootLayout from './pages/VehiclesRoot';
+import DriversRootLayout from './pages/DriversRoot';
+import VehiclesPage, { loader as vehiclesLoader } from './pages/Vehicles';
 import VehicleDetailPage, {
   loader as vehicleDetailLoader,
   action as deleteVehicleAction,
-} from "./pages/VehicleDetail";
-import EditVehiclePage from "./pages/EditVehicle";
+} from './pages/VehicleDetail';
+import EditVehiclePage from './pages/EditVehicle';
 
 // Router
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         element: <StartScreen />,
       },
       {
-        path: "vehicles",
+        path: 'vehicles',
         element: <VehiclesRootLayout />,
         children: [
           {
@@ -40,8 +40,8 @@ const router = createBrowserRouter([
             loader: vehiclesLoader,
           },
           {
-            path: ":vinNumber",
-            id: "vehicle-detail",
+            path: ':vin',
+            id: 'vehicle-detail',
             loader: vehicleDetailLoader,
             children: [
               {
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
                 action: deleteVehicleAction,
               },
               {
-                path: "edit",
+                path: 'edit',
                 element: <EditVehiclePage />,
               },
             ],
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "drivers",
+        path: 'drivers',
         element: <DriversRootLayout />,
         children: [
           {
@@ -67,8 +67,8 @@ const router = createBrowserRouter([
             loader: driversLoader,
           },
           {
-            path: ":natRegNum",
-            id: "driver-detail",
+            path: ':driverID',
+            id: 'driver-detail',
             loader: driverDetailLoader,
             children: [
               {
@@ -77,18 +77,18 @@ const router = createBrowserRouter([
                 action: deleteDriverAction,
               },
               {
-                path: "edit",
+                path: 'edit',
                 element: <EditDriverPage />,
               },
             ],
           },
         ],
       },
-      { path: "gascards", element: <GascardPage /> },
+      { path: 'gascards', element: <GascardPage /> },
     ],
   },
 ]);
-const App = (props) => {
+const App = props => {
   return <RouterProvider router={router} />;
 };
 

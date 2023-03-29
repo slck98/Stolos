@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import foto from "../images/notAvailable.png";
-import classes from "../css/VehicleEdit.module.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import foto from '../images/notAvailable.png';
+import classes from '../css/VehicleEdit.module.css';
 
 const VehicleEdit = ({ vehicle }) => {
   const [input, setInput] = useState();
   const navigate = useNavigate();
 
-  const changeHandler = (e) => {
+  const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
-  
+
   return (
     <article className={classes.container}>
       <img src={foto} alt="notAvailable" />
@@ -34,11 +34,11 @@ const VehicleEdit = ({ vehicle }) => {
           />
         </span>
         <span>
-          <p>Chasisnummer:</p>
+          <p>Chassisnummer:</p>
           <input
             type="text"
-            name="vinNumber"
-            defaultValue={vehicle.vinNumber}
+            name="vin"
+            defaultValue={vehicle.vin}
             onChange={changeHandler}
           />
         </span>

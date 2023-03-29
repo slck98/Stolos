@@ -1,19 +1,19 @@
-import React, { Suspense } from "react";
+import React, { Suspense } from 'react';
 import {
   Await,
   useRouteLoaderData,
   json,
   redirect,
   defer,
-} from "react-router-dom";
-import VehicleEdit from "../components/VehicleEdit";
+} from 'react-router-dom';
+import VehicleEdit from '../components/VehicleEdit';
 
 const EditVehiclePage = () => {
-  const { vehicle } = useRouteLoaderData("vehicle-detail");
+  const { vehicle } = useRouteLoaderData('vehicle-detail');
   return (
     <Suspense>
       <Await resolve={vehicle}>
-        {(loadVehicle) => <VehicleEdit vehicle={loadVehicle} />}
+        {loadVehicle => <VehicleEdit vehicle={loadVehicle} />}
       </Await>
     </Suspense>
   );
@@ -21,11 +21,11 @@ const EditVehiclePage = () => {
 
 export default EditVehiclePage;
 
-async function loadVehicle(vinNumber) {
-  const response = await fetch("https://localhost:7144/vehicle/" + vinNumber);
+async function loadVehicle(vin) {
+  const response = await fetch('https://localhost:7144/vehicle/' + vin);
   if (!response.ok) {
     throw json(
-      { message: "Kon de details van het voertuig niet ophalen" },
+      { message: 'Kon de details van het voertuig niet ophalen' },
       { status: 500 }
     );
   } else {
@@ -35,21 +35,18 @@ async function loadVehicle(vinNumber) {
 }
 
 export async function loader({ req, params }) {
-  const { vinNumber } = params;
+  const { vin } = params;
   return defer({
-    vehicle: await loadVehicle(vinNumber),
+    vehicle: await loadVehicle(vin),
   });
 }
 
 export async function action({ params, request }) {
-  const response = await fetch(
-    "https://localhost:7144/vehicle/" + params.vinNumber,
-    {
-      method: request.method,
-    }
-  );
+  const response = await fetch('https://localhost:7144/vehicle/' + params.vin, {
+    method: request.method,
+  });
   if (!response.ok) {
-    throw json({ message: "Error." }, { status: 500 });
+    throw json({ message: 'Error.' }, { status: 500 });
   }
-  return redirect("/vehicles");
+  return redirect('/vehicles');
 }
