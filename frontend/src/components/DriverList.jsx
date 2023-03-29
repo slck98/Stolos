@@ -14,8 +14,9 @@ const DriverList = ({ drivers }) => {
       <hr className={classes.line} />
       <ul>
         {drivers.map(driver => (
-          <li key={driver.driverID}>
-            <Link to={driver.driverID}>{driver.firstName}</Link>
+          <li key={driver.driverID.toString()}>
+            {console.log(driver)}
+            <Link to={driver.driverID.toString()}>{driver.firstName}</Link>
           </li>
         ))}
       </ul>
