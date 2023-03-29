@@ -19,10 +19,21 @@ public class Vehicle
         LicensePlate = licensePlate;
         BrandModel = brandModel;
         Category = category;
+        Fuel = fuel;
         Color = color;
         Doors = doors;
+        Driver = driver;
+    }
+
+    public Vehicle(string vinNumber, string licensePlate, string brandModel, VehicleType category, FuelType fuel, string? color, int? doors)
+    {
+        VinNumber = vinNumber;
+        LicensePlate = licensePlate;
+        BrandModel = brandModel;
+        Category = category;
         Fuel = fuel;
-        //Driver = driver;
+        Color = color;
+        Doors = doors;
     }
 
     public string VinNumber 
@@ -54,5 +65,5 @@ public class Vehicle
     public FuelType Fuel { get; set; }
     public string? Color { get; set; }
     public int? Doors { get; set; }
-    //public Driver? Driver { get; set; }
+    public Driver? Driver { get; set; }
 }

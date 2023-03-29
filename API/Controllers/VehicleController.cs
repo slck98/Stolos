@@ -35,7 +35,7 @@ public class VehicleController : ControllerBase
 
 
     [HttpPost, Route("addVehicle")]
-    public ActionResult<Vehicle> Add(Vehicle vehicle)
+    public OkResult Add(VehicleInfo vehicle)
     {
         _vehicleManager.AddVehicle(vehicle);
         return Ok();

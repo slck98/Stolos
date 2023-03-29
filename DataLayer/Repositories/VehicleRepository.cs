@@ -167,7 +167,7 @@ public class VehicleRepository : IVehicleRepository
     #endregion
 
     #region post
-    public void AddVehicle(Vehicle vehicle)
+    public void AddVehicle(VehicleInfo vehicle)
     {
         MySqlConnection conn;
         MySqlCommand cmd;
@@ -177,16 +177,16 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                cmd = new("INSERT INTO db_allphifm.Driver (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
+                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
 
-                cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
+                cmd.Parameters.AddWithValue("@vin", vehicle.VIN);
                 cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
                 cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
-                cmd.Parameters.AddWithValue("@ft", vehicle.Fuel);
-                cmd.Parameters.AddWithValue("@vt", vehicle.Category);
+                cmd.Parameters.AddWithValue("@ft", vehicle.FuelType);
+                cmd.Parameters.AddWithValue("@vt", vehicle.VehicleType);
                 cmd.Parameters.AddWithValue("@clr", vehicle.Color);
                 cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
-                //cmd.Parameters.AddWithValue("@did", vehicle.Driver.Id);
+                cmd.Parameters.AddWithValue("@did", vehicle.Driver.Id);
 
                 cmd.ExecuteNonQuery();
 
