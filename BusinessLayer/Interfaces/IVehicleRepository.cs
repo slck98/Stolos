@@ -15,5 +15,6 @@ public interface IVehicleRepository
 {
     List<VehicleInfo> GetAllVehicleInfos();
     VehicleInfo GetVehicleByVIN(string vin);
-    void AddVehicle(VehicleInfo vehicle);
+    void AddVehicle(Vehicle vehicle);
+    void AddVehicle(VehicleInfo vehicleInfo);
 }

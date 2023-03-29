@@ -58,7 +58,7 @@ public class VehicleRepository : IVehicleRepository
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
                         int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
 
-                        Vehicle v = DomainFactory.ExistingVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
+                        Vehicle v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
                         Driver? d = null;
 
                         if (reader["DriverId"] is not DBNull)
@@ -78,7 +78,7 @@ public class VehicleRepository : IVehicleRepository
                                 licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                             }
 
-                            d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                            d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
 
                         VehicleInfo vehicleInfo = new(v, d);
@@ -145,10 +145,10 @@ public class VehicleRepository : IVehicleRepository
                                 licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                             }
 
-                            d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                            d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
 
-                        v = DomainFactory.ExistingVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
+                        v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
 
                     }
                     reader.Close();
@@ -167,7 +167,7 @@ public class VehicleRepository : IVehicleRepository
     #endregion
 
     #region post
-    public void AddVehicle(VehicleInfo vehicle)
+    public void AddVehicle(Vehicle vehicle)
     {
         MySqlConnection conn;
         MySqlCommand cmd;
@@ -177,16 +177,51 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
+                //cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
+                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @del);", conn);
 
-                cmd.Parameters.AddWithValue("@vin", vehicle.VIN);
+                cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
                 cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
                 cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
-                cmd.Parameters.AddWithValue("@ft", vehicle.FuelType);
-                cmd.Parameters.AddWithValue("@vt", vehicle.VehicleType);
+                cmd.Parameters.AddWithValue("@ft", vehicle.Fuel);
+                cmd.Parameters.AddWithValue("@vt", vehicle.Category);
                 cmd.Parameters.AddWithValue("@clr", vehicle.Color);
                 cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
-                cmd.Parameters.AddWithValue("@did", vehicle.Driver.Id);
+                cmd.Parameters.AddWithValue("@del", 0);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("VehicleRepo-AddVehicle", ex);
+        }
+    }
+    public void AddVehicle(VehicleInfo vehicleInfo)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                //cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
+                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did, @del);", conn);
+
+                cmd.Parameters.AddWithValue("@vin", vehicleInfo.VIN);
+                cmd.Parameters.AddWithValue("@bm", vehicleInfo.BrandModel);
+                cmd.Parameters.AddWithValue("@lp", vehicleInfo.LicensePlate);
+                cmd.Parameters.AddWithValue("@ft", vehicleInfo.FuelType);
+                cmd.Parameters.AddWithValue("@vt", vehicleInfo.VehicleType);
+                cmd.Parameters.AddWithValue("@clr", vehicleInfo.Color);
+                cmd.Parameters.AddWithValue("@drs", vehicleInfo.Doors);
+                var driverId = ((vehicleInfo.Driver is null) ? null : vehicleInfo.Driver.Id);
+                cmd.Parameters.AddWithValue("@did", driverId);
+                cmd.Parameters.AddWithValue("@del", 0);
 
                 cmd.ExecuteNonQuery();
 

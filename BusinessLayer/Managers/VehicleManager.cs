@@ -28,16 +28,14 @@ namespace BusinessLayer.Managers
         }
 
        
-        public void AddVehicle(VehicleInfo vehicle)
+        public void AddVehicle(Vehicle vehicle)
         {
             _repo.AddVehicle(vehicle);
-            //if(vehicle.Driver != null)
-            //{
-            //    if (vehicle.Driver.Vehicle == null)
-            //    {
-            //        vehicle.Driver.Vehicle = vehicle;
-            //    }
-            //}
+        }
+
+        public void AddVehicle(VehicleInfo vehicleInfo)
+        {
+            _repo.AddVehicle(vehicleInfo);
         }
     }
 }

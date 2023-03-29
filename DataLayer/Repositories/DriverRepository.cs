@@ -61,7 +61,7 @@ public class DriverRepository : IDriverRepository
                         }
 
 
-                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         drivers.Add(d);
                     }
                     reader.Close();
@@ -109,7 +109,7 @@ public class DriverRepository : IDriverRepository
                         }
 
 
-                        d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                     }
                     reader.Close();
                 }
@@ -158,7 +158,7 @@ public class DriverRepository : IDriverRepository
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
 
-                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         Vehicle? v = null;
                         GasCard? gc = null;
 
@@ -189,7 +189,7 @@ public class DriverRepository : IDriverRepository
                                 fuelTypeList.Add((FuelType)Enum.Parse(typeof(FuelType), ftsArrStr));
                             }
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = DomainFactory.ExistingGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
+                            gc = DomainFactory.CreateGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }
 
                         DriverInfo driverInfo = new(d, v, gc);
@@ -241,7 +241,7 @@ public class DriverRepository : IDriverRepository
                             licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
                         }
 
-                        Driver d = DomainFactory.ExistingDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         Vehicle? v = null;
                         GasCard? gc = null;
 
@@ -272,7 +272,7 @@ public class DriverRepository : IDriverRepository
                                 fuelTypeList.Add((FuelType)Enum.Parse(typeof(FuelType), ftsArrStr));
                             }
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = DomainFactory.ExistingGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
+                            gc = DomainFactory.CreateGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }
 
                         di = new(d, v, gc);
