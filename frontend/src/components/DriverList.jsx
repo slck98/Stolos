@@ -1,7 +1,7 @@
-import React from "react";
-import classes from "../css/DriverList.module.css";
-import logo from "../images/logoLong.png";
-import { Link } from "react-router-dom";
+import React from 'react';
+import classes from '../css/DriverList.module.css';
+import logo from '../images/logoLong.png';
+import { Link } from 'react-router-dom';
 
 const DriverList = ({ drivers }) => {
   return (
@@ -13,9 +13,9 @@ const DriverList = ({ drivers }) => {
 
       <hr className={classes.line} />
       <ul>
-        {drivers.map((driver) => (
-          <li key={driver.natRegNum}>
-            <Link to={driver.natRegNum}>{driver.firstName}</Link>
+        {drivers.map(driver => (
+          <li key={driver.driverID}>
+            <Link to={driver.driverID}>{driver.firstName}</Link>
           </li>
         ))}
       </ul>

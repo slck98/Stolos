@@ -1,10 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import classes from "../css/VehicleList.module.css";
-import logo from "../images/logoLong.png";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import classes from '../css/VehicleList.module.css';
+import logo from '../images/logoLong.png';
 
 const VehicleList = ({ vehicles }) => {
-
   return (
     <article className={classes.container}>
       <article className={classes.headerPage}>
@@ -14,9 +13,9 @@ const VehicleList = ({ vehicles }) => {
 
       <hr className={classes.line} />
       <ul>
-        {vehicles.map((vehicle) => (
-          <li key={vehicle.vinNumber}>
-            <Link to={vehicle.vinNumber}>{vehicle.licensePlate}</Link>
+        {vehicles.map(vehicle => (
+          <li key={vehicle.vin}>
+            <Link to={vehicle.vin}>{vehicle.licensePlate}</Link>
           </li>
         ))}
       </ul>
