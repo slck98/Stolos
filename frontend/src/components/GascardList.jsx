@@ -5,7 +5,7 @@ import logo from "../images/logoLong.png";
 
 const GascardList = ({ gascards }) => {
   return (
-    <article className={classes.containter}>
+    <article className={classes.container}>
       <article className={classes.headerPage}>
         <h1>Brandstofkaarten</h1>
         <img src={logo} alt="logo" />
@@ -14,8 +14,8 @@ const GascardList = ({ gascards }) => {
       <hr className={classes.line} />
       <ul>
         {gascards.map((gascard) => (
-          <li key={gascard.cardNumber}>
-            <Link to={gascard.cardNumber}>{gascard.cardNumber}</Link>
+          <li key={gascard.gasCardID.toString()}>
+            <Link to={gascard.gasCardID.toString()}>{gascard.cardNumber}</Link>
           </li>
         ))}
       </ul>
