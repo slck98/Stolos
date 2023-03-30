@@ -7,7 +7,7 @@ import logo from '../images/logoLong.png';
 
 const DriverList = ({ drivers }) => {
     return (
-      <article className={driverClasses.container}>
+      <header className={driverClasses.container}>
         <article className={driverClasses.headerPage}>
           <h1>Bestuurders</h1>
           <img src={logo} alt="logo"></img>
@@ -22,13 +22,13 @@ const DriverList = ({ drivers }) => {
             </li>
           ))}
         </ul>
-      </article>
+      </header>
     );
   };
 
 export const VehicleList = ({ vehicles }) => {
   return (
-    <article className={vehicleClasses.container}>
+    <header className={vehicleClasses.container}>
       <article className={vehicleClasses.headerPage}>
         <h1>Voertuigen</h1>
         <img src={logo} alt="logo"></img>
@@ -42,14 +42,14 @@ export const VehicleList = ({ vehicles }) => {
           </li>
         ))}
       </ul>
-    </article>
+    </header>
   );
 };
 
 
 export const GascardList = ({ gascards }) => {
     return (
-      <article className={gasCardClasses.container}>
+      <header className={gasCardClasses.container}>
         <article className={gasCardClasses.headerPage}>
           <h1>Brandstofkaarten</h1>
           <img src={logo} alt="logo" />
@@ -63,7 +63,7 @@ export const GascardList = ({ gascards }) => {
             </li>
           ))}
         </ul>
-      </article>
+      </header>
     );
   };
 export default DriverList;

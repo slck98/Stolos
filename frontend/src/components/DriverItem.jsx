@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import classes from '../css/DriverItem.module.css';
 import foto from '../images/user.png';
 import DeletePopup from './DeletePopup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen,faTrashCan} from '@fortawesome/free-solid-svg-icons';
 
 const DriverItem = ({ driver }) => {
   const [deletePopup, setDeletePopup] = useState(false);
@@ -11,24 +13,38 @@ const DriverItem = ({ driver }) => {
 
   return (
     <>
-      <article className={classes.container}>
+      <header className={classes.container}>
         <article className={classes.back}>
           <p onClick={() => navigate(-1)}>Terug</p>
         </article>
         <img src={foto} alt="User" />
-        <article className={classes.one}>
-          <h4>{driver.firstName} {driver.lastName}</h4>
-          <p>Geboortedatum: {driver.birthDate}</p>
-          <p>Rijksregisternummer: {driver.natRegNum}</p>
-          <p>Adres: {driver.address}</p>
-          <p>License: {driver.licenses}</p>
-        </article>
+          <table className={classes.one}>
+            <tr>
+              <th colSpan="2">{driver.firstName} {driver.lastName}</th>
+            </tr>
+            <tr>
+              <td>Geboortedatum: </td>
+              <td> {driver.birthDate}</td>
+            </tr>
+            <tr>
+              <td>Rijksregisternummer: </td>
+              <td> {driver.natRegNum}</td>
+            </tr>
+            <tr>
+              <td>Adres: </td>
+              <td> {driver.address}</td>
+            </tr>
+            <tr>
+              <td>License: </td>
+              <td> {driver.licenses}</td>
+            </tr>
+          </table>
 
-        <article className={classes.two}>
-          <p onClick={() => navigate(`/drivers/${driver.driverID}/edit`)}>
-            Bewerken
+        <article className={classes.button}>
+          <p onClick={() => navigate(`/drivers/${driver.driverID}/edit`)} className={classes.bewerken}>
+          <FontAwesomeIcon icon={faPen}/> Bewerken
           </p>
-          <p onClick={() => setDeletePopup(true)}>Verwijderen</p>
+          <p onClick={() => setDeletePopup(true)} className={classes.verwijderen}><FontAwesomeIcon icon={faTrashCan}/> Verwijderen</p>
         </article>
 
         {/* <article className={classes.three}>
@@ -38,7 +54,7 @@ const DriverItem = ({ driver }) => {
             <li></li>
           </ul>
         </article> */}
-      </article>
+      </header>
 
       <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
         <p>Zeker dat u deze bestuurder wilt verwijderen?</p>

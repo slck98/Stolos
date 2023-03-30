@@ -9,7 +9,7 @@ const GascardItem = ({ gascard }) => {
   const navigate = useNavigate();
   return (
     <>
-      <article className={classes.container}>
+      <header className={classes.container}>
         <article className={classes.back}>
           <p onClick={() => navigate(-1)}>Terug</p>
         </article>
@@ -24,7 +24,7 @@ const GascardItem = ({ gascard }) => {
           if(gascard.driver !== null) {<p>Bestuurder: {gascard.driver}</p>} else
           {<p>Bestuurder: N.V.T.</p>}
         </article>
-      </article>
+      </header>
 
       <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
         <p>Zeker dat u deze voertuig wilt verwijderen?</p>

@@ -11,7 +11,7 @@ const VehicleItem = ({ vehicle }) => {
 
   return (
     <>
-      <article className={classes.container}>
+      <header className={classes.container}>
         <article className={classes.back}>
           <p onClick={() => navigate(-1)}>Terug</p>
         </article>
@@ -39,7 +39,7 @@ const VehicleItem = ({ vehicle }) => {
             <li></li>
           </ul>
         </article> */}
-      </article>
+      </header>
 
       <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
         <p>Zeker dat u deze voertuig wilt verwijderen?</p>

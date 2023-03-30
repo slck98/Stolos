@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import foto from '../images/user.png';
 import classes from '../css/DriverEdit.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan,faFloppyDisk} from '@fortawesome/free-solid-svg-icons';
 
 const DriverEdit = ({ driver }) => {
   const [input, setInput] = useState();
@@ -14,56 +16,57 @@ const DriverEdit = ({ driver }) => {
   return (
     <article className={classes.container}>
       <img src={foto} alt="notAvailable" />
-      <article className={classes.one}>
-        <span>
-          <p>Naam:</p>
-          <input
+      <table className={classes.one}>
+        <tr>
+          <td>Naam:</td>
+          <td><input
             type="text"
             name="firstName"
             defaultValue={driver.firstName}
             onChange={changeHandler}
-          />
-        </span>
-        <span>
-          <p>Familienaam:</p>
+          /></td>
+        </tr>
+        <tr>
+          <td>Familienaam:</td>
+          <td>
           <input
             type="text"
             name="lastName"
             defaultValue={driver.lastName}
             onChange={changeHandler}
-          />
-        </span>
-        <span>
-          <p>Geboortedatum:</p>
-          <input
+          /></td>
+        </tr>
+        <tr>
+          <td>Geboortedatum:</td>
+          <td><input
             type="text"
             name="birthDate"
             defaultValue={driver.birthDate}
             onChange={changeHandler}
-          />
-        </span>
-        <span>
-          <p>Rijksregisternummer:</p>
-          <input
+          /></td>
+        </tr>
+        <tr>
+          <td>Rijksregisternummer:</td>
+          <td><input
             type="text"
             name="natRegNumber"
             defaultValue={driver.natRegNum}
             onChange={changeHandler}
-          />
-        </span>
-        <span>
-          <p>Adres:</p>
-          <input
+          /></td>
+        </tr>
+        <tr>
+          <td>Adres:</td>
+          <td><input
             type="text"
             name="address"
             defaultValue={driver.address}
             onChange={changeHandler}
-          />
-        </span>        
-      </article>
-      <article className={classes.two}>
-        <p onClick={() => navigate(-1)}>Opslaan</p>
-        <p onClick={() => navigate(-1)}>Annuleren</p>
+          /></td>
+        </tr>        
+      </table>
+      <article className={classes.button}>
+        <p onClick={() => navigate(-1)}className={classes.opslaan}><FontAwesomeIcon icon={faFloppyDisk}/> Opslaan</p>
+        <p onClick={() => navigate(-1)}className={classes.annuleren}><FontAwesomeIcon icon={faBan}/> Annuleren</p>
       </article>
     </article>
   );
