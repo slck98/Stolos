@@ -7,7 +7,7 @@ import {
   redirect,
 } from 'react-router-dom';
 import DriverItem from '../components/DriverItem';
-import DriverList from '../components/DriverList';
+import DriverList from '../components/Lists';
 
 const DriverDetailPage = () => {
   const { drivers, driver } = useRouteLoaderData('driver-detail');

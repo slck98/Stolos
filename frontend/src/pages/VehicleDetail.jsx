@@ -7,7 +7,7 @@ import {
   Await,
 } from 'react-router-dom';
 import VehicleItem from '../components/VehicleItem';
-import VehicleList from '../components/VehicleList';
+import {VehicleList} from '../components/Lists';
 
 const VehicleDetailPage = () => {
   const { vehicles, vehicle } = useRouteLoaderData('vehicle-detail');

@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Await, useLoaderData, json, defer } from "react-router-dom";
-import GascardList from "../components/GascardList";
+import {GascardList} from "../components/Lists";
 
 const GascardPage = () => {
   const { gascards } = useLoaderData();

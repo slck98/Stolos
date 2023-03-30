@@ -7,7 +7,7 @@ import {
   Await,
 } from "react-router-dom";
 import GascardItem from "../components/GascardItem";
-import GascardList from "../components/GascardList";
+import {GascardList} from "../components/Lists";
 
 const GascardDetail = () => {
   const { gascard, gascards } = useRouteLoaderData("gascard-detail");

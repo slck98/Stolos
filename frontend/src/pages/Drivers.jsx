@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { useLoaderData, json, defer, Await } from "react-router-dom";
-import DriverList from "../components/DriverList";
+import DriverList from "../components/Lists";
 
 const DriversPage = () => {
   const { drivers } = useLoaderData();

@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { useLoaderData, defer, Await, json } from 'react-router-dom';
-import VehicleList from '../components/VehicleList';
+import {VehicleList} from '../components/Lists';
 
 const VehiclesPage = () => {
   const { vehicles } = useLoaderData();
