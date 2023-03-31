@@ -37,5 +37,10 @@ namespace BusinessLayer.Managers
         {
             _repo.AddVehicle(vehicleInfo);
         }
+
+        public void UpdateVehicle(VehicleInfo vehicleInfo)
+        {
+            _repo. UpdateVehicle(vehicleInfo);
+        }
     }
 }

@@ -49,7 +49,7 @@ public class VehicleController : ControllerBase
         }
     }
 
-    [HttpPost, Route("addVehicle")]
+    [HttpPost(Name = "addVehicle")]
     public OkResult Add(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
     {
         try
@@ -70,4 +70,27 @@ public class VehicleController : ControllerBase
             throw new APIException("VehicleController AddVehicle", ex);
         }
     }
+
+    [HttpPut (Name = "updateVehicles")]
+    public OkResult Put(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(vin)) throw new Exception();
+            Vehicle v = DomainFactory.CreateVehicle(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
+            Driver? d = null;
+            if (driverId != null)
+            {
+                d = DomainFactory.CreateDriver(driverId, lname, fname, natRegNum, driversLicenses, birthDate, address);
+            }
+            VehicleInfo vi = new(v, d);
+            _vehicleManager.AddVehicle(vi);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            throw new APIException("VehicleController updateVehicle", ex);
+        }
+    }
+
 }
