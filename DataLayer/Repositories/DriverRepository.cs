@@ -171,7 +171,7 @@ public class DriverRepository : IDriverRepository
                             FuelType fuelType = (FuelType)reader["FuelType"];
                             VehicleType vehicleType = (VehicleType)reader["VehicleType"];
                             string? color = (string)reader["Color"];
-                            int? doors = (int?)reader["Doors"];
+                            int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
                             v = new(vin, licensePlate, brandModel, vehicleType, fuelType, color, doors);
                         }
                         if (reader[0] is not DBNull)
@@ -254,7 +254,7 @@ public class DriverRepository : IDriverRepository
                             FuelType fuelType = (FuelType)reader["FuelType"];
                             VehicleType vehicleType = (VehicleType)reader["VehicleType"];
                             string? color = (string)reader["Color"];
-                            int? doors = (int?)reader["Doors"];
+                            int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
                             v = new(vin, licensePlate, brandModel, vehicleType, fuelType, color, doors);
                         }
                         if (reader[0] is not DBNull)
