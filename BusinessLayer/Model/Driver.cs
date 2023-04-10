@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BusinessLayer.Exceptions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BusinessLayer.Model;
 
@@ -43,7 +42,7 @@ public class Driver
         get { return _firstName; }
         set
         {
-            if (string.IsNullOrEmpty(value)) throw new DomainException("Driverr: set-FirstName: NULL value");
+            if (string.IsNullOrEmpty(value)) throw new DomainException("Driver: set-FirstName: NULL value");
             _firstName = value;
         }
     }

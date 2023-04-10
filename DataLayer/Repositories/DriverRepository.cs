@@ -89,7 +89,8 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM Driver WHERE DriverID=" + id.ToString() + " AND Deleted=0;", conn);
+                cmd = new("SELECT * FROM Driver WHERE DriverID=@id AND Deleted=0;", conn);
+                cmd.Parameters.AddWithValue("@id", id);
 
                 using (reader = cmd.ExecuteReader())
                 {
@@ -210,7 +211,7 @@ public class DriverRepository : IDriverRepository
 
     public DriverInfo GetDriverInfoById(int driverId)
     {
-        DriverInfo di = null;
+        DriverInfo? di = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -220,7 +221,8 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0 AND d.DriverID = " + driverId.ToString() + ";", conn);
+                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0 AND d.DriverID = @id;", conn);
+                cmd.Parameters.AddWithValue("@id", driverId);
 
                 using (reader = cmd.ExecuteReader())
                 {

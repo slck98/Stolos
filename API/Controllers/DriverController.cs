@@ -4,6 +4,7 @@ using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace API.Controllers
 {
@@ -25,11 +26,13 @@ namespace API.Controllers
         }
 
         [HttpGet(Name = "GetDriverInfos")]
-        public List<DriverInfo> Get()
+        public ActionResult<List<DriverInfo>> Get()
         {
             try
             {
-                return _driverManager.GetDriverInfos();
+                List <DriverInfo> driverInfos = _driverManager.GetDriverInfos();
+                if (driverInfos == null) return NotFound();
+                return Ok(driverInfos);
             }
             catch (Exception ex)
             {
@@ -38,15 +41,17 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetDriverInfo")]
-        public DriverInfo Get(int id)
+        public ActionResult<DriverInfo> Get(int id)
         {
             try
             {
-                return _driverManager.GetDriverInfoById(id);
+                DriverInfo di = _driverManager.GetDriverInfoById(id);
+                if (di == null) return NotFound();
+                return Ok(di);
             }
             catch (Exception ex)
             {
-                throw new APIException("DriverController GetDriverInfoById(id)", ex);
+                throw new APIException($"DriverController GetDriverInfoById({id})", ex);
             }
         }
     }
