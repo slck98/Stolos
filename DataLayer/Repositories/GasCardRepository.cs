@@ -206,5 +206,82 @@ public class GasCardRepository : IGasCardRepository
         }
         return cardsInfos;
     }
+
+    public GasCardInfo GetGasCardInfo(string cardNum)
+    {
+        GasCardInfo gci = null;
+        Driver? d = null;
+        MySqlConnection conn;
+        MySqlDataReader reader;
+        MySqlCommand cmd;
+
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("SELECT * FROM GasCard gc LEFT JOIN Driver d ON gc.DriverID=d.DriverID WHERE CardNumber = @cn AND gc.Deleted=0;", conn);
+                cmd.Parameters.AddWithValue("@cn", cardNum.ToLower());
+                string commandtext = cmd.CommandText;
+                foreach (MySqlParameter p in cmd.Parameters)
+                    commandtext = commandtext.Replace(p.ParameterName, p.Value.ToString());
+                Console.WriteLine(commandtext);
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = (int)reader[0];
+                        string cardnumber = (string)reader[1];
+                        DateTime expiringdate = (DateTime)reader[2];
+                        int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
+                        List<FuelType> fuels = new List<FuelType>();
+                        string? fuelsDB = (string?)((reader[4] is DBNull) ? null : reader[4]);
+                        if (fuelsDB != null)
+                        {
+                            string[] fArrStrs = fuelsDB.Split(",");
+                            foreach (string fArrStr in fArrStrs)
+                            {
+                                fuels.Add((FuelType)Enum.Parse(typeof(FuelType), fArrStr));
+                            }
+                        }
+                        bool blocked = Convert.ToBoolean(reader[6]);
+
+                        GasCard gc = DomainFactory.CreateGasCard(id, cardnumber, expiringdate, pincode, fuels, blocked);
+
+                        if (reader[8] is not DBNull)
+                        {
+                            //driver
+                            int driverID = (int)reader[8];
+                            string fName = (string)reader["FirstName"];
+                            string lName = (string)reader["LastName"];
+                            string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
+                            DateTime birthDate = (DateTime)reader["BirthDate"];
+                            string natRegNum = (string)reader["NationalRegistrationNumber"];
+                            List<DriversLicense> licenseList = new List<DriversLicense>();
+                            string licensesDB = (string)reader["DriversLicenses"];
+                            string[] lArrStrs = licensesDB.Split(",");
+                            foreach (string lArrStr in lArrStrs)
+                            {
+                                licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
+                            }
+                            d = DomainFactory.CreateDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
+                        }
+                        gci = new(gc, d);
+                    }
+                    reader.Close();
+                }
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("GasCardRepo-GetAllGasCards", ex);
+        }
+
+        return gci;
+    }
     #endregion
 }

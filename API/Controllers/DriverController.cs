@@ -17,10 +17,10 @@ namespace API.Controllers
         private IConfiguration iConfig;
         private DriverManager _driverManager;
 
-        public DriverController(ILogger<DriverController> logger, IConfiguration iConfig)
+        public DriverController(ILogger<DriverController> logger, IConfiguration config)
         {
             this.logger = logger;
-            this.iConfig = iConfig;
+            this.iConfig = config;
 
             _driverManager = new DriverManager(new DriverRepository(iConfig.GetValue<string>("ConnectionStrings:stolos")));
         }

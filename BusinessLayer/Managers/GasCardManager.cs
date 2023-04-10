@@ -31,5 +31,10 @@ namespace BusinessLayer.Managers
         {
             return _repo.GetGasCardInfos();
         }
+
+        public GasCardInfo GetGasCardInfo(string cn)
+        {
+            return _repo.GetGasCardInfo(cn);
+        }
     }
 }

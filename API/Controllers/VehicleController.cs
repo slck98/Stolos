@@ -6,6 +6,7 @@ using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace API.Controllers;
 
@@ -14,21 +15,24 @@ namespace API.Controllers;
 public class VehicleController : ControllerBase
 {
     private readonly ILogger<VehicleController> logger;
+    private IConfiguration iConfig;
     private VehicleManager _vehicleManager;
 
-    public VehicleController(ILogger<VehicleController> logger, IConfiguration iConfig)
+    public VehicleController(ILogger<VehicleController> logger, IConfiguration config)
     {
         this.logger = logger;
-
+        this.iConfig = config;
         _vehicleManager = new VehicleManager(new VehicleRepository(iConfig.GetValue<string>("ConnectionStrings:stolos")));
     }
 
     [HttpGet(Name = "GetVehicles")]
-    public List<VehicleInfo> Get()
+    public ActionResult<List<VehicleInfo>> Get()
     {
         try
         {
-            return _vehicleManager.GetAllVehicleInfos();
+            List<VehicleInfo> vis = _vehicleManager.GetAllVehicleInfos();
+            if (vis == null) return NotFound();
+            return vis;
         }
         catch (Exception ex)
         {
@@ -37,11 +41,13 @@ public class VehicleController : ControllerBase
     }
 
     [HttpGet("{vin}", Name = "GetVehicleByVin")]
-    public VehicleInfo Get(string vin)
+    public ActionResult<VehicleInfo> Get(string vin)
     {
         try
         {
-            return _vehicleManager.GetVehicleByVIN(vin);
+            VehicleInfo vi = _vehicleManager.GetVehicleByVIN(vin);
+            if (vi == null) return NotFound();
+            return vi;
         }
         catch (Exception ex)
         {
