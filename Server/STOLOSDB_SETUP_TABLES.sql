@@ -11,9 +11,7 @@ CREATE TABLE `Driver` (
 	`Address` VARCHAR(50),
 	`BirthDate` DATE NOT NULL,
 	`NationalRegistrationNumber` VARCHAR(15) NOT NULL,
-	`DriversLicenses` VARCHAR(41) NOT NULL,
---	`GasCardID` INT(255),
---	`VehicleVIN` VARCHAR(17),
+	`DriversLicenses` SET('AM', 'A1', 'A2', 'A', 'B', 'C1', 'C', 'D1', 'D', 'BE', 'C1E', 'CE', 'D1E', 'DE', 'G') NOT NULL,
 	`Deleted` INT(1) NOT NULL,
 	PRIMARY KEY (`DriverID`)
 );
@@ -21,8 +19,8 @@ CREATE TABLE `Vehicle` (
 	`VIN` VARCHAR(17) NOT NULL,
 	`BrandModel` VARCHAR(50) NOT NULL,
 	`LicensePlate` VARCHAR(25) NOT NULL,
-	`FuelType` INT(10) NOT NULL,
-	`VehicleType` INT(10) NOT NULL,
+	`FuelType` ENUM('Unknown', 'Petrol', 'Diesel', 'Electric', 'LPG', 'PetrolHybrid', 'DieselHybrid') NOT NULL,
+	`VehicleType` ENUM('Unknown', 'Car', 'Van', 'Truck', 'Bus') NOT NULL,
 	`Color` VARCHAR(25),
 	`Doors` INT(10),
 	`DriverID` INT(255),
@@ -34,7 +32,7 @@ CREATE TABLE `GasCard` (
 	`CardNumber` VARCHAR(20) NOT NULL,
 	`ExpiringDate` DATE NOT NULL,
 	`Pincode` INT(4),
-	`FuelTypes` VARCHAR(100),
+	`FuelTypes` SET('Unknown', 'Petrol', 'Diesel', 'Electric', 'LPG', 'PetrolHybrid', 'DieselHybrid'),
 	`DriverID` INT(255),
 	`Blocked` INT(1) NOT NULL,
 	`Deleted` INT(1) NOT NULL,
@@ -43,15 +41,11 @@ CREATE TABLE `GasCard` (
 
 /* ADD CONSTRAINTS*/
 /* FK */
--- ALTER TABLE Driver ADD CONSTRAINT fk_driver_gascardid_gascardid FOREIGN KEY (GascardID) REFERENCES GasCard(ID) ON DELETE SET NULL;
--- ALTER TABLE Driver ADD CONSTRAINT fk_driver_vehiclevin_vehiclevin FOREIGN KEY (VehicleVIN) REFERENCES Vehicle(VIN) ON DELETE SET NULL;
 ALTER TABLE Vehicle ADD CONSTRAINT fk_vehicle_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(DriverID) ON DELETE SET NULL;
 ALTER TABLE GasCard ADD CONSTRAINT fk_gascard_driverid_driverid FOREIGN KEY (DriverID) REFERENCES Driver(DriverID) ON DELETE SET NULL;
 
 /* UQ */
 ALTER TABLE Driver ADD CONSTRAINT uc_driver_natregnum UNIQUE (NationalRegistrationNumber);
--- ALTER TABLE Driver ADD CONSTRAINT uc_driver_vehiclevin UNIQUE (VehicleVIN);
--- ALTER TABLE Driver ADD CONSTRAINT uc_driver_tankcardid UNIQUE (GasCardID);
 
 ALTER TABLE Vehicle ADD CONSTRAINT uc_vehicle_licenseplate UNIQUE (LicensePlate);
 ALTER TABLE Vehicle ADD CONSTRAINT uc_vehicle_driverid UNIQUE (DriverID);

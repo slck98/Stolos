@@ -19,7 +19,7 @@ DRIVING_LICENSES = ["AM", "A1", "A2", "A", "B", "C1", "C", "D1", "D", "BE", "C1E
 ALL_GIRLS_FIRST = ["Emma", "Louise", "Alice", "Lucie", "Olivia", "Camille", "Giulia", "Mila", "Mia", "Sofia", "Victoria", "Juliette", "Jade", "Eva", "Lina", "Rose", "Julia", "Elise", "Elena", "Anna", "Nina", "Charlotte", "Manon", "Margaux", "Lena", "Adele", "Lou", "Clara", "Jeanne", "Ambre", "Luna", "Lily", "Mya", "Lola", "Sarah", "Marion", "Livia", "Emy", "Romane", "Alix", "Amelia", "Eleonore", "Inaya", "Nora", "Mila", "Olivia", "Marie", "Ella", "Noor", "Elena", "Juliette", "Anna", "Nora", "Elise", "Liv", "Lena", "Alice", "Julie", "Lina", "Lotte", "Camille", "Charlotte", "Nina", "Ellie", "Mona", "Sofia", "Amelie", "Manon", "Sara", "Amber", "Fien", "Mia", "Billie", "Helena", "Oona", "Lucie", "Luna", "Janne", "Lou", "Axelle", "Ellis", "Nore", "Fleur", "Emilia", "Rosalie", "Laura", "Amira", "Julia", "Lara", "Kato", "Lore", "Eva", "Sophia", "Stella"]
 ALL_GUYS_FIRST = ["Gabriel", "Louis", "Hugo", "Jules", "Arthur", "Liam", "Victor", "Noah", "Tom", "Nathan", "Lucas", "Eden", "Adam", "Ethan", "Sacha", "Diego", "Baptiste", "William", "Robin", "Alexandre", "Eliott", "Martin", "Aaron", "Antoine", "Maxime", "Oscar", "Basile", "Augustin", "Enzo", "Tiago", "Milo", "Valentin", "Mathis", "Samuel", "Gaspard", "Yanis", "Alexis", "Achille", "Marius", "Maxence", "Romain", "Alessio", "Luca", "Lyam", "Mathys", "Simon", "Adrien", "Charly", "Mohamed", "Rayan", "Ezio", "Arthur", "Noah", "Lucas", "Liam", "Leon", "Jules", "Finn", "Louis", "Victor", "Lewis", "Adam", "Lars", "Vic", "Vince", "Matteo", "Mathis", "Mohamed", "Emiel", "Jack", "Elias", "Alexander", "Gust", "Oscar", "Stan", "Maurice", "Lou", "Lowie", "Marcel", "Milan", "Mats", "Felix", "Wout", "Kobe", "Nathan", "Tuur", "Warre", "Viktor", "Seppe", "Lukas", "Rayan", "Cas", "Eden", "Ferre", "David", "Daan", "Amir", "Otis", "Thomas", "Miel", "Luca", "Bas", "Mauro", "Oliver", "Emile", "Georges", "Jayden", "Sem", "Cyriel", "Lenn", "Maxim", "Mil", "Henri", "Siebe", "Jef", "Lex", "Sam", "Juul", "Senne", "Loïc", "Alex", "Remi", "Levi", "Max", "Kamiel", "Ali", "Milo", "Youssef"]
 ALL_LASTNAMES = ["Peeters", "Maes", "Claes", "Goossens", "De Smet", "Vermeulen", "Lambert", "Michiels", "Martens", "Smets", "Van de Velde", "Hendrickx", "Van Damme", "Janssen", "Dumont", "De backer", "Lemmens", "Van den Broeck", "Laurent", "Renard", "Verhoeven", "Cools", "De cock", "Petit", "Lemaire", "emmerman", "De meyer", "Vandenberghe", "De wilde", "Bauwens", "Lefebvre", "Mathieu", "Boghaert", "Geerts", "Bosmans", "Bernard", "Moens", "Baert", "Carlier", "Van den Bossche", "Verheyen", "De pauw", "Cornelis", "De Ridder", "Thys", "Michel", "De smedt", "Smet", "Charlier", "Declerq", "Le Clercq", "Lejeune", "Denis", "Wauters", "Coppens", "Leroy", "Segers", "Stevens", "De vos", "Dupoint", "Aerts", "Hermans", "Pauwels", "Dubois", "Wouters", "Willems", "Jacobs", "Janssens"]
-ADDRESSES = ["WVL", "OVL", "ANT", "LIM", "VBR", "BRU", "WBR", "HAI", "NAM", "LIE", "LUX"]
+ADDRESSES = ["NULL", "WVL", "OVL", "ANT", "LIM", "VBR", "BRU", "WBR", "HAI", "NAM", "LIE", "LUX"]
 for x in range(1, AMOUNT+1):
   
   isMan = random.randint(0, 1)
@@ -60,10 +60,13 @@ for x in range(1, AMOUNT+1):
 
   rrn = str(year)[2:]+"."+str(month)+"."+str(day)+"-"+str(rrnDayCounter)+"."+str(rrnControlNum)
 
-  licenses = [DRIVING_LICENSES[i] for i in sorted(random.sample(range(len(DRIVING_LICENSES)), 3))]
+  licenses = [DRIVING_LICENSES[i] for i in sorted(random.sample(range(len(DRIVING_LICENSES)), random.randint(1, 3)))]
   
   seperator = ","
-  sqlinsert = f"INSERT INTO Driver(FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES ('{fname}', '{lname}', '{address}', '{birthdate}', '{rrn}', '{seperator.join(licenses)}', 0);\n"
+  if address == "NULL":
+    sqlinsert = f"INSERT INTO Driver(FirstName, LastName, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES ('{fname}', '{lname}', '{birthdate}', '{rrn}', '{seperator.join(licenses)}', 0);\n"
+  else:
+    sqlinsert = f"INSERT INTO Driver(FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES ('{fname}', '{lname}', '{address}', '{birthdate}', '{rrn}', '{seperator.join(licenses)}', 0);\n"
   print(f"{rrn} {fname} {lname}")
   file.write(sqlinsert)
 
@@ -75,7 +78,7 @@ print("\n\n\n")
 #start loop VEHICLES
 #INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('01234567890000000', 'VW Polo', '1-ABC-123', 1, 1, 'black', 3, NULL, 0);
 #fuels: 0=unknown, 1=Bezine, 2=Diesel, 3=Electric, 4=LPG, 5=BenzineHybrid, 6=DieselHybrid
-BRAND_MODELS = {"VW Polo":1, "VW Golf":1, "VW Jetta":1, "Renault Kangoo":2, "Kia EV6":3, "Tesla Model 3":3, "Audi A4":1, "Mercedes EQA":3}
+BRAND_MODELS = {"VW Polo":"Petrol", "VW Golf":"Petrol", "VW Jetta":"Petrol", "Renault Kangoo":"Diesel", "Kia EV6":"Electric", "Tesla Model 3":"Electric", "Audi A4":"Petrol", "Mercedes EQA":"Electric"}
 COLORS = ["black", "red", "gray", "blue", "white"]
 existingDrivers = []
 for x in range(1, AMOUNT+1):
@@ -83,9 +86,9 @@ for x in range(1, AMOUNT+1):
   vin = "".join(random.choices(string.ascii_uppercase + string.digits, k=17))
   bm, f = random.choice(list(BRAND_MODELS.items()))
   brandModel = bm
-  licensePlate = str(str(random.randint(0, 9)) + "-" + str("".join(random.choices(string.ascii_uppercase, k=3))) + "-" + str(random.randint(0, 999)).zfill(3)) #"1-ABC-123"
+  licensePlate = str(str(random.randint(1, 3)) + "-" + str("".join(random.choices(string.ascii_uppercase, k=3))) + "-" + str(random.randint(0, 999)).zfill(3)) #"1-ABC-123"
   fueltype = f
-  vehicleType = 1
+  vehicleType = "Car"
   color = str(random.choice(COLORS))
   doors = random.randint(0, 2)*2+1
   if doors == 0 or doors == 1:
@@ -101,7 +104,7 @@ for x in range(1, AMOUNT+1):
     driverId = "NULL"
 
   
-  sqlinsert = f"INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('{vin}', '{brandModel}', '{licensePlate}', {fueltype}, {vehicleType}, '{color}', {doors}, {driverId}, 0);\n"
+  sqlinsert = f"INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES ('{vin}', '{brandModel}', '{licensePlate}', '{fueltype}', '{vehicleType}', '{color}', {doors}, {driverId}, 0);\n"
   print(f"{vin} {brandModel}")
   file.write(sqlinsert)
 
@@ -113,7 +116,8 @@ print("\n\n\n")
 #start loop GASCARDS
 #INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES ('12345678900000000000', '2023-12-31', NULL, NULL, NULL, 0, 0);
 #fuels: 0=unknown, 1=Bezine, 2=Diesel, 3=Electric, 4=LPG, 5=BenzineHybrid, 6=DieselHybrid
-FUELS = ["0", "1", "2", "3", "4", "5", "6"]
+#FUELS = ["Unknown", "Petrol", "Diesel", "Electric", "LPG", "PetrolHybrid", "DieselHybrid"]
+FUELS = ["Petrol", "Diesel", "Electric"]
 existingDrivers = []
 for x in range(1, AMOUNT+1):
   
@@ -123,7 +127,7 @@ for x in range(1, AMOUNT+1):
   if pincode == 0:
     pincode = "NULL"
   pincode = str(pincode).zfill(4)
-  fueltypes = [FUELS[i] for i in sorted(random.sample(range(len(FUELS)), random.randint(1, 6)))]
+  fueltypes = [FUELS[i] for i in sorted(random.sample(range(len(FUELS)), random.randint(1, len(FUELS))))]
   if len(fueltypes) == 0:
     fueltypes = "NULL"
 
