@@ -52,13 +52,7 @@ public class DriverRepository : IDriverRepository
                         string? address = (string?)((reader[3] is DBNull) ? null : reader[3]);
                         DateTime birthDate = (DateTime)reader[4];
                         string natRegNum = (string)reader[5];
-                        List<DriversLicense> licenseList = new();
-                        string licensesDB = (string)reader[6];
-                        string[] lArrStrs = licensesDB.Split(",");
-                        foreach (string lArrStr in lArrStrs)
-                        {
-                            licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
-                        }
+                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
 
                         Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
@@ -101,13 +95,7 @@ public class DriverRepository : IDriverRepository
                         string? address = (string?)((reader[3] is DBNull) ? null : reader[3]);
                         DateTime birthDate = (DateTime)reader[4];
                         string natRegNum = (string)reader[5];
-                        List<DriversLicense> licenseList = new();
-                        string licensesDB = (string)reader[6];
-                        string[] lArrStrs = licensesDB.Split(",");
-                        foreach (string lArrStr in lArrStrs)
-                        {
-                            licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
-                        }
+                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
 
                         d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
@@ -151,13 +139,8 @@ public class DriverRepository : IDriverRepository
                         string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
                         DateTime birthDate = (DateTime)reader["BirthDate"];
                         string natRegNum = (string)reader["NationalRegistrationNumber"];
-                        List<DriversLicense> licenseList = new();
-                        string licensesDB = (string)reader["DriversLicenses"];
-                        string[] lArrStrs = licensesDB.Split(",");
-                        foreach (string lArrStr in lArrStrs)
-                        {
-                            licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
-                        }
+
+                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
                         Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         Vehicle? v = null;
@@ -169,8 +152,8 @@ public class DriverRepository : IDriverRepository
                             string vin = (string)reader["VIN"];
                             string brandModel = (string)reader["BrandModel"];
                             string licensePlate = (string)reader["LicensePlate"];
-                            FuelType fuelType = (FuelType)reader["FuelType"];
-                            VehicleType vehicleType = (VehicleType)reader["VehicleType"];
+                            FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
+                            VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                             string? color = (string)reader["Color"];
                             int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
                             v = new(vin, licensePlate, brandModel, vehicleType, fuelType, color, doors);
@@ -182,13 +165,7 @@ public class DriverRepository : IDriverRepository
                             string cardNum = (string)reader["CardNumber"];
                             DateTime expiringDate = (DateTime)reader["ExpiringDate"];
                             int? pin = (int)reader["Pincode"];
-                            List<FuelType> fuelTypeList = new();
-                            string fuelTypesDB = (string)reader["FuelTypes"];
-                            string[] ftsArrStrs = fuelTypesDB.Split(",");
-                            foreach (string ftsArrStr in ftsArrStrs)
-                            {
-                                fuelTypeList.Add((FuelType)Enum.Parse(typeof(FuelType), ftsArrStr));
-                            }
+                            List<FuelType> fuelTypeList = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
                             gc = DomainFactory.CreateGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }
@@ -235,13 +212,7 @@ public class DriverRepository : IDriverRepository
                         string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
                         DateTime birthDate = (DateTime)reader["BirthDate"];
                         string natRegNum = (string)reader["NationalRegistrationNumber"];
-                        List<DriversLicense> licenseList = new();
-                        string licensesDB = (string)reader["DriversLicenses"];
-                        string[] lArrStrs = licensesDB.Split(",");
-                        foreach (string lArrStr in lArrStrs)
-                        {
-                            licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
-                        }
+                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
                         Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         Vehicle? v = null;
@@ -266,13 +237,7 @@ public class DriverRepository : IDriverRepository
                             string cardNum = (string)reader["CardNumber"];
                             DateTime expiringDate = (DateTime)reader["ExpiringDate"];
                             int? pin = (int)reader["Pincode"];
-                            List<FuelType> fuelTypeList = new();
-                            string fuelTypesDB = (string)reader["FuelTypes"];
-                            string[] ftsArrStrs = fuelTypesDB.Split(",");
-                            foreach (string ftsArrStr in ftsArrStrs)
-                            {
-                                fuelTypeList.Add((FuelType)Enum.Parse(typeof(FuelType), ftsArrStr));
-                            }
+                            List<FuelType> fuelTypeList = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
                             gc = DomainFactory.CreateGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }

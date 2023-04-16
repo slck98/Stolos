@@ -52,8 +52,8 @@ public class VehicleRepository : IVehicleRepository
                         string vinDB = (string)reader[0];
                         string brandModel = (string)reader[1];
                         string plate = (string)reader[2];
-                        FuelType fuelType = (FuelType)reader[3];
-                        VehicleType vehicleType = (VehicleType)reader[4];
+                        FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
+                        VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                         string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
                         int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
@@ -70,13 +70,7 @@ public class VehicleRepository : IVehicleRepository
                             string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
                             DateTime birthDate = (DateTime)reader["BirthDate"];
                             string natRegNum = (string)reader["NationalRegistrationNumber"];
-                            List<DriversLicense> licenseList = new();
-                            string licensesDB = (string)reader["DriversLicenses"];
-                            string[] lArrStrs = licensesDB.Split(",");
-                            foreach (string lArrStr in lArrStrs)
-                            {
-                                licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
-                            }
+                            List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
                             d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
@@ -122,8 +116,8 @@ public class VehicleRepository : IVehicleRepository
                         string vinDB = (string)reader[0];
                         string brandModel = (string)reader[1];
                         string plate = (string)reader[2];
-                        FuelType fuelType = (FuelType)reader[3];
-                        VehicleType vehicleType = (VehicleType)reader[4];
+                        FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
+                        VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                         string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
                         int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
@@ -137,13 +131,7 @@ public class VehicleRepository : IVehicleRepository
                             string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
                             DateTime birthDate = (DateTime)reader["BirthDate"];
                             string natRegNum = (string)reader["NationalRegistrationNumber"];
-                            List<DriversLicense> licenseList = new();
-                            string licensesDB = (string)reader["DriversLicenses"];
-                            string[] lArrStrs = licensesDB.Split(",");
-                            foreach (string lArrStr in lArrStrs)
-                            {
-                                licenseList.Add((DriversLicense)Enum.Parse(typeof(DriversLicense), lArrStr));
-                            }
+                            List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
                             d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
