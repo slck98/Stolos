@@ -12,22 +12,48 @@
   margin-right: auto;
 }
 
-.one {
-  text-align: center;
+.one th{
+  text-align: middle;
+  padding-top: 0.5vw;
+  padding-bottom: 1vw;
+  font-size: larger;
+}
+.one td {
+  text-align: left;
+  vertical-align: middle;
+  padding-bottom: 0.5vw;
+}
+.one{
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.two{
-text-align: center;
-display: flex;
-justify-content: space-evenly;
+.button{
+  display: flex;
+  width: 30%;
+  grid-template-columns: 1fr;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.5vw;
 }
 
-.two p:hover, .back p:hover{
-  color: #f00;
+.verwijderen,.bewerken{
+  text-decoration: none;
+    margin:10px;
+    padding: 3px;
+    border-radius: 25px;
+    background-color: #2397d3;
+    color: white;
+    font-size: 1vw;
+    text-align: center;
+    width: 100%;
+}
+  
+.bewerken:hover{
+   background-color: #00d4ff;
+   cursor: pointer;
+}
+.verwijderen:hover{
+  background-color: red;
   cursor: pointer;
 }
-
-.two span{
-  align-items: flex-start;
-}
-

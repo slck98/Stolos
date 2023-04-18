@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import classes from "../css/GascardItem.module.css";
 import DeletePopup from "./DeletePopup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPen,
+  faTrashCan,
+  faCircleArrowLeft,
+} from "@fortawesome/free-solid-svg-icons";
 
 const GascardItem = ({ gascard }) => {
   const [deletePopup, setDeletePopup] = useState(false);
@@ -12,17 +18,53 @@ const GascardItem = ({ gascard }) => {
       <header className={classes.container}>
         <article className={classes.back}>
           <p onClick={() => navigate(-1)}>Terug</p>
+          {/* <FontAwesomeIcon icon={faCircleArrowLeft} /> Moet er nog worden tussen geplaatst*/}
         </article>
-        <article className={classes.one}>
-          <h4>{gascard.cardNumber}</h4>
-          <p>Vervaldatum: {gascard.expiringDate}</p>
-          if(gascard.pinCode !== null) {<p>Pin: {gascard.pinCode}</p>} else
-          {<p>Pin: N.V.T.</p>}
-          {/* <p>Brandstoftypen: {gascard.fuelTypes}</p> */}
-          if(gascard.blocked === true) {<p>Geblokkeerd: Ja</p>} else
-          {<p>Geblokkeerd: Nee</p>}
-          if(gascard.driver !== null) {<p>Bestuurder: {gascard.driver}</p>} else
-          {<p>Bestuurder: N.V.T.</p>}
+        <table className={classes.one}>
+          <tr>
+            <th colSpan="2">{gascard.cardNumber}</th>
+          </tr>
+          <tr>
+            <td>Vervaldatum: </td>
+            <td> {gascard.expiringDate}</td>
+          </tr>
+          <tr>
+            <td>Pin: </td>
+            <td>
+              {gascard.pincode !== null ? gascard.pincode.toString() : "N.V.T."}
+            </td>
+          </tr>
+          <tr>
+            <td>Brandstoftypen: </td>
+            <td> {gascard.fuelTypes.toString()}</td>
+          </tr>
+          <tr>
+            <td>Geblokkeerd: </td>
+            <td> {gascard.blocked === true ? "Ja" : "Nee"}</td>
+          </tr>
+          <tr>
+            <td>Gebruiker: </td>
+            <td>
+              {gascard.driver !== null
+                ? gascard.driver.firstName && gascard.driver.lastName
+                : "N.V.T."}
+            </td>
+          </tr>
+        </table>
+
+        <article className={classes.button}>
+          <p
+            onClick={() => navigate(`/gascards/${gascard.gascardID}/edit`)}
+            className={classes.bewerken}
+          >
+            <FontAwesomeIcon icon={faPen} /> Bewerken
+          </p>
+          <p
+            onClick={() => setDeletePopup(true)}
+            className={classes.verwijderen}
+          >
+            <FontAwesomeIcon icon={faTrashCan} /> Verwijderen
+          </p>
         </article>
       </header>
 
