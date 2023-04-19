@@ -17,4 +17,5 @@ public interface IGasCardRepository
     GasCard GetGasCard(string cardNum);
     List<GasCardInfo> GetGasCardInfos();
     GasCardInfo GetGasCardInfo(string cardNum);
+    void AddGasCard(GasCard gc);
 }

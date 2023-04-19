@@ -140,7 +140,7 @@ public class GasCardRepository : IGasCardRepository
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                         bool blocked = Convert.ToBoolean(reader[6]);
 
-                        GasCard gc = DomainFactory.CreateGasCard(id, cardnumber, expiringdate, pincode, fuels, blocked);
+                        GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked);
                         Driver d = null;
 
                         if (reader[8] is not DBNull)
@@ -200,7 +200,7 @@ public class GasCardRepository : IGasCardRepository
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                         bool blocked = Convert.ToBoolean(reader[6]);
 
-                        GasCard gc = DomainFactory.CreateGasCard(id, cardnumber, expiringdate, pincode, fuels, blocked);
+                        GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked);
 
                         if (reader[8] is not DBNull)
                         {
@@ -228,6 +228,37 @@ public class GasCardRepository : IGasCardRepository
         }
 
         return gci;
+    }
+    #endregion
+
+    #region post
+    public void AddGasCard(GasCard gc)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, Blocked) VALUES (@cn, @ed, @pc, @ft, @bl);", conn);
+
+                cmd.Parameters.AddWithValue("@cn", gc.CardNumber);
+                cmd.Parameters.AddWithValue("@ed", gc.ExpiringDate);
+                cmd.Parameters.AddWithValue("@pc", gc.Pincode);
+                cmd.Parameters.AddWithValue("@ft", gc.Fuel);
+                cmd.Parameters.AddWithValue("@bl", gc.Blocked);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("GasCardRepo-AddGasCard", ex);
+        }
     }
     #endregion
 }

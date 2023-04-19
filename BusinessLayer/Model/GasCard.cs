@@ -20,9 +20,8 @@ public class GasCard
 
     #region ctor
     //ctor
-    internal GasCard(int? id, string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
+    internal GasCard(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
     {
-        Id=id;
         CardNumber = cardNumber;
         ExpiringDate = expiringDate;
         Pincode = pincode;

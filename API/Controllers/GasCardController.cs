@@ -1,4 +1,5 @@
 ﻿using API.Exceptions;
+using BusinessLayer;
 using BusinessLayer.DTO;
 using BusinessLayer.Managers;
 using BusinessLayer.Model;
@@ -39,7 +40,7 @@ public class GasCardController : Controller
         }
     }
 
-    [HttpGet("cardnum", Name = "GetGasCardsInfos")]
+    [HttpGet("{cardnum}", Name = "GetGasCardsInfos")]
     public ActionResult<GasCardInfo> Get(string cardNum)
     {
         try
@@ -51,6 +52,22 @@ public class GasCardController : Controller
         catch (Exception ex)
         {
             throw new APIException($"DriverController GetDriverInfoById({cardNum})", ex);
+        }
+    }
+
+    [HttpPost(Name = "addGasCard")]
+    public OkResult Add(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(cardNumber)) throw new Exception();
+            GasCard gc = DomainFactory.CreateGasCard(cardNumber, expiringDate, pincode, fuel, blocked);
+            _gasCardManager.AddGasCard(gc);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            throw new APIException("GasCardController AddGasCard", ex);
         }
     }
 }
