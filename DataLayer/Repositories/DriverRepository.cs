@@ -167,7 +167,7 @@ public class DriverRepository : IDriverRepository
                             int? pin = (int)reader["Pincode"];
                             List<FuelType> fuelTypeList = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = DomainFactory.CreateGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
+                            gc = DomainFactory.CreateGasCard(cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }
 
                         DriverInfo driverInfo = new(d, v, gc);
@@ -239,7 +239,7 @@ public class DriverRepository : IDriverRepository
                             int? pin = (int)reader["Pincode"];
                             List<FuelType> fuelTypeList = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                             bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = DomainFactory.CreateGasCard(gasCardId, cardNum, expiringDate, pin, fuelTypeList, blocked);
+                            gc = DomainFactory.CreateGasCard(cardNum, expiringDate, pin, fuelTypeList, blocked);
                         }
 
                         di = new(d, v, gc);
