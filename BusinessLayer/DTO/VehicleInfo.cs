@@ -14,19 +14,19 @@ public class VehicleInfo
 		VIN = v.VinNumber;
 		BrandModel = v.BrandModel;
 		LicensePlate = v.LicensePlate;
-		FuelType = v.Fuel;
-		VehicleType = v.Category;
+		FuelType = v.Fuel.ToString();
+		VehicleType = v.Category.ToString();
 		Color = v.Color;
 		Doors = v.Doors;
-        if (d != null) Driver = d;
+        if (d != null) DriverId = d.Id;
     }
 
 	public string VIN { get; set; }
 	public string BrandModel { get; set; }
 	public string LicensePlate { get; set; }
-	public FuelType FuelType { get; set; }
-	public VehicleType VehicleType { get; set; }
+	public string FuelType { get; set; }
+	public string VehicleType { get; set; }
 	public string? Color { get; set; }
 	public int? Doors { get; set; }
-	public Driver? Driver { get; set; }
+	public int? DriverId { get; set; }
 }
