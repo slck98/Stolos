@@ -156,7 +156,7 @@ public class DriverRepository : IDriverRepository
                             VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                             string? color = (string)reader["Color"];
                             int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
-                            v = new(vin, licensePlate, brandModel, vehicleType, fuelType, color, doors);
+                            v = new(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
                         }
                         if (reader[0] is not DBNull)
                         {
@@ -228,7 +228,7 @@ public class DriverRepository : IDriverRepository
                             VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                             string? color = (string)reader["Color"];
                             int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
-                            v = new(vin, licensePlate, brandModel, vehicleType, fuelType, color, doors);
+                            v = new(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
                         }
                         if (reader[0] is not DBNull)
                         {
