@@ -5,27 +5,57 @@
     border-radius: 10px;
     padding: 10px;
   }
-  
   .container img {
-    display: block;
+    display: grid;
     margin-left: auto;
     margin-right: auto;
-    width: 12vw;
+    width: 15vw;
   }
-  .one th{
-    text-align: middle;
-    padding-top: 0.5vw;
-    padding-bottom: 1vw;
+  .table{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(auto);
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .one {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    text-align: center;
+    margin-bottom: 2vw;
     font-size: larger;
   }
-  .one td {
-    text-align: left;
-    vertical-align: middle;
-    padding-bottom: 0.5vw;
-  }
-  .one{
+  .two {
+    grid-column: 1;
+    grid-row: 2/7;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: 1vw;
+  }
+  .three {
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 1vw;
+  }
+  .four {
+    grid-column: 2;
+    grid-row: 3;
+    margin-left: 1vw;
+  }
+  .five {
+    grid-column: 2;
+    grid-row: 4;
+    margin-left: 1vw;
+  }
+  .six {
+    grid-column: 2;
+    grid-row: 5;
+    margin-left: 1vw;
+  }
+  .seven {
+    grid-column: 2;
+    grid-row: 6;
+    margin-left: 1vw;
   }
   
 .button{

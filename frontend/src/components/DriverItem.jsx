@@ -17,36 +17,23 @@ const DriverItem = ({ driver }) => {
 
   return (
     <>
-      <header className={classes.container}>
-        <article className={classes.back}>
+      <section className={classes.container}>
+        <nav className={classes.back}>
           <p onClick={() => navigate(-1)}>Terug</p>
           {/* <FontAwesomeIcon icon={faCircleArrowLeft} /> Moet er nog worden tussen geplaatst*/}
+        </nav>
+        <article>
+          <div className={classes.table}>
+            <div className={classes.one}>{driver.firstName} {driver.lastName}</div>
+            <div className={classes.two}><img src={foto} alt="User"/></div>
+            <div className={classes.three}>Geboortedatum: {driver.birthDate.split('T',1)}</div>
+            <div className={classes.four}>Rijksregisternummer: {driver.natRegNum}</div>
+            <div className={classes.five}>Adres: {driver.address}</div>
+            <div className={classes.six}>Rijbewijs: {driver.licenses}</div>
+            <div className={classes.seven}>Nummerplaat: {driver.vehicle.licensePlate}</div>
+          </div>
         </article>
-        <img src={foto} alt="User" />
-        <table className={classes.one}>
-          <tr>
-            <th colSpan="2">
-              {driver.firstName} {driver.lastName}
-            </th>
-          </tr>
-          <tr>
-            <td>Geboortedatum: </td>
-            <td> {driver.birthDate}</td>
-          </tr>
-          <tr>
-            <td>Rijksregisternummer: </td>
-            <td> {driver.natRegNum}</td>
-          </tr>
-          <tr>
-            <td>Adres: </td>
-            <td> {driver.address}</td>
-          </tr>
-          <tr>
-            <td>License: </td>
-            <td> {driver.licenses}</td>
-          </tr>
-        </table>
-
+        
         <article className={classes.button}>
           <p
             onClick={() => navigate(`/drivers/${driver.driverID}/edit`)}
@@ -61,7 +48,7 @@ const DriverItem = ({ driver }) => {
             <FontAwesomeIcon icon={faTrashCan} /> Verwijderen
           </p>
         </article>
-      </header>
+      </section>
 
       <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
         <p>Zeker dat u deze bestuurder wilt verwijderen?</p>
