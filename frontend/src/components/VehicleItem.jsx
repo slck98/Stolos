@@ -1,90 +1,37 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import classes from '../css/VehicleItem.module.css';
+import DetailCard from './DetailCard';
+import { NavLink } from 'react-router-dom';
+import classes from '../css/Item.module.css';
 import foto from '../images/notAvailable.png';
-import DeletePopup from './DeletePopup';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faPen,
-  faTrashCan,
-  faCircleArrowLeft,
-} from '@fortawesome/free-solid-svg-icons';
 
 const VehicleItem = ({ vehicle }) => {
-  const [deletePopup, setDeletePopup] = useState(false);
-
-  const navigate = useNavigate();
-
   return (
     <>
-      <section className={classes.container}>
-        <nav className={classes.back}>
-          <button onClick={() => navigate(-1)}>
-            <FontAwesomeIcon icon={faCircleArrowLeft} />
-            Terug
-          </button>
-        </nav>
-        <img src={foto} alt="notAvailable" />
-        <table className={classes.one}>
-          <tbody>
-            <tr>
-              <th colSpan="2">{vehicle.brandModel}</th>
-            </tr>
-            <tr>
-              <td>Kenteken: </td>
-              <td> {vehicle.licensePlate}</td>
-            </tr>
-            <tr>
-              <td>Chassisnummer: </td>
-              <td> {vehicle.vin}</td>
-            </tr>
-            <tr>
-              <td>Type: </td>
-              <td>{vehicle.vehicleType}</td>
-            </tr>
-            <tr>
-              <td>Brandstof: </td>
-              <td> {vehicle.fuelType}</td>
-            </tr>
-            <tr>
-              <td>Kleur: </td>
-              <td> {vehicle.color}</td>
-            </tr>
-            <tr>
-              <td>Aantal deuren: </td>
-              <td> {vehicle.doors.toString()}</td>
-            </tr>
-            {vehicle.driver && (
-              <tr>
-                <td> Bestuurder: </td>
-                <td>
-                  {' '}
-                  {vehicle.driver.firstName} {vehicle.driver.lastName}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        <article className={classes.button}>
-          <p
-            onClick={() => navigate(`/vehicles/${vehicle.vin}/edit`)}
-            className={classes.bewerken}
-          >
-            <FontAwesomeIcon icon={faPen} /> Bewerken
-          </p>
-          <p
-            onClick={() => setDeletePopup(true)}
-            className={classes.verwijderen}
-          >
-            <FontAwesomeIcon icon={faTrashCan} /> Verwijderen
-          </p>
+      <DetailCard type="vehicle" id={vehicle.vin}>
+        <article>
+          <div className={classes.table}>
+            <div className={classes.title}>{vehicle.brandModel}</div>
+            <div className={classes.image}>
+              <img src={foto} alt={`Foto van ${vehicle.brandModel}`} />
+            </div>
+            <div className={classes.data}>
+              <p>Kenteken: {vehicle.licensePlate}</p>
+              <p>Chassisnummer: {vehicle.vin}</p>
+              <p>Type: {vehicle.vehicleType}</p>
+              <p>Brandstof: {vehicle.fuelType}</p>
+              <p>Kleur: {vehicle.color}</p>
+              <p>Aantal deuren: {vehicle.doors}</p>
+              {vehicle.driverid && (
+                <p>
+                  Bestuurder: {vehicle.driverid}
+                  <NavLink to={`/vehicles/${vehicle.vehicleVin}`}>
+                    {vehicle.vehicleLicensePlate}
+                  </NavLink>
+                </p>
+              )}
+            </div>
+          </div>
         </article>
-      </section>
-
-      <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
-        <p>Zeker dat u dit voertuig wilt verwijderen?</p>
-      </DeletePopup>
+      </DetailCard>
     </>
   );
 };

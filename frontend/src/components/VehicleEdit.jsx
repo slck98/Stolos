@@ -90,7 +90,7 @@ const VehicleEdit = ({ vehicle }) => {
               <input
                 type="number"
                 name="doors"
-                defaultValue={vehicle.doors.toString()}
+                defaultValue={vehicle.doors}
                 readOnly
               />
             </td>
