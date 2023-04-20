@@ -1,7 +1,9 @@
-﻿using BusinessLayer.Model;
+﻿using BusinessLayer.Exceptions;
+using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,17 +17,18 @@ public class GasCardInfo
 		CardNumber = gc.CardNumber;
 		ExpiringDate = gc.ExpiringDate;
 		Pincode = gc.Pincode;
-		FuelTypes = gc.Fuel;
+		FuelTypes = gc.Fuel.ConvertAll(l => l.ToString());
 		Blocked = gc.Blocked;
 
-        if (d != null) Driver = d;
+		if (d != null) DriverId= d.Id;
     }
 
 	public int? GasCardID { get; set; }
 	public string CardNumber { get; set; }
 	public DateTime ExpiringDate { get; set; }
 	public int? Pincode { get; set; }
-	public List<FuelType>? FuelTypes { get; set; }
+	public List<string>? FuelTypes { get; set; }
 	public bool Blocked { get; set; }
-	public Driver? Driver { get; set; }
+
+    public int? DriverId { get; set; }
 }

@@ -207,7 +207,7 @@ public class VehicleRepository : IVehicleRepository
                 cmd.Parameters.AddWithValue("@vt", vehicleInfo.VehicleType);
                 cmd.Parameters.AddWithValue("@clr", vehicleInfo.Color);
                 cmd.Parameters.AddWithValue("@drs", vehicleInfo.Doors);
-                var driverId = ((vehicleInfo.Driver is null) ? null : vehicleInfo.Driver.Id);
+                var driverId = ((vehicleInfo.DriverId is null) ? null : vehicleInfo.DriverId);
                 cmd.Parameters.AddWithValue("@did", driverId);
                 cmd.Parameters.AddWithValue("@del", 0);
 
@@ -243,7 +243,7 @@ public class VehicleRepository : IVehicleRepository
                 cmd.Parameters.AddWithValue("@vt", vehicleInfo.VehicleType);
                 cmd.Parameters.AddWithValue("@clr", vehicleInfo.Color);
                 cmd.Parameters.AddWithValue("@drs", vehicleInfo.Doors);
-                var driverId = ((vehicleInfo.Driver is null) ? null : vehicleInfo.Driver.Id);
+                var driverId = ((vehicleInfo.DriverId is null) ? null : vehicleInfo.DriverId);
                 cmd.Parameters.AddWithValue("@did", driverId);
                 cmd.Parameters.AddWithValue("@del", 0);
 
