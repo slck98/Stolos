@@ -29,8 +29,8 @@ const DriverItem = ({ driver }) => {
             <div className={classes.three}>Geboortedatum: {driver.birthDate.split('T',1)}</div>
             <div className={classes.four}>Rijksregisternummer: {driver.natRegNum}</div>
             <div className={classes.five}>Adres: {driver.address}</div>
-            <div className={classes.six}>Rijbewijs: {driver.licenses}</div>
-            <div className={classes.seven}>Nummerplaat: {driver.vehicle.licensePlate}</div>
+            <div className={classes.six}>Rijbewijs: {driver.licenses.toString()}</div>
+            <div className={classes.seven}>Nummerplaat: {driver.vehicleLicensePlate}</div>
           </div>
         </article>
         
