@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import classes from '../css/Item.module.css';
+import classes from '../css/Detail.module.css';
 import foto from '../images/user.png';
 import DetailCard from './DetailCard';
 

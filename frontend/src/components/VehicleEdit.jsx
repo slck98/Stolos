@@ -1,111 +1,72 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import foto from '../images/notAvailable.png';
-import classes from '../css/VehicleEdit.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import EditCard from './EditCard';
+import classes from '../css/Edit.module.css';
 
 const VehicleEdit = ({ vehicle }) => {
   const [input, setInput] = useState();
-  const navigate = useNavigate();
 
   const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
   return (
-    <article className={classes.container}>
-      <img src={foto} alt="notAvailable" />
-      <table className={classes.one}>
-        <tbody>
-          <tr>
-            <td>Model:</td>
-            <td>
-              <input
-                type="text"
-                name="brandModel"
-                defaultValue={vehicle.brandModel}
-                readOnly
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Kenteken:</td>
-            <td>
-              <input
-                type="text"
-                name="licensePlate"
-                defaultValue={vehicle.licensePlate}
-                onChange={changeHandler}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Chassisnummer:</td>
-            <td>
-              <input
-                type="text"
-                name="vin"
-                defaultValue={vehicle.vin}
-                readOnly
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Type:</td>
-            <td>
-              <input
-                type="text"
-                name="type"
-                defaultValue={vehicle.vehicleType}
-                readOnly
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Brandstof:</td>
-            <td>
-              <input
-                type="text"
-                name="fuelType"
-                defaultValue={vehicle.fuelType}
-                readOnly
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Kleur:</td>
-            <td>
-              <input
-                type="text"
-                name="color"
-                defaultValue={vehicle.color}
-                readOnly
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Aantal deuren:</td>
-            <td>
-              <input
-                type="number"
-                name="doors"
-                defaultValue={vehicle.doors}
-                readOnly
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <article className={classes.button}>
-        <p onClick={() => navigate(-1)} className={classes.opslaan}>
-          <FontAwesomeIcon icon={faFloppyDisk} /> Opslaan
-        </p>
-        <p onClick={() => navigate(-1)} className={classes.annuleren}>
-          <FontAwesomeIcon icon={faBan} /> Annuleren
-        </p>
-      </article>
-    </article>
+    <EditCard>
+      <form className={classes.table}>
+        <img src={foto} alt="notAvailable" />
+        <div className={classes.data}>
+          <p>Model:</p>
+          <input
+            type="text"
+            name="brandmodel"
+            defaultValue={vehicle.brandModel}
+            onChange={changeHandler}
+          />
+          <p>Kenteken:</p>
+          <input
+            type="text"
+            name="licenseplate"
+            defaultValue={vehicle.licensePlate}
+            onChange={changeHandler}
+          />
+          <p>Chassisnummer:</p>
+          <input
+            type="text"
+            name="vin"
+            defaultValue={vehicle.vin}
+            onChange={changeHandler}
+          />
+          <p>Type:</p>
+          <input
+            type="text"
+            name="vehicletype"
+            defaultValue={vehicle.vehicleType}
+            onChange={changeHandler}
+          />
+          <p>Brandstof:</p>
+          <input
+            type="text"
+            name="fueltype"
+            defaultValue={vehicle.fuelType}
+            onChange={changeHandler}
+          />
+          <p>Kleur:</p>
+          <input
+            type="text"
+            name="color"
+            defaultValue={vehicle.color}
+            onChange={changeHandler}
+          />
+          <p>Aantal deuren:</p>
+          <input
+            type="text"
+            name="doors"
+            defaultValue={vehicle.doors}
+            onChange={changeHandler}
+          />
+        </div>
+      </form>
+    </EditCard>
   );
 };
 

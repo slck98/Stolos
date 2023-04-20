@@ -1,0 +1,30 @@
+.table {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  margin: 0 auto;
+}
+.table img {
+  grid-column: 1;
+  width: 15vw;
+  margin: 0 auto;
+}
+
+.data {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  margin-left: 1vw;
+  font-size: 1.4rem;
+}
+
+.data p {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  font-size: 1.4rem;
+  margin-right: 8px;
+}
+
+.data input {
+  font-size: 1.4rem;
+}
