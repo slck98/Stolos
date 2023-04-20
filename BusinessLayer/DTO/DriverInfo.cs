@@ -16,12 +16,15 @@ public class DriverInfo
 		LastName = d.LastName;
 		BirthDate = d.BirthDate;
 		NatRegNum = d.NatRegNumber;
-		Licenses = d.Licenses;
+		Licenses = d.Licenses.ConvertAll(l=>l.ToString());
 		Address = d.Address;
-		//if (v != null ) Vehicle = (v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors);
-		//if (gc != null ) GasCard = (gc.Id, gc.CardNumber, gc.ExpiringDate, gc.Pincode, gc.Fuel, gc.Blocked);
-		if (v != null) Vehicle = v;
-		if (gc != null) GasCard = gc;
+		if (v != null)
+		{
+            VehicleVin = v.VinNumber;
+			VehicleLicensePlate = v.LicensePlate;
+        }
+
+        if (gc != null ) GasCardNum = gc.CardNumber;
     }
 
 	public int? DriverID { get; set; }
@@ -29,12 +32,11 @@ public class DriverInfo
 	public string LastName { get; set; }
 	public DateTime BirthDate { get; set; }
 	public string NatRegNum { get; set; }
-	public List<DriversLicense> Licenses { get;set; }
+	public List<string> Licenses { get;set; }
 	public string Address { get; set; }
 
 	//tuples for vehicle + gascard
-	//public (string? vin, string? brandModel, string? licensePlate, FuelType? fuelType, VehicleType? vehicleType, string? color, int? doors) Vehicle { get; set; }
-	//public (int? id, string? cardNum, DateTime? expiringDate, int? pin, List<FuelType>? fuelTypes, bool? blocked) GasCard { get; set; }
-	public Vehicle Vehicle { get; set; }
-	public GasCard GasCard { get; set;}
+	public string? VehicleVin { get; set; }
+	public string? VehicleLicensePlate { get; set; }
+	public string? GasCardNum { get; set; }
 }
