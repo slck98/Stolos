@@ -40,7 +40,7 @@ public class GasCardController : Controller
         }
     }
 
-    [HttpGet("{cardnum}", Name = "GetGasCardsInfos")]
+    [HttpGet("cardnum", Name = "GetGasCardsInfos")]
     public ActionResult<GasCardInfo> Get(string cardNum)
     {
         try
@@ -56,7 +56,7 @@ public class GasCardController : Controller
     }
 
     [HttpPost(Name = "addGasCard")]
-    public OkResult Add(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
+    public ActionResult Add(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
     {
         try
         {

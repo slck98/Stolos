@@ -4,6 +4,7 @@ using BusinessLayer.Interfaces;
 using BusinessLayer.Model;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -242,13 +243,16 @@ public class GasCardRepository : IGasCardRepository
             {
                 conn.Open();
 
-                cmd = new("INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, Blocked) VALUES (@cn, @ed, @pc, @ft, @bl);", conn);
+                cmd = new("INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, Blocked, Deleted) VALUES (@cn, @ed, @pc, @ft, @bl, @del);", conn);
 
                 cmd.Parameters.AddWithValue("@cn", gc.CardNumber);
                 cmd.Parameters.AddWithValue("@ed", gc.ExpiringDate);
                 cmd.Parameters.AddWithValue("@pc", gc.Pincode);
-                cmd.Parameters.AddWithValue("@ft", gc.Fuel);
+                List<string> stringList = gc.Fuel.ConvertAll(f => f.ToString());
+                string fueltypes = string.Join(",", stringList);
+                cmd.Parameters.AddWithValue("@ft", fueltypes);
                 cmd.Parameters.AddWithValue("@bl", gc.Blocked);
+                cmd.Parameters.AddWithValue("@del", false);
 
                 cmd.ExecuteNonQuery();
 

@@ -78,7 +78,7 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPut (Name = "updateVehicles")]
-    public OkResult Put(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
+    public ActionResult Put(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
     {
         try
         {
