@@ -48,7 +48,6 @@ public class GasCardRepository : IGasCardRepository
                 {
                     while (reader.Read())
                     {
-                        int id = (int)reader[0];
                         string cardnumber = (string)reader[1];
                         DateTime expiringdate = (DateTime)reader[2];
                         int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
@@ -91,7 +90,6 @@ public class GasCardRepository : IGasCardRepository
                 {
                     while (reader.Read())
                     {
-                        int id = (int)reader[0];
                         string cardnumber = (string)reader[1];
                         DateTime expiringdate = (DateTime)reader[2];
                         int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
@@ -134,7 +132,6 @@ public class GasCardRepository : IGasCardRepository
                 {
                     while (reader.Read())
                     {
-                        int id = (int)reader[0];
                         string cardnumber = (string)reader[1];
                         DateTime expiringdate = (DateTime)reader[2];
                         int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
@@ -194,7 +191,6 @@ public class GasCardRepository : IGasCardRepository
                 {
                     while (reader.Read())
                     {
-                        int id = (int)reader[0];
                         string cardnumber = (string)reader[1];
                         DateTime expiringdate = (DateTime)reader[2];
                         int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);

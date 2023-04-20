@@ -13,7 +13,6 @@ public class GasCardInfo
 {
 	public GasCardInfo(GasCard gc, Driver? d)
 	{
-		GasCardID = gc.Id;
 		CardNumber = gc.CardNumber;
 		ExpiringDate = gc.ExpiringDate;
 		Pincode = gc.Pincode;
@@ -23,7 +22,6 @@ public class GasCardInfo
 		if (d != null) DriverId= d.Id;
     }
 
-	public int? GasCardID { get; set; }
 	public string CardNumber { get; set; }
 	public DateTime ExpiringDate { get; set; }
 	public int? Pincode { get; set; }

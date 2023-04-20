@@ -12,7 +12,6 @@ public class GasCard
 {
     #region attrib
     //attrib
-    private int? _id;
     private string _cardNumber;
     private DateTime _expiringDate;
     private int? _pincode;
@@ -32,15 +31,6 @@ public class GasCard
 
     #region prop
     //prop
-    public int? Id
-    {
-        get { return _id; }
-        set
-        {
-            if (value == default || value < 1) throw new DomainException("GasCard: set-Id: Invalid value (val < 1)");
-            _id = value;
-        }
-    }
     public string CardNumber
     {
         /*
