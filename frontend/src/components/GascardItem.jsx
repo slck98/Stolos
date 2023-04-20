@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import classes from "../css/GascardItem.module.css";
-import DeletePopup from "./DeletePopup";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import classes from '../css/GascardItem.module.css';
+import DeletePopup from './DeletePopup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faPen,
   faTrashCan,
   faCircleArrowLeft,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 const GascardItem = ({ gascard }) => {
   const [deletePopup, setDeletePopup] = useState(false);
@@ -16,10 +16,12 @@ const GascardItem = ({ gascard }) => {
   return (
     <>
       <header className={classes.container}>
-        <article className={classes.back}>
-          <p onClick={() => navigate(-1)}>Terug</p>
-          {/* <FontAwesomeIcon icon={faCircleArrowLeft} /> Moet er nog worden tussen geplaatst*/}
-        </article>
+        <nav className={classes.back}>
+          <button onClick={() => navigate(-1)}>
+            <FontAwesomeIcon icon={faCircleArrowLeft} />
+            Terug
+          </button>
+        </nav>
         <table className={classes.one}>
           <tr>
             <th colSpan="2">{gascard.cardNumber}</th>
@@ -31,7 +33,7 @@ const GascardItem = ({ gascard }) => {
           <tr>
             <td>Pin: </td>
             <td>
-              {gascard.pincode !== null ? gascard.pincode.toString() : "N.V.T."}
+              {gascard.pincode !== null ? gascard.pincode.toString() : 'N.V.T.'}
             </td>
           </tr>
           <tr>
@@ -40,14 +42,14 @@ const GascardItem = ({ gascard }) => {
           </tr>
           <tr>
             <td>Geblokkeerd: </td>
-            <td> {gascard.blocked === true ? "Ja" : "Nee"}</td>
+            <td> {gascard.blocked === true ? 'Ja' : 'Nee'}</td>
           </tr>
           <tr>
             <td>Gebruiker: </td>
             <td>
               {gascard.driver !== null
                 ? gascard.driver.firstName && gascard.driver.lastName
-                : "N.V.T."}
+                : 'N.V.T.'}
             </td>
           </tr>
         </table>
@@ -69,7 +71,7 @@ const GascardItem = ({ gascard }) => {
       </header>
 
       <DeletePopup trigger={deletePopup} setTrigger={setDeletePopup}>
-        <p>Zeker dat u deze voertuig wilt verwijderen?</p>
+        <p>Zeker dat u deze kaart wilt verwijderen?</p>
       </DeletePopup>
     </>
   );
