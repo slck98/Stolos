@@ -1,6 +1,6 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import classes from "../css/GascardNavigation.module.css";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import classes from '../css/GascardNavigation.module.css';
 
 function GascardNavigation() {
   return (
@@ -20,7 +20,7 @@ function GascardNavigation() {
           </li>
           <li>
             <NavLink
-              to="/gascards"
+              to="/gascards/new"
               className={({ isActive }) =>
                 isActive ? classes.isActive : undefined
               }

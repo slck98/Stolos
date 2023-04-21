@@ -6,14 +6,14 @@ import {
   redirect,
   defer,
 } from 'react-router-dom';
-import VehicleEdit from '../components/VehicleEdit';
+import VehicleForm from '../components/VehicleForm';
 
 const EditVehiclePage = () => {
   const { vehicle } = useRouteLoaderData('vehicle-detail');
   return (
     <Suspense>
       <Await resolve={vehicle}>
-        {loadVehicle => <VehicleEdit vehicle={loadVehicle} />}
+        {loadVehicle => <VehicleForm vehicle={loadVehicle} method="put" />}
       </Await>
     </Suspense>
   );

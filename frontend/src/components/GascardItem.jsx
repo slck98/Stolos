@@ -21,7 +21,7 @@ const GascardItem = ({ gascard }) => {
                   ? gascard.pincode.toString()
                   : 'N.V.T.'}
               </p>
-              <p>Brandstoftypes: {gascard.fuelTypes.ToString()}</p>
+              <p>Brandstoftypes: {gascard.fuelTypes.toString()}</p>
               <p>Geblokkeerd: {gascard.blocked === true ? 'Ja' : 'Nee'}</p>
               {gascard.driverId && (
                 <p>

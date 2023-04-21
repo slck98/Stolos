@@ -1,6 +1,6 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import classes from "../css/DriversNavigation.module.css";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import classes from '../css/DriversNavigation.module.css';
 
 function DriversNavigation() {
   return (
@@ -20,7 +20,7 @@ function DriversNavigation() {
           </li>
           <li>
             <NavLink
-              to="/drivers"
+              to="/drivers/new"
               className={({ isActive }) =>
                 isActive ? classes.isActive : undefined
               }

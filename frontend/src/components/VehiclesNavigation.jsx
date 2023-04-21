@@ -19,7 +19,7 @@ function VehiclesNavigation() {
           </li>
           <li>
             <NavLink
-              to="/vehicles"
+              to="/vehicles/new"
               className={({ isActive }) =>
                 isActive ? classes.isActive : undefined
               }

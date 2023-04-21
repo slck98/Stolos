@@ -1,34 +1,40 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import ErrorPage from "./pages/Error";
-import DriversPage, { loader as driversLoader } from "./pages/Drivers";
+import ErrorPage from './pages/Error';
+import DriversPage, { loader as driversLoader } from './pages/Drivers';
 import DriverDetailPage, {
   loader as driverDetailLoader,
   action as deleteDriverAction,
-} from "./pages/DriverDetail";
-import RootLayout from "./pages/Root";
-import StartScreen from "./pages/Start";
-import VehiclesRootLayout from "./pages/VehiclesRoot";
-import EditDriverPage from "./pages/EditDriver";
-import EditGascardPage from "./pages/EditGascard";
-import GascardPage, { loader as gascardsLoader } from "./pages/Gascards";
-import GascardRootLayout from "./pages/GascardRoot";
+} from './pages/DriverDetail';
+import RootLayout from './pages/Root';
+import StartScreen from './pages/Start';
+import VehiclesRootLayout from './pages/VehiclesRoot';
+import EditDriverPage from './pages/EditDriver';
+import EditGascardPage from './pages/EditGascard';
+import GascardPage, { loader as gascardsLoader } from './pages/Gascards';
+import GascardRootLayout from './pages/GascardRoot';
 import GascardDetailPage, {
   loader as gascardDetailLoader,
   action as deleteGascardAction,
-} from "./pages/GascardDetail";
-import DriversRootLayout from "./pages/DriversRoot";
-import VehiclesPage, { loader as vehiclesLoader } from "./pages/Vehicles";
+} from './pages/GascardDetail';
+import DriversRootLayout from './pages/DriversRoot';
+import VehiclesPage, { loader as vehiclesLoader } from './pages/Vehicles';
 import VehicleDetailPage, {
   loader as vehicleDetailLoader,
   action as deleteVehicleAction,
-} from "./pages/VehicleDetail";
-import EditVehiclePage from "./pages/EditVehicle";
+} from './pages/VehicleDetail';
+import EditVehiclePage from './pages/EditVehicle';
+import { action as manipulateDriverAction } from './components/DriverForm';
+import { action as manipulateVehicleAction } from './components/VehicleForm';
+import { action as manipulateGascardAction } from './components/GascardForm';
+import NewDriver from './pages/NewDriver';
+import NewVehicle from './pages/NewVehicle';
+import NewGascard from './pages/NewGascard';
 
 // Router
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
@@ -37,7 +43,7 @@ const router = createBrowserRouter([
         element: <StartScreen />,
       },
       {
-        path: "vehicles",
+        path: 'vehicles',
         element: <VehiclesRootLayout />,
         children: [
           {
@@ -46,8 +52,8 @@ const router = createBrowserRouter([
             loader: vehiclesLoader,
           },
           {
-            path: ":vin",
-            id: "vehicle-detail",
+            path: ':vin',
+            id: 'vehicle-detail',
             loader: vehicleDetailLoader,
             children: [
               {
@@ -56,15 +62,21 @@ const router = createBrowserRouter([
                 action: deleteVehicleAction,
               },
               {
-                path: "edit",
+                path: 'edit',
                 element: <EditVehiclePage />,
+                action: manipulateVehicleAction,
               },
             ],
+          },
+          {
+            path: 'new',
+            element: <NewVehicle />,
+            action: manipulateVehicleAction,
           },
         ],
       },
       {
-        path: "drivers",
+        path: 'drivers',
         element: <DriversRootLayout />,
         children: [
           {
@@ -73,8 +85,8 @@ const router = createBrowserRouter([
             loader: driversLoader,
           },
           {
-            path: ":driverID",
-            id: "driver-detail",
+            path: ':driverID',
+            id: 'driver-detail',
             loader: driverDetailLoader,
             children: [
               {
@@ -83,15 +95,21 @@ const router = createBrowserRouter([
                 action: deleteDriverAction,
               },
               {
-                path: "edit",
+                path: 'edit',
                 element: <EditDriverPage />,
+                action: manipulateDriverAction,
               },
             ],
+          },
+          {
+            path: 'new',
+            element: <NewDriver />,
+            action: manipulateDriverAction,
           },
         ],
       },
       {
-        path: "gascards",
+        path: 'gascards',
         element: <GascardRootLayout />,
         children: [
           {
@@ -100,8 +118,8 @@ const router = createBrowserRouter([
             loader: gascardsLoader,
           },
           {
-            path: ":gasCardID",
-            id: "gascard-detail",
+            path: ':cardNumber',
+            id: 'gascard-detail',
             loader: gascardDetailLoader,
             children: [
               {
@@ -110,17 +128,23 @@ const router = createBrowserRouter([
                 action: deleteGascardAction,
               },
               {
-                path: "edit",
+                path: 'edit',
                 element: <EditGascardPage />,
+                action: manipulateGascardAction,
               },
             ],
+          },
+          {
+            path: 'new',
+            element: <NewGascard />,
+            action: manipulateGascardAction,
           },
         ],
       },
     ],
   },
 ]);
-const App = (props) => {
+const App = props => {
   return <RouterProvider router={router} />;
 };
 

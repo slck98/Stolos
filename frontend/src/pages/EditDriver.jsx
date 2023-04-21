@@ -6,14 +6,14 @@ import {
   Await,
   redirect,
 } from 'react-router-dom';
-import DriverEdit from '../components/DriverEdit';
+import DriverForm from '../components/DriverForm';
 
 const EditDriverPage = () => {
   const { driver } = useRouteLoaderData('driver-detail');
   return (
     <Suspense>
       <Await resolve={driver}>
-        {loadDriver => <DriverEdit driver={loadDriver} />}
+        {loadDriver => <DriverForm driver={loadDriver} method="put" />}
       </Await>
     </Suspense>
   );
