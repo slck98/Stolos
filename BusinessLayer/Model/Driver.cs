@@ -42,7 +42,7 @@ public class Driver
         get { return _firstName; }
         set
         {
-            if (string.IsNullOrEmpty(value)) throw new DomainException("Driver: set-FirstName: NULL value");
+            if (string.IsNullOrWhiteSpace(value)) throw new DomainException("Driver: set-FirstName: NULL value");
             _firstName = value;
         }
     }
