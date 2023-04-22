@@ -28,7 +28,6 @@ CREATE TABLE `Vehicle` (
 	PRIMARY KEY (`VIN`)
 );
 CREATE TABLE `GasCard` (
-	`GasCardID` INT(255) NOT NULL AUTO_INCREMENT,
 	`CardNumber` VARCHAR(20) NOT NULL,
 	`ExpiringDate` DATE NOT NULL,
 	`Pincode` INT(4),
@@ -36,7 +35,7 @@ CREATE TABLE `GasCard` (
 	`DriverID` INT(255),
 	`Blocked` INT(1) NOT NULL,
 	`Deleted` INT(1) NOT NULL,
-	PRIMARY KEY (`GasCardID`)
+	PRIMARY KEY (`CardNumber`)
 );
 
 /* ADD CONSTRAINTS*/

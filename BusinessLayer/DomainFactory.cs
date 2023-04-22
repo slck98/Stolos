@@ -13,11 +13,12 @@ namespace BusinessLayer;
 
 public class DomainFactory
 {
-    public static Driver CreateDriver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, DateTime? birthDate = null, string? address = null)
+    public static Driver CreateDriver(int? id, string lname, string fname, string natRegNum, List<DriversLicense> licenses, DateTime birthDate, string address)//CreateDriver(DriverInfo di)
     {
         try
         {
-            return new Driver(id, lastName, firstName, natRegNumber, licenses, birthDate, address);
+            return new Driver(id, lname, fname, natRegNum, licenses, birthDate, address);
+            //return new Driver(di.DriverID, di.LastName, di.FirstName, di.NatRegNum, di.Licenses.ConvertAll(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)), di.BirthDate, di.Address);
         }
         catch (Exception ex)
         {

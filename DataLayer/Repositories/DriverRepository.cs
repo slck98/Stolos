@@ -1,9 +1,11 @@
 ﻿using BusinessLayer;
 using BusinessLayer.DTO;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Mappers;
 using BusinessLayer.Model;
 using DataLayer.Exceptions;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,92 +29,6 @@ public class DriverRepository : IDriverRepository
     #endregion
 
     #region get
-    public List<Driver> GetAllDrivers()
-    {
-        List<Driver> drivers = new();
-        MySqlConnection conn;
-        MySqlDataReader reader;
-        MySqlCommand cmd;
-        try
-        {
-            using (conn = new(_connectionString))
-
-            {
-                conn.Open();
-
-                cmd = new("SELECT * FROM Driver WHERE Deleted=0;", conn);
-
-                using (reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        int id = (int)reader[0];
-                        string fName = (string)reader[1];
-                        string lName = (string)reader[2];
-                        string? address = (string?)((reader[3] is DBNull) ? null : reader[3]);
-                        DateTime birthDate = (DateTime)reader[4];
-                        string natRegNum = (string)reader[5];
-                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
-
-
-                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
-                        drivers.Add(d);
-                    }
-                    reader.Close();
-                }
-
-                conn.Close();
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new DataException("DriverRepo-GetAllDrivers", ex);
-        }
-        return drivers;
-    }
-
-    public Driver GetDriverById(int id)
-    {
-        Driver? d = null;
-        MySqlConnection conn;
-        MySqlDataReader reader;
-        MySqlCommand cmd;
-        try
-        {
-            using (conn = new(_connectionString))
-            {
-                conn.Open();
-
-                cmd = new("SELECT * FROM Driver WHERE DriverID=@id AND Deleted=0;", conn);
-                cmd.Parameters.AddWithValue("@id", id);
-
-                using (reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        string fName = (string)reader[1];
-                        string lName = (string)reader[2];
-                        string? address = (string?)((reader[3] is DBNull) ? null : reader[3]);
-                        DateTime birthDate = (DateTime)reader[4];
-                        string natRegNum = (string)reader[5];
-                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
-
-
-                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
-                    }
-                    reader.Close();
-                }
-
-                conn.Close();
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new DataException("DriverRepo-GetDriver", ex);
-        }
-        return d;
-    }
-
     public List<DriverInfo> GetAllDriverInfos()
     {
         List<DriverInfo> drivers = new();
@@ -126,14 +42,15 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0;", conn);
+                cmd = new("SELECT d.DriverID, d.FirstName, d.LastName, d.Address, d.BirthDate, d.NationalRegistrationNumber, d.DriversLicenses, v.VIN, v.LicensePlate, gc.CardNumber " +
+                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0;", conn);
 
                 using (reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         //driver
-                        int id = (int)reader[8];
+                        int id = (int)reader["DriverID"];
                         string fName = (string)reader["FirstName"];
                         string lName = (string)reader["LastName"];
                         string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
@@ -145,33 +62,22 @@ public class DriverRepository : IDriverRepository
                         Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
                         Vehicle? v = null;
                         GasCard? gc = null;
+                        string? vin = null, licensePlate = null, gcNum = null;
 
                         if (reader["VIN"] is not DBNull)
                         {
                             //vehicle
-                            string vin = (string)reader["VIN"];
-                            string brandModel = (string)reader["BrandModel"];
-                            string licensePlate = (string)reader["LicensePlate"];
-                            FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
-                            VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
-                            string? color = (string)reader["Color"];
-                            int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
-                            v = new(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
+                            vin = (string?)reader["VIN"];
+                            licensePlate = (string?)reader["LicensePlate"];
                         }
-                        if (reader[0] is not DBNull)
+                        if (reader["CardNumber"] is not DBNull)
                         {
                             //gascard
-                            int gasCardId = (int)reader[0];
-                            string cardNum = (string)reader["CardNumber"];
-                            DateTime expiringDate = (DateTime)reader["ExpiringDate"];
-                            int? pin = (int)reader["Pincode"];
-                            List<FuelType> fuelTypeList = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
-                            bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = DomainFactory.CreateGasCard(cardNum, expiringDate, pin, fuelTypeList, blocked);
+                            gcNum = (string?)reader["CardNumber"];
                         }
 
-                        DriverInfo driverInfo = new(d, v, gc);
-                        drivers.Add(driverInfo);
+                        DriverInfo di = DriverMapper.MapEntityToDto(d, vin, licensePlate, gcNum);
+                        drivers.Add(di);
                     }
                     reader.Close();
                 }
@@ -198,7 +104,8 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0 AND d.DriverID = @id;", conn);
+                cmd = new("SELECT d.DriverID, d.FirstName, d.LastName, d.Address, d.BirthDate, d.NationalRegistrationNumber, d.DriversLicenses, v.VIN, v.LicensePlate, gc.CardNumber " +
+                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0 AND d.DriverID = @id;", conn);
                 cmd.Parameters.AddWithValue("@id", driverId);
 
                 using (reader = cmd.ExecuteReader())
@@ -206,7 +113,7 @@ public class DriverRepository : IDriverRepository
                     while (reader.Read())
                     {
                         //driver
-                        int id = (int)reader[8];
+                        int id = (int)reader["DriverID"];
                         string fName = (string)reader["FirstName"];
                         string lName = (string)reader["LastName"];
                         string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
@@ -218,31 +125,21 @@ public class DriverRepository : IDriverRepository
                         Vehicle? v = null;
                         GasCard? gc = null;
 
+                        string? vin = null, licensePlate = null, cardNum = null;
+
                         if (reader["VIN"] is not DBNull)
                         {
                             //vehicle
-                            string vin = (string)reader["VIN"];
-                            string brandModel = (string)reader["BrandModel"];
-                            string licensePlate = (string)reader["LicensePlate"];
-                            FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
-                            VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
-                            string? color = (string)reader["Color"];
-                            int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
-                            v = new(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
+                            vin = (string?)reader["VIN"];
+                            licensePlate = (string?)reader["LicensePlate"];
                         }
-                        if (reader[0] is not DBNull)
+                        if (reader["CardNumber"] is not DBNull)
                         {
                             //gascard
-                            int gasCardId = (int)reader[0];
-                            string cardNum = (string)reader["CardNumber"];
-                            DateTime expiringDate = (DateTime)reader["ExpiringDate"];
-                            int? pin = (int)reader["Pincode"];
-                            List<FuelType> fuelTypeList = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
-                            bool blocked = Convert.ToBoolean((int)reader["Blocked"]);
-                            gc = DomainFactory.CreateGasCard(cardNum, expiringDate, pin, fuelTypeList, blocked);
+                            cardNum = (string?)reader["CardNumber"];
                         }
 
-                        di = new(d, v, gc);
+                        di = DriverMapper.MapEntityToDto(d, vin, licensePlate, cardNum);
                     }
                     reader.Close();
                 }
@@ -254,6 +151,179 @@ public class DriverRepository : IDriverRepository
             throw new DataException("DriverRepo-GetDriver", ex);
         }
         return di;
+    }
+
+    public DriverInfo GetDriverInfoByNatRegNum(string natRegNum)
+    {
+        DriverInfo? di = null;
+        MySqlConnection conn;
+        MySqlDataReader reader;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("SELECT d.DriverID, d.FirstName, d.LastName, d.Address, d.BirthDate, d.NationalRegistrationNumber, d.DriversLicenses, v.VIN, v.LicensePlate, gc.CardNumber " +
+                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.NationalRegistrationNumber = @rrn;", conn);
+                cmd.Parameters.AddWithValue("@rrn", natRegNum);
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //driver
+                        int id = (int)reader["DriverID"];
+                        string fName = (string)reader["FirstName"];
+                        string lName = (string)reader["LastName"];
+                        string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
+                        DateTime birthDate = (DateTime)reader["BirthDate"];
+                        natRegNum = (string)reader["NationalRegistrationNumber"];
+                        List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
+
+                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                        Vehicle? v = null;
+                        GasCard? gc = null;
+
+                        string? vin = null, licensePlate = null, cardNum = null;
+
+                        if (reader["VIN"] is not DBNull)
+                        {
+                            //vehicle
+                            vin = (string?)reader["VIN"];
+                            licensePlate = (string?)reader["LicensePlate"];
+                        }
+                        if (reader["CardNumber"] is not DBNull)
+                        {
+                            //gascard
+                            cardNum = (string?)reader["CardNumber"];
+                        }
+
+                        di = DriverMapper.MapEntityToDto(d, vin, licensePlate, cardNum);
+                    }
+                    reader.Close();
+                }
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("DriverRepo-GetDriver", ex);
+        }
+        return di;
+    }
+    #endregion
+
+    #region post
+    public void AddDriver(Driver d)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                bool existingButDeleted = false;
+                if (GetDriverInfoByNatRegNum(d.NatRegNumber) != null)
+                {
+                    existingButDeleted= true;
+                }
+                string sql = "";
+                cmd = new(sql, conn);
+
+                if (!existingButDeleted)
+                {
+                    cmd = new("INSERT INTO Driver(FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES (@fn, @ln, @ad, @bd, @rrn, @dls, @del);", conn);
+
+                    cmd.Parameters.AddWithValue("@fn", d.FirstName);
+                    cmd.Parameters.AddWithValue("@ln", d.LastName);
+                    cmd.Parameters.AddWithValue("@ad", d.Address);
+                    cmd.Parameters.AddWithValue("@bd", d.BirthDate);
+                    cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
+                    cmd.Parameters.AddWithValue("@dls", string.Join(",", d.Licenses.ConvertAll(dl => dl.ToString())));
+                    cmd.Parameters.AddWithValue("@del", 0);
+                }
+                else
+                {
+                    cmd = new("UPDATE Driver SET Deleted=0 WHERE NationalRegistrationNumber=@rrn;", conn);
+
+                    cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
+                }
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("DriverRepo-AddDriver", ex);
+        }
+    }
+    #endregion
+
+    #region put
+    public void UpdateDriver(Driver d, bool deleted)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("UPDATE Driver SET FirstName=@fn,LastName=@ln,Address=@ad,BirthDate=@bd,NationalRegistrationNumber=@rrn,DriversLicenses=@dls,Deleted=@del WHERE DriverID=@did;", conn);
+
+                cmd.Parameters.AddWithValue("@did", d.Id);
+
+                cmd.Parameters.AddWithValue("@fn", d.FirstName);
+                cmd.Parameters.AddWithValue("@ln", d.LastName);
+                cmd.Parameters.AddWithValue("@ad", d.Address);
+                cmd.Parameters.AddWithValue("@bd", d.BirthDate);
+                cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
+                cmd.Parameters.AddWithValue("@dls", string.Join(",", d.Licenses.ConvertAll(dl => dl.ToString())));
+                cmd.Parameters.AddWithValue("@del", deleted);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("DriverRepo-UpdateDriver", ex);
+        }
+    }
+    #endregion
+
+    #region delete (soft)
+    public void DeleteDriver(Driver d)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("UPDATE Driver SET Deleted=1 WHERE DriverID=@did;", conn);
+
+                cmd.Parameters.AddWithValue("@did", d.Id);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("DriverRepo-DeleteDriver", ex);
+        }
     }
     #endregion
 }

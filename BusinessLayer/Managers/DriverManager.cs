@@ -18,16 +18,8 @@ public class DriverManager
 		_repo = repo;
 	}
 
-	public List<Driver> GetAllDrivers()
-	{
-		return _repo.GetAllDrivers();
-	}
-	public Driver GetDriverById(int id)
-	{
-		return _repo.GetDriverById(id);
-	}
-
-	public List<DriverInfo> GetDriverInfos()
+    #region GET
+    public List<DriverInfo> GetDriverInfos()
 	{
 		return _repo.GetAllDriverInfos();
 	}
@@ -36,4 +28,26 @@ public class DriverManager
 	{
 		return _repo.GetDriverInfoById(id);
 	}
+    #endregion
+
+    #region ADD
+    public void AddDriver(Driver d)
+    {
+        _repo.AddDriver(d);
+    }
+    #endregion
+
+    #region UPDATE
+    public void UpdateDriver(Driver d, bool deleted)
+    {
+        _repo.UpdateDriver(d, deleted);
+    }
+    #endregion
+
+    #region DELETE (soft)
+    public void DeleteDriver(Driver d)
+    {
+        _repo.DeleteDriver(d);
+    }
+    #endregion
 }

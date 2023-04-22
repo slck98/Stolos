@@ -1,6 +1,8 @@
 ﻿using API.Exceptions;
+using BusinessLayer;
 using BusinessLayer.DTO;
 using BusinessLayer.Managers;
+using BusinessLayer.Mappers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +54,59 @@ namespace API.Controllers
             catch (Exception ex)
             {
                 throw new APIException($"DriverController GetDriverInfoById({id})", ex);
+            }
+        }
+
+        [HttpPost(Name = "AddDriver")]
+        public ActionResult Add(string fname, string lname, string address, DateTime birthDate, string natRegNum, List<string> driversLicenses)
+        {
+            try
+            {
+                DriverInfo di = new(null, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
+                Driver d = DriverMapper.MapDtoToEntity(di);
+                _driverManager.AddDriver(d);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw new APIException("DriverController AddDriver", ex);
+            }
+        }
+
+        [HttpPut(Name = "UpdateDriver")]
+        public ActionResult Put(int id, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<string> driversLicenses, bool deleted)
+        {
+            try
+            {
+                if (_driverManager.GetDriverInfoById(id) == null) return NotFound();
+                DriverInfo newDi = new(id, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
+
+                //validate new data
+                Driver d = DriverMapper.MapDtoToEntity(newDi);
+
+                _driverManager.UpdateDriver(d, deleted);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw new APIException("DriverController UpdateDriver", ex);
+            }
+        }
+
+        [HttpDelete(Name = "DeleteDriver")]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                //soft delete
+                DriverInfo di = _driverManager.GetDriverInfoById(id);
+                if (di == null) return NotFound();
+                _driverManager.DeleteDriver(DriverMapper.MapDtoToEntity(di));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw new APIException("DriverController DeleteDriver", ex);
             }
         }
     }

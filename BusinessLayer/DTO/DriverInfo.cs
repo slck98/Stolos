@@ -9,22 +9,22 @@ namespace BusinessLayer.DTO;
 
 public class DriverInfo
 {
-	public DriverInfo(Driver d, Vehicle? v, GasCard? gc) //(int? driverId, string firstName, string lastName, DateTime birthDate, string natRegNum, List<DriversLicense> licenses, string? address, string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors,int? gasCardId, string cardNum, DateTime expiringDate, int? pin, List<FuelType>? fuelTypes, bool blocked)
-	{
-		DriverID = d.Id;
-		FirstName = d.FirstName;
-		LastName = d.LastName;
-		BirthDate = d.BirthDate;
-		NatRegNum = d.NatRegNumber;
-		Licenses = d.Licenses.ConvertAll(l=>l.ToString());
-		Address = d.Address;
-		if (v != null)
-		{
-            VehicleVin = v.VinNumber;
-			VehicleLicensePlate = v.LicensePlate;
+    public DriverInfo(int? id, string fname, string lname, DateTime birthDate, string natRegNum, List<string> licenses, string address, string? vehVin, string? vehLP, string? gcNum)
+    {
+        DriverID = id;
+        FirstName = fname;
+        LastName = lname;
+        BirthDate = birthDate;
+        NatRegNum = natRegNum;
+        Licenses = licenses;
+        Address = address;
+        if ((!string.IsNullOrEmpty(vehVin)) && (!string.IsNullOrEmpty(vehLP)))
+        {
+            VehicleVin = vehVin;
+            VehicleLicensePlate = vehLP;
         }
 
-        if (gc != null ) GasCardNum = gc.CardNumber;
+        if (gcNum != null) GasCardNum = gcNum;
     }
 
 	public int? DriverID { get; set; }
@@ -35,7 +35,7 @@ public class DriverInfo
 	public List<string> Licenses { get;set; }
 	public string Address { get; set; }
 
-	//tuples for vehicle + gascard
+	//foreign obj data
 	public string? VehicleVin { get; set; }
 	public string? VehicleLicensePlate { get; set; }
 	public string? GasCardNum { get; set; }

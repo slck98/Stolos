@@ -23,8 +23,8 @@ public class Driver
     {
         get { return _id; } 
         set 
-        { 
-            if(value == default || value < 1) throw new DomainException("Driver: set-Id: Invalid value (val < 1)");
+        {
+            if (value != null && value < 1) throw new DomainException("Driver: set-Id: Invalid value (val < 1)");
             _id = value;
         }
     }
