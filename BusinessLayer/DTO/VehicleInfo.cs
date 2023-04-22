@@ -9,19 +9,17 @@ namespace BusinessLayer.DTO;
 
 public class VehicleInfo
 {
-	public VehicleInfo(Vehicle v, int? dId)
+	public VehicleInfo(string vin, string brandModel, string licensePlate, FuelType fuel, VehicleType vehicleType, string? color, int? doors, int? dId)
 	{
-		VIN = v.VinNumber;
-		BrandModel = v.BrandModel;
-		LicensePlate = v.LicensePlate;
-		FuelType = v.Fuel.ToString();
-		VehicleType = v.Category.ToString();
-		Color = v.Color;
-		Doors = v.Doors;
+		VIN = vin;
+		BrandModel = brandModel;
+		LicensePlate = licensePlate;
+		FuelType = fuel.ToString();
+		VehicleType = vehicleType.ToString();
+		Color = color;
+		Doors = doors;
         if (dId != null) DriverId = dId;
     }
-
-    public VehicleInfo(Vehicle v, Driver? d) : this(v, d.Id) { }
 
     public string VIN { get; set; }
 	public string BrandModel { get; set; }

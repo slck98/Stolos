@@ -56,7 +56,8 @@ public class VehicleRepository : IVehicleRepository
                         VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                         string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
-                        int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
+                        //int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
+                        int? dId = null;
 
                         Vehicle v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
                         Driver? d = null;
@@ -64,7 +65,7 @@ public class VehicleRepository : IVehicleRepository
                         if (reader["DriverId"] is not DBNull)
                         {
                             //Driver
-                            int id = (int)reader["DriverId"];
+                            dId = (int)reader["DriverID"];
                             string fName = (string)reader["FirstName"];
                             string lName = (string)reader["LastName"];
                             string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
@@ -72,10 +73,10 @@ public class VehicleRepository : IVehicleRepository
                             string natRegNum = (string)reader["NationalRegistrationNumber"];
                             List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
-                            d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                            d = DomainFactory.CreateDriver(dId, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
 
-                        VehicleInfo vehicleInfo = new(v, d);
+                        VehicleInfo vehicleInfo = new(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, dId);
                         vehicles.Add(vehicleInfo);
                     }
                     reader.Close();
@@ -99,13 +100,14 @@ public class VehicleRepository : IVehicleRepository
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
+        int? dId = null;
         try
         {
             using (conn = new(_connectionString))
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM Vehicle v JOIN Driver d WHERE VIN = @vin AND v.Deleted=0;", conn);
+                cmd = new("SELECT * FROM Vehicle v LEFT JOIN Driver d ON v.DriverID=d.DriverID WHERE VIN = @vin AND v.Deleted=0;", conn);
                 cmd.Parameters.AddWithValue("@vin", vin);
 
                 using (reader = cmd.ExecuteReader())
@@ -120,12 +122,12 @@ public class VehicleRepository : IVehicleRepository
                         VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
                         string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
                         int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
-                        int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
+                        //int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
 
-                        if (reader["DriverId"] is not DBNull)
+                        if (reader["DriverID"] is not DBNull)
                         {
                             //Driver
-                            int id = (int)reader["DriverId"];
+                            int? id = (int?)reader["DriverID"];
                             string fName = (string)reader["FirstName"];
                             string lName = (string)reader["LastName"];
                             string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
@@ -134,6 +136,7 @@ public class VehicleRepository : IVehicleRepository
                             List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
                             d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
+                            dId = id;
                         }
 
                         v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
@@ -149,7 +152,7 @@ public class VehicleRepository : IVehicleRepository
         {
             throw new DataException("VehicleRepo-GetVehicle", ex);
         }
-        vehicle = new VehicleInfo(v, d);
+        vehicle = new VehicleInfo(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, dId);
         return vehicle;
     }
     #endregion

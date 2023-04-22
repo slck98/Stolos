@@ -56,7 +56,7 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPost(Name = "addVehicle")]
-    public OkResult Add(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
+    public ActionResult Add(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
     {
         try
         {
@@ -67,7 +67,7 @@ public class VehicleController : ControllerBase
             {
                 d = DomainFactory.CreateDriver(driverId, lname, fname, natRegNum, driversLicenses, birthDate, address);
             }
-            VehicleInfo vi = new(v, d);
+            VehicleInfo vi = new(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, d.Id);
             _vehicleManager.AddVehicle(vi);
             return Ok();
         }
@@ -89,7 +89,7 @@ public class VehicleController : ControllerBase
             {
                 d = DomainFactory.CreateDriver(driverId, lname, fname, natRegNum, driversLicenses, birthDate, address);
             }
-            VehicleInfo vi = new(v, d);
+            VehicleInfo vi = new(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, d.Id);
             _vehicleManager.AddVehicle(vi);
             return Ok();
         }
