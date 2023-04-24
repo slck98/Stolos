@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -132,19 +133,19 @@ public class GasCardRepository : IGasCardRepository
                 {
                     while (reader.Read())
                     {
-                        string cardnumber = (string)reader[1];
-                        DateTime expiringdate = (DateTime)reader[2];
-                        int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
+                        string cardnumber = (string)reader["CardNumber"];
+                        DateTime expiringdate = (DateTime)reader["ExpiringDate"];
+                        int? pincode = (int?)((reader["Pincode"] is DBNull) ? null : reader["Pincode"]);
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
-                        bool blocked = Convert.ToBoolean(reader[6]);
+                        bool blocked = Convert.ToBoolean(reader["Blocked"]);
 
                         GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked);
                         Driver d = null;
 
-                        if (reader[8] is not DBNull)
+                        if (reader["DriverID"] is not DBNull)
                         {
                             //driver
-                            int driverID = (int)reader[8];
+                            int driverID = (int)reader["DriverID"];
                             string fName = (string)reader["FirstName"];
                             string lName = (string)reader["LastName"];
                             string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
@@ -154,7 +155,10 @@ public class GasCardRepository : IGasCardRepository
                             d = DomainFactory.CreateDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
 
-                        GasCardInfo cardInfo = new(gc, d);
+                        int? dId = null;
+                        if (d != null) dId= d.Id;
+
+                        GasCardInfo cardInfo = new(gc.CardNumber, gc.ExpiringDate, gc.Pincode, gc.Fuel, gc.Blocked, dId);
                         cardsInfos.Add(cardInfo);
                     }
                     reader.Close();
@@ -191,18 +195,18 @@ public class GasCardRepository : IGasCardRepository
                 {
                     while (reader.Read())
                     {
-                        string cardnumber = (string)reader[1];
-                        DateTime expiringdate = (DateTime)reader[2];
-                        int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
+                        string cardnumber = (string)reader["CardNumber"];
+                        DateTime expiringdate = (DateTime)reader["ExpiringDate"];
+                        int? pincode = (int?)((reader["Pincode"] is DBNull) ? null : reader["Pincode"]);
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
-                        bool blocked = Convert.ToBoolean(reader[6]);
+                        bool blocked = Convert.ToBoolean(reader["Blocked"]);
 
                         GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked);
 
-                        if (reader[8] is not DBNull)
+                        if (reader["DriverID"] is not DBNull)
                         {
                             //driver
-                            int driverID = (int)reader[8];
+                            int driverID = (int)reader["DriverID"];
                             string fName = (string)reader["FirstName"];
                             string lName = (string)reader["LastName"];
                             string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
@@ -211,7 +215,11 @@ public class GasCardRepository : IGasCardRepository
                             List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
                             d = DomainFactory.CreateDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
                         }
-                        gci = new(gc, d);
+
+                        int? dId = null;
+                        if (d != null) dId = d.Id;
+
+                        gci = new(gc.CardNumber, gc.ExpiringDate, gc.Pincode, gc.Fuel, gc.Blocked, dId);
                     }
                     reader.Close();
                 }
