@@ -226,11 +226,7 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                bool existingButDeleted = false;
-                if (GetDriverInfoByNatRegNum(d.NatRegNumber) != null)
-                {
-                    existingButDeleted= true;
-                }
+                bool existingButDeleted = ((GetDriverInfoByNatRegNum(d.NatRegNumber) != null) ? true : false);
                 string sql = "";
                 cmd = new(sql, conn);
 
@@ -266,7 +262,7 @@ public class DriverRepository : IDriverRepository
     #endregion
 
     #region put
-    public void UpdateDriver(Driver d, bool deleted)
+    public void UpdateDriver(Driver d)
     {
         MySqlConnection conn;
         MySqlCommand cmd;
@@ -276,7 +272,7 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                cmd = new("UPDATE Driver SET FirstName=@fn,LastName=@ln,Address=@ad,BirthDate=@bd,NationalRegistrationNumber=@rrn,DriversLicenses=@dls,Deleted=@del WHERE DriverID=@did;", conn);
+                cmd = new("UPDATE Driver SET FirstName=@fn,LastName=@ln,Address=@ad,BirthDate=@bd,NationalRegistrationNumber=@rrn,DriversLicenses=@dls WHERE DriverID=@did;", conn);
 
                 cmd.Parameters.AddWithValue("@did", d.Id);
 
@@ -286,7 +282,6 @@ public class DriverRepository : IDriverRepository
                 cmd.Parameters.AddWithValue("@bd", d.BirthDate);
                 cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
                 cmd.Parameters.AddWithValue("@dls", string.Join(",", d.Licenses.ConvertAll(dl => dl.ToString())));
-                cmd.Parameters.AddWithValue("@del", deleted);
 
                 cmd.ExecuteNonQuery();
 
@@ -301,7 +296,7 @@ public class DriverRepository : IDriverRepository
     #endregion
 
     #region delete (soft)
-    public void DeleteDriver(Driver d)
+    public void DeleteDriver(int id)
     {
         MySqlConnection conn;
         MySqlCommand cmd;
@@ -313,7 +308,7 @@ public class DriverRepository : IDriverRepository
 
                 cmd = new("UPDATE Driver SET Deleted=1 WHERE DriverID=@did;", conn);
 
-                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.Parameters.AddWithValue("@did", id);
 
                 cmd.ExecuteNonQuery();
 

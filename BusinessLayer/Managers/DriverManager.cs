@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTO;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Mappers;
 using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -31,23 +32,25 @@ public class DriverManager
     #endregion
 
     #region ADD
-    public void AddDriver(Driver d)
+    public void AddDriver(DriverInfo di)
     {
+        Driver d = DriverMapper.MapDtoToEntity(di);
         _repo.AddDriver(d);
     }
     #endregion
 
     #region UPDATE
-    public void UpdateDriver(Driver d, bool deleted)
+    public void UpdateDriver(DriverInfo di)
     {
-        _repo.UpdateDriver(d, deleted);
+        Driver d = DriverMapper.MapDtoToEntity(di);
+        _repo.UpdateDriver(d);
     }
     #endregion
 
     #region DELETE (soft)
-    public void DeleteDriver(Driver d)
+    public void DeleteDriver(int id)
     {
-        _repo.DeleteDriver(d);
+        _repo.DeleteDriver(id);
     }
     #endregion
 }

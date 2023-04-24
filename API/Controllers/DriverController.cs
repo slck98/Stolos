@@ -63,8 +63,7 @@ namespace API.Controllers
             try
             {
                 DriverInfo di = new(null, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
-                Driver d = DriverMapper.MapDtoToEntity(di);
-                _driverManager.AddDriver(d);
+                _driverManager.AddDriver(di);
                 return Ok();
             }
             catch (Exception ex)
@@ -74,17 +73,14 @@ namespace API.Controllers
         }
 
         [HttpPut(Name = "UpdateDriver")]
-        public ActionResult Put(int id, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<string> driversLicenses, bool deleted)
+        public ActionResult Put(int id, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<string> driversLicenses)
         {
             try
             {
                 if (_driverManager.GetDriverInfoById(id) == null) return NotFound();
-                DriverInfo newDi = new(id, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
+                DriverInfo di = new(id, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
 
-                //validate new data
-                Driver d = DriverMapper.MapDtoToEntity(newDi);
-
-                _driverManager.UpdateDriver(d, deleted);
+                _driverManager.UpdateDriver(di);
                 return Ok();
             }
             catch (Exception ex)
@@ -101,7 +97,7 @@ namespace API.Controllers
                 //soft delete
                 DriverInfo di = _driverManager.GetDriverInfoById(id);
                 if (di == null) return NotFound();
-                _driverManager.DeleteDriver(DriverMapper.MapDtoToEntity(di));
+                _driverManager.DeleteDriver((int)di.DriverID);
                 return Ok();
             }
             catch (Exception ex)

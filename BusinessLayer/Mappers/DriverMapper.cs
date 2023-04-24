@@ -12,7 +12,7 @@ public static class DriverMapper
 {
     public static Driver MapDtoToEntity(DriverInfo di)
     {
-        return new Driver(di.DriverID, di.LastName, di.FirstName, di.NatRegNum, di.Licenses.ConvertAll(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)), di.BirthDate, di.Address);
+        return DomainFactory.CreateDriver(di.DriverID, di.LastName, di.FirstName, di.NatRegNum, di.Licenses.ConvertAll(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)), di.BirthDate, di.Address);
     }
 
     public static DriverInfo MapEntityToDto(Driver d, string vehVin = null, string vehLP = null, string gcNum = null)
