@@ -31,21 +31,6 @@ const VehicleForm = ({ method, vehicle }) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  const lijst1 = [
-    { label: "Shark", value: "Shark" },
-    { label: "Dolphin", value: "Dolphin" },
-    { label: "Whale", value: "Whale" },
-    { label: "Octopus", value: "Octopus" },
-    { label: "Crab", value: "Crab" },
-    { label: "Lobster", value: "Lobster" },
-    { label: "Shark1", value: "Shark1" },
-    { label: "Dolphin1", value: "Dolphin1" },
-    { label: "Whale1", value: "Whale1" },
-    { label: "Octopus1", value: "Octopus1" },
-    { label: "Crab1", value: "Crab1" },
-    { label: "Lobster1", value: "Lobster1" },
-  ];
-
   return (
     <EditCard>
       <Form method={method} className={classes.table}>
@@ -92,13 +77,14 @@ const VehicleForm = ({ method, vehicle }) => {
             name="vehicletype"
             required
             defaultValue={vehicle ? vehicle.vehicleType : ""}
-            onChange={changeHandler}>
-              <option value="Car">Car</option>
-              <option value="Van">Van</option>
-              <option value="Truck">Truck</option>
-              <option value="Unknown">Unknown</option>
-              <option value="Bus">Bus</option>
-            </select>
+            onChange={changeHandler}
+          >
+            <option value="Car">Car</option>
+            <option value="Van">Van</option>
+            <option value="Truck">Truck</option>
+            <option value="Unknown">Unknown</option>
+            <option value="Bus">Bus</option>
+          </select>
           <label htmlFor="fueltype">Brandstof:</label>
           <input
             id="fueltype"
