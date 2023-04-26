@@ -1,7 +1,7 @@
-import DetailCard from './DetailCard';
-import { NavLink } from 'react-router-dom';
-import classes from '../css/Detail.module.css';
-import foto from '../images/notAvailable.png';
+import DetailCard from "./DetailCard";
+import { NavLink } from "react-router-dom";
+import classes from "../css/Detail.module.css";
+import foto from "../images/notAvailable.png";
 
 const VehicleItem = ({ vehicle }) => {
   return (
@@ -20,11 +20,11 @@ const VehicleItem = ({ vehicle }) => {
               <p>Brandstof: {vehicle.fuelType}</p>
               <p>Kleur: {vehicle.color}</p>
               <p>Aantal deuren: {vehicle.doors}</p>
-              {vehicle.driverid && (
+              {vehicle.driverId && (
                 <p>
-                  Bestuurder: {vehicle.driverid}
-                  <NavLink to={`/vehicles/${vehicle.vehicleVin}`}>
-                    {vehicle.vehicleLicensePlate}
+                  Bestuurder: 
+                   <NavLink to={`/drivers/${vehicle.driverId}`}>
+                      {vehicle.driverId}
                   </NavLink>
                 </p>
               )}

@@ -25,8 +25,15 @@
   margin-right: 8px;
 }
 
-.data input {
+.data input, .data select {
   font-size: 1.4rem;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+  height: 35px;
+}
+
+.data Select{
+
 }
 
 .buttons {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import foto from '../images/notAvailable.png';
-import EditCard from './EditCard';
+import React, { useState } from "react";
+import Select from "react-select";
+import foto from "../images/notAvailable.png";
+import EditCard from "./EditCard";
 import {
   Form,
   json,
@@ -8,34 +9,49 @@ import {
   useActionData,
   useNavigate,
   useNavigation,
-} from 'react-router-dom';
+} from "react-router-dom";
 
-import classes from '../css/Edit.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import classes from "../css/Edit.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBan, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 
 const VehicleForm = ({ method, vehicle }) => {
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
 
-  const isSubmitting = navigation.state === 'submitting';
+  const isSubmitting = navigation.state === "submitting";
 
   function cancelHandler() {
-    navigate('..');
+    navigate("..");
   }
   const [input, setInput] = useState();
 
-  const changeHandler = e => {
+  const changeHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
+
+  const lijst1 = [
+    { label: "Shark", value: "Shark" },
+    { label: "Dolphin", value: "Dolphin" },
+    { label: "Whale", value: "Whale" },
+    { label: "Octopus", value: "Octopus" },
+    { label: "Crab", value: "Crab" },
+    { label: "Lobster", value: "Lobster" },
+    { label: "Shark1", value: "Shark1" },
+    { label: "Dolphin1", value: "Dolphin1" },
+    { label: "Whale1", value: "Whale1" },
+    { label: "Octopus1", value: "Octopus1" },
+    { label: "Crab1", value: "Crab1" },
+    { label: "Lobster1", value: "Lobster1" },
+  ];
 
   return (
     <EditCard>
       <Form method={method} className={classes.table}>
         {data && data.errors && (
           <ul>
-            {Object.values(data.errors).map(err => (
+            {Object.values(data.errors).map((err) => (
               <li key={err}>{err}</li>
             ))}
           </ul>
@@ -48,7 +64,7 @@ const VehicleForm = ({ method, vehicle }) => {
             type="text"
             name="brandmodel"
             required
-            defaultValue={vehicle ? vehicle.brandModel : ''}
+            defaultValue={vehicle ? vehicle.brandModel : ""}
             onChange={changeHandler}
           />
           <label htmlFor="licenseplate">Kenteken:</label>
@@ -57,7 +73,7 @@ const VehicleForm = ({ method, vehicle }) => {
             type="text"
             name="licenseplate"
             required
-            defaultValue={vehicle ? vehicle.licensePlate : ''}
+            defaultValue={vehicle ? vehicle.licensePlate : ""}
             onChange={changeHandler}
           />
           <label htmlFor="vin">Chassisnummer:</label>
@@ -66,25 +82,30 @@ const VehicleForm = ({ method, vehicle }) => {
             type="text"
             name="vin"
             required
-            defaultValue={vehicle ? vehicle.vin : ''}
+            defaultValue={vehicle ? vehicle.vin : ""}
             onChange={changeHandler}
           />
           <label htmlFor="vehicletype">Type:</label>
-          <input
+          <select
             id="vehicletype"
             type="text"
             name="vehicletype"
             required
-            defaultValue={vehicle ? vehicle.vehicleType : ''}
-            onChange={changeHandler}
-          />
+            defaultValue={vehicle ? vehicle.vehicleType : ""}
+            onChange={changeHandler}>
+              <option value="Car">Car</option>
+              <option value="Van">Van</option>
+              <option value="Truck">Truck</option>
+              <option value="Unknown">Unknown</option>
+              <option value="Bus">Bus</option>
+            </select>
           <label htmlFor="fueltype">Brandstof:</label>
           <input
             id="fueltype"
             type="text"
             name="fueltype"
             required
-            defaultValue={vehicle ? vehicle.fuelType : ''}
+            defaultValue={vehicle ? vehicle.fuelType : ""}
             onChange={changeHandler}
           />
           <label htmlFor="color">Kleur:</label>
@@ -92,7 +113,7 @@ const VehicleForm = ({ method, vehicle }) => {
             id="color"
             type="text"
             name="color"
-            defaultValue={vehicle ? vehicle.color : ''}
+            defaultValue={vehicle ? vehicle.color : ""}
             onChange={changeHandler}
           />
           <label htmlFor="doors">Aantal deuren:</label>
@@ -100,9 +121,11 @@ const VehicleForm = ({ method, vehicle }) => {
             id="doors"
             type="text"
             name="doors"
-            defaultValue={vehicle ? vehicle.doors : ''}
+            defaultValue={vehicle ? vehicle.doors : ""}
             onChange={changeHandler}
           />
+          <label htmlFor="driverId">Bestuurder:</label>
+          <Select id="driverId" name="driverId" onChange={changeHandler} />
         </div>
         <div className={classes.buttons}>
           <button disabled={isSubmitting} className={classes.save}>
@@ -123,18 +146,18 @@ export async function action({ request, params }) {
   const method = request.method;
   const data = await request.formData();
   const vehicleData = {
-    brandModel: data.get('brandmodel'),
-    licensePlate: data.get('licenseplate'),
-    vin: data.get('vin'),
-    type: data.get('type'),
-    fuelType: data.get('fueltype'),
-    color: data.get('color'),
-    doors: data.get('doors'),
+    brandModel: data.get("brandmodel"),
+    licensePlate: data.get("licenseplate"),
+    vin: data.get("vin"),
+    type: data.get("type"),
+    fuelType: data.get("fueltype"),
+    color: data.get("color"),
+    doors: data.get("doors"),
   };
 
-  let url = 'https://localhost:7144/vehicle';
+  let url = "https://localhost:7144/vehicle";
 
-  if (method === 'PUT') {
+  if (method === "PUT") {
     const { vin } = params;
     url = `${url}/${vin}`;
   }
@@ -142,7 +165,7 @@ export async function action({ request, params }) {
   const response = await fetch(url, {
     method: method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(vehicleData),
   });
@@ -152,8 +175,8 @@ export async function action({ request, params }) {
   }
 
   if (!response.ok) {
-    throw json({ message: 'Kon het voertuig niet opslaan' }, { status: 500 });
+    throw json({ message: "Kon het voertuig niet opslaan" }, { status: 500 });
   }
 
-  return redirect('/vehicles');
+  return redirect("/vehicles");
 }
