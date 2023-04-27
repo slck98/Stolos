@@ -43,7 +43,7 @@ public class DriverRepository : IDriverRepository
                 conn.Open();
 
                 cmd = new("SELECT d.DriverID, d.FirstName, d.LastName, d.Address, d.BirthDate, d.NationalRegistrationNumber, d.DriversLicenses, v.VIN, v.LicensePlate, gc.CardNumber " +
-                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0;", conn);
+                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.Deleted=0 ORDER BY d.FirstName ASC;", conn);
 
                 using (reader = cmd.ExecuteReader())
                 {
