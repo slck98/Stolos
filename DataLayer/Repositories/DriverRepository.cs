@@ -60,8 +60,8 @@ public class DriverRepository : IDriverRepository
                         List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
                         string? vin = null, gcNum = null;
 
-                        if (reader["VIN"] is not DBNull) vin = (string?)reader["VIN"];
-                        if (reader["CardNumber"] is not DBNull) gcNum = (string?)reader["CardNumber"];
+                        vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
+                        gcNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
                         Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, gcNum);
                         drivers.Add(d);
                     }
@@ -108,8 +108,8 @@ public class DriverRepository : IDriverRepository
                         List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
                         string? vin = null, cardNum = null;
 
-                        if (reader["VIN"] is not DBNull) vin = (string?)reader["VIN"];
-                        if (reader["CardNumber"] is not DBNull) cardNum = (string?)reader["CardNumber"];
+                        vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
+                        cardNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
                         d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, vin, cardNum);
                     }
                     reader.Close();
@@ -155,8 +155,8 @@ public class DriverRepository : IDriverRepository
 
                         string? vin = null, cardNum = null;
 
-                        if (reader["VIN"] is not DBNull) vin = (string?)reader["VIN"];
-                        if (reader["CardNumber"] is not DBNull) cardNum = (string?)reader["CardNumber"];
+                        vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
+                        cardNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
 
                         d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, cardNum);
                     }
@@ -185,8 +185,6 @@ public class DriverRepository : IDriverRepository
                 conn.Open();
 
                 bool existingButDeleted = ((GetDriverInfoByNatRegNum(d.NatRegNumber) != null) ? true : false);
-                string sql = "";
-                cmd = new(sql, conn);
 
                 if (!existingButDeleted)
                 {
@@ -203,7 +201,6 @@ public class DriverRepository : IDriverRepository
                 else
                 {
                     cmd = new("UPDATE Driver SET Deleted=0 WHERE NationalRegistrationNumber=@rrn;", conn);
-
                     cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
                 }
 

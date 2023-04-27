@@ -24,11 +24,11 @@ public class DomainFactory
         }
     }
 
-    public static Vehicle CreateVehicle(string vin, string brandModel, string plate, VehicleType vehicleType, FuelType fuelType, string? color, int? doors)
+    public static Vehicle CreateVehicle(string vin, string brandModel, string plate, VehicleType vehicleType, FuelType fuelType, string? color, int? doors, int? driverId)
     {
         try
         {
-            return new(vin, brandModel, plate, vehicleType, fuelType, color, doors);
+            return new(vin, brandModel, plate, vehicleType, fuelType, color, doors, driverId);
         }
         catch (Exception ex)
         {

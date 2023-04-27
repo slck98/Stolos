@@ -30,9 +30,9 @@ public class VehicleRepository : IVehicleRepository
     #endregion
 
     #region get
-    public List<VehicleInfo> GetAllVehicleInfos()
+    public List<Vehicle> GetAllVehicles()
     {
-        List<VehicleInfo> vehicles = new();
+        List<Vehicle> vehicles = new();
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -48,36 +48,19 @@ public class VehicleRepository : IVehicleRepository
                 {
                     while (reader.Read())
                     {
-                        //vehicle
-                        string vinDB = (string)reader[0];
-                        string brandModel = (string)reader[1];
-                        string plate = (string)reader[2];
+                        string vinDB = (string)reader["VIN"];
+                        string brandModel = (string)reader["BrandModel"];
+                        string plate = (string)reader["LicensePlate"];
                         FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
                         VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
-                        string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
-                        int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
-                        //int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
-                        int? dId = null;
+                        string? color = (string?)((reader["Color"] is DBNull) ? "" : reader["Color"]);
+                        int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
 
-                        Vehicle v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
-                        Driver? d = null;
+                        int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
 
-                        if (reader["DriverId"] is not DBNull)
-                        {
-                            //Driver
-                            dId = (int)reader["DriverID"];
-                            string fName = (string)reader["FirstName"];
-                            string lName = (string)reader["LastName"];
-                            string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
-                            DateTime birthDate = (DateTime)reader["BirthDate"];
-                            string natRegNum = (string)reader["NationalRegistrationNumber"];
-                            List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
+                        Vehicle v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors, dId);
 
-                            d = DomainFactory.CreateDriver(dId, lName, fName, natRegNum, licenseList, birthDate, address);
-                        }
-
-                        VehicleInfo vehicleInfo = new(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, dId);
-                        vehicles.Add(vehicleInfo);
+                        vehicles.Add(v);
                     }
                     reader.Close();
                 }
@@ -92,15 +75,12 @@ public class VehicleRepository : IVehicleRepository
         return vehicles;
     }
 
-    public VehicleInfo GetVehicleByVIN(string vin)
+    public Vehicle GetVehicleByVIN(string vin)
     {
-        VehicleInfo vehicle;
-        Vehicle v = null;
-        Driver? d = null;
+        Vehicle? v = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
-        int? dId = null;
         try
         {
             using (conn = new(_connectionString))
@@ -114,32 +94,17 @@ public class VehicleRepository : IVehicleRepository
                 {
                     while (reader.Read())
                     {
-                        //vehicle
-                        string vinDB = (string)reader[0];
-                        string brandModel = (string)reader[1];
-                        string plate = (string)reader[2];
+                        string vinDB = (string)reader["VIN"];
+                        string brandModel = (string)reader["BrandModel"];
+                        string plate = (string)reader["LicensePlate"];
                         FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
                         VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
-                        string? color = (string?)((reader[5] is DBNull) ? "" : reader[5]);
-                        int? doors = (int?)((reader[6] is DBNull) ? null : reader[6]);
-                        //int? driverId = (int?)((reader[7] is DBNull) ? null : reader[7]);
+                        string? color = (string?)((reader["Color"] is DBNull) ? "" : reader["Color"]);
+                        int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
 
-                        if (reader["DriverID"] is not DBNull)
-                        {
-                            //Driver
-                            int? id = (int?)reader["DriverID"];
-                            string fName = (string)reader["FirstName"];
-                            string lName = (string)reader["LastName"];
-                            string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
-                            DateTime birthDate = (DateTime)reader["BirthDate"];
-                            string natRegNum = (string)reader["NationalRegistrationNumber"];
-                            List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
+                        int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
 
-                            d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
-                            dId = id;
-                        }
-
-                        v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors);
+                        v = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors, dId);
 
                     }
                     reader.Close();
@@ -152,8 +117,7 @@ public class VehicleRepository : IVehicleRepository
         {
             throw new DataException("VehicleRepo-GetVehicle", ex);
         }
-        vehicle = new VehicleInfo(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, dId);
-        return vehicle;
+        return v;
     }
     #endregion
 
@@ -168,51 +132,27 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                //cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
-                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @del);", conn);
+                bool existingButDeleted = ((GetVehicleByVIN(vehicle.VinNumber) != null) ? true : false);
 
-                cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
-                cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
-                cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
-                cmd.Parameters.AddWithValue("@ft", vehicle.Fuel);
-                cmd.Parameters.AddWithValue("@vt", vehicle.Category);
-                cmd.Parameters.AddWithValue("@clr", vehicle.Color);
-                cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
-                cmd.Parameters.AddWithValue("@del", 0);
+                if (!existingButDeleted)
+                {
+                    cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did, @del);", conn);
 
-                cmd.ExecuteNonQuery();
-
-                conn.Close();
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new DataException("VehicleRepo-AddVehicle", ex);
-        }
-    }
-    public void AddVehicle(VehicleInfo vehicleInfo)
-    {
-        MySqlConnection conn;
-        MySqlCommand cmd;
-        try
-        {
-            using (conn = new(_connectionString))
-            {
-                conn.Open();
-
-                //cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did);", conn);
-                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did, @del);", conn);
-
-                cmd.Parameters.AddWithValue("@vin", vehicleInfo.VIN);
-                cmd.Parameters.AddWithValue("@bm", vehicleInfo.BrandModel);
-                cmd.Parameters.AddWithValue("@lp", vehicleInfo.LicensePlate);
-                cmd.Parameters.AddWithValue("@ft", vehicleInfo.FuelType);
-                cmd.Parameters.AddWithValue("@vt", vehicleInfo.VehicleType);
-                cmd.Parameters.AddWithValue("@clr", vehicleInfo.Color);
-                cmd.Parameters.AddWithValue("@drs", vehicleInfo.Doors);
-                var driverId = ((vehicleInfo.DriverId is null) ? null : vehicleInfo.DriverId);
-                cmd.Parameters.AddWithValue("@did", driverId);
-                cmd.Parameters.AddWithValue("@del", 0);
+                    cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
+                    cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
+                    cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
+                    cmd.Parameters.AddWithValue("@ft", vehicle.Fuel);
+                    cmd.Parameters.AddWithValue("@vt", vehicle.Category);
+                    cmd.Parameters.AddWithValue("@clr", vehicle.Color);
+                    cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
+                    cmd.Parameters.AddWithValue("@did", vehicle.DriverID);
+                    cmd.Parameters.AddWithValue("@del", 0);
+                }
+                else
+                {
+                    cmd = new("UPDATE Vehicle SET Deleted=0 WHERE VIN=@vin;", conn);
+                    cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
+                }
 
                 cmd.ExecuteNonQuery();
 
@@ -226,8 +166,8 @@ public class VehicleRepository : IVehicleRepository
     }
     #endregion
 
-    #region patch
-    public void UpdateVehicle(VehicleInfo vehicleInfo)
+    #region put
+    public void UpdateVehicle(Vehicle v)
     {
         MySqlConnection conn;
         MySqlCommand cmd;
@@ -237,18 +177,16 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did, @del);", conn);
+                cmd = new("UPDATE Vehicle SET BrandModel=@bm, LicensePlate=@lp, VehicleType=@vt, FuelType=@ft, Color=@clr, Doors=@drs, DriverID=@did WHERE VIN=@vin;", conn);
 
-                cmd.Parameters.AddWithValue("@vin", vehicleInfo.VIN);
-                cmd.Parameters.AddWithValue("@bm", vehicleInfo.BrandModel);
-                cmd.Parameters.AddWithValue("@lp", vehicleInfo.LicensePlate);
-                cmd.Parameters.AddWithValue("@ft", vehicleInfo.FuelType);
-                cmd.Parameters.AddWithValue("@vt", vehicleInfo.VehicleType);
-                cmd.Parameters.AddWithValue("@clr", vehicleInfo.Color);
-                cmd.Parameters.AddWithValue("@drs", vehicleInfo.Doors);
-                var driverId = ((vehicleInfo.DriverId is null) ? null : vehicleInfo.DriverId);
-                cmd.Parameters.AddWithValue("@did", driverId);
-                cmd.Parameters.AddWithValue("@del", 0);
+                cmd.Parameters.AddWithValue("@vin", v.VinNumber);
+                cmd.Parameters.AddWithValue("@bm", v.BrandModel);
+                cmd.Parameters.AddWithValue("@lp", v.LicensePlate);
+                cmd.Parameters.AddWithValue("@ft", v.Fuel.ToString());
+                cmd.Parameters.AddWithValue("@vt", v.Category.ToString());
+                cmd.Parameters.AddWithValue("@clr", v.Color);
+                cmd.Parameters.AddWithValue("@drs", v.Doors);
+                cmd.Parameters.AddWithValue("@did", v.DriverID);
 
                 cmd.ExecuteNonQuery();
 
@@ -258,6 +196,33 @@ public class VehicleRepository : IVehicleRepository
         catch (Exception ex)
         {
             throw new DataException("VehicleRepo-AddVehicle", ex);
+        }
+    }
+    #endregion
+
+    #region delete (soft)
+    public void DeleteVehicle(string vin)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("UPDATE Vehicle SET Deleted=1 WHERE VIN=@vin;", conn);
+
+                cmd.Parameters.AddWithValue("@vin", vin);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("VehicleRepo-DeleteVehicle", ex);
         }
     }
     #endregion
