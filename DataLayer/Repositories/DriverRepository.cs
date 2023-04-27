@@ -124,9 +124,9 @@ public class DriverRepository : IDriverRepository
         return d;
     }
 
-    private Driver GetDriverInfoByNatRegNum(string natRegNum)
+    private Driver GetDeletedDriverByExistingDriverParam(Driver d)
     {
-        Driver? d = null;
+        Driver? driver = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -137,8 +137,8 @@ public class DriverRepository : IDriverRepository
                 conn.Open();
 
                 cmd = new("SELECT d.DriverID, d.FirstName, d.LastName, d.Address, d.BirthDate, d.NationalRegistrationNumber, d.DriversLicenses, v.VIN, v.LicensePlate, gc.CardNumber " +
-                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.NationalRegistrationNumber = @rrn;", conn);
-                cmd.Parameters.AddWithValue("@rrn", natRegNum);
+                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.NationalRegistrationNumber = @rrn AND d.Deleted=1;", conn);
+                cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
 
                 using (reader = cmd.ExecuteReader())
                 {
@@ -150,7 +150,7 @@ public class DriverRepository : IDriverRepository
                         string lName = (string)reader["LastName"];
                         string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
                         DateTime birthDate = (DateTime)reader["BirthDate"];
-                        natRegNum = (string)reader["NationalRegistrationNumber"];
+                        string natRegNum = (string)reader["NationalRegistrationNumber"];
                         List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
                         string? vin = null, cardNum = null;
@@ -158,7 +158,7 @@ public class DriverRepository : IDriverRepository
                         vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
                         cardNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
 
-                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, cardNum);
+                        driver = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, cardNum);
                     }
                     reader.Close();
                 }
@@ -169,7 +169,7 @@ public class DriverRepository : IDriverRepository
         {
             throw new DataException("DriverRepo-GetDriver", ex);
         }
-        return d;
+        return driver;
     }
     #endregion
 
@@ -184,25 +184,18 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                bool existingButDeleted = ((GetDriverInfoByNatRegNum(d.NatRegNumber) != null) ? true : false);
+                bool existingButDeleted = ((GetDeletedDriverByExistingDriverParam(d) != null) ? true : false);//atm still gives 200 when you try to add an already added but not deleted driver
 
-                if (!existingButDeleted)
-                {
-                    cmd = new("INSERT INTO Driver(FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES (@fn, @ln, @ad, @bd, @rrn, @dls, @del);", conn);
-
-                    cmd.Parameters.AddWithValue("@fn", d.FirstName);
-                    cmd.Parameters.AddWithValue("@ln", d.LastName);
-                    cmd.Parameters.AddWithValue("@ad", d.Address);
-                    cmd.Parameters.AddWithValue("@bd", d.BirthDate);
-                    cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
-                    cmd.Parameters.AddWithValue("@dls", string.Join(",", d.Licenses.ConvertAll(dl => dl.ToString())));
-                    cmd.Parameters.AddWithValue("@del", 0);
-                }
-                else
-                {
-                    cmd = new("UPDATE Driver SET Deleted=0 WHERE NationalRegistrationNumber=@rrn;", conn);
-                    cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
-                }
+                string sql = (existingButDeleted ? "UPDATE Driver SET FirstName=@fn, LastName=@ln, Address=@ad, BirthDate=@bd, NationalRegistrationNumber=@rrn, DriversLicenses=@dls, Deleted=@del WHERE NationalRegistrationNumber=@rrn;" 
+                    : "INSERT INTO Driver(FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES (@fn, @ln, @ad, @bd, @rrn, @dls, @del);");
+                cmd = new(sql, conn);
+                cmd.Parameters.AddWithValue("@fn", d.FirstName);
+                cmd.Parameters.AddWithValue("@ln", d.LastName);
+                cmd.Parameters.AddWithValue("@ad", d.Address);
+                cmd.Parameters.AddWithValue("@bd", d.BirthDate);
+                cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
+                cmd.Parameters.AddWithValue("@dls", string.Join(",", d.Licenses.ConvertAll(dl => dl.ToString())));
+                cmd.Parameters.AddWithValue("@del", 0);
 
                 cmd.ExecuteNonQuery();
 

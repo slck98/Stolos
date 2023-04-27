@@ -28,7 +28,7 @@ public class DomainFactory
     {
         try
         {
-            return new(vin, brandModel, plate, vehicleType, fuelType, color, doors, driverId);
+            return new Vehicle(vin, brandModel, plate, vehicleType, fuelType, color, doors, driverId);
         }
         catch (Exception ex)
         {

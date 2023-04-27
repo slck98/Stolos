@@ -15,8 +15,8 @@ public static class DriverMapper
         return DomainFactory.CreateDriver(di.DriverID, di.LastName, di.FirstName, di.NatRegNum, di.Licenses.ConvertAll(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)), di.BirthDate, di.Address, di.VehicleVin, di.GasCardNum);
     }
 
-    public static DriverInfo MapEntityToDto(Driver d)
+    public static DriverInfo? MapEntityToDto(Driver d)
     {
-        return new DriverInfo(d.Id, d.FirstName, d.LastName, d.BirthDate, d.NatRegNumber, d.Licenses.ConvertAll(dl => dl.ToString()), d.Address, d.VIN, d.GasCardNum);
+        return (d != null) ? new DriverInfo(d.Id, d.FirstName, d.LastName, d.BirthDate, d.NatRegNumber, d.Licenses.ConvertAll(dl => dl.ToString()), d.Address, d.VIN, d.GasCardNum) : null;
     }
 }

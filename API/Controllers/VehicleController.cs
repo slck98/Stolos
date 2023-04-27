@@ -75,6 +75,7 @@ public class VehicleController : ControllerBase
     {
         try
         {
+            if (_vehicleManager.GetVehicleByVIN(vin) == null) return NotFound();
             VehicleInfo vi = new VehicleInfo(vin, brandModel, licensePlate, fuelType, vehicleType, color, doors, driverId);
             _vehicleManager.UpdateVehicle(vi);
             return Ok();

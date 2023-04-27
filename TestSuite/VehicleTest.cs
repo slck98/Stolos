@@ -23,7 +23,7 @@ namespace TestSuite
             string color = "red";
             int doors = 3;
 
-            Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, color, doors);
+            Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, color, doors, null);
 
             Assert.Equal(vin, v.VinNumber);
             Assert.Equal(brandmodel, v.BrandModel);
@@ -44,7 +44,7 @@ namespace TestSuite
             FuelType ftype = FuelType.Petrol;
             string color = "red";
 
-            Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, color, null);
+            Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, color, null, null);
 
             Assert.Null(v.Doors);
         }
@@ -59,7 +59,7 @@ namespace TestSuite
             FuelType ftype = FuelType.Petrol;
             int doors = 3;
 
-            Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, null, doors);
+            Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, null, doors, null);
 
             Assert.Null(v.Color);
         }

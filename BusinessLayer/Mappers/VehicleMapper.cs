@@ -14,8 +14,8 @@ internal class VehicleMapper
     {
         return new Vehicle(vi.VIN, vi.BrandModel, vi.LicensePlate, (VehicleType)Enum.Parse(typeof(VehicleType), vi.VehicleType.ToString()), (FuelType)Enum.Parse(typeof(FuelType), vi.FuelType.ToString()), vi.Color, vi.Doors, vi.DriverId);
     }
-    public static VehicleInfo MapEntityToDto(Vehicle v)
+    public static VehicleInfo? MapEntityToDto(Vehicle v)
     {
-        return new VehicleInfo(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel.ToString(), v.Category.ToString(), v.Color, v.Doors, v.DriverID);
+        return (v != null) ? new VehicleInfo(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel.ToString(), v.Category.ToString(), v.Color, v.Doors, v.DriverID) : null;
     }
 }

@@ -119,6 +119,51 @@ public class VehicleRepository : IVehicleRepository
         }
         return v;
     }
+
+    private Vehicle GetDeletedVehicleByExistingParam(Vehicle v)
+    {
+        Vehicle? veh = null;
+        MySqlConnection conn;
+        MySqlDataReader reader;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("SELECT * FROM Vehicle v LEFT JOIN Driver d ON v.DriverID=d.DriverID WHERE VIN = @vin AND v.Deleted=1;", conn);
+                cmd.Parameters.AddWithValue("@vin", v.VinNumber);
+
+                using (reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string vinDB = (string)reader["VIN"];
+                        string brandModel = (string)reader["BrandModel"];
+                        string plate = (string)reader["LicensePlate"];
+                        FuelType fuelType = (FuelType)Enum.Parse(typeof(FuelType), (string)reader["FuelType"]);
+                        VehicleType vehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), (string)reader["VehicleType"]);
+                        string? color = (string?)((reader["Color"] is DBNull) ? "" : reader["Color"]);
+                        int? doors = (int?)((reader["Doors"] is DBNull) ? null : reader["Doors"]);
+
+                        int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
+
+                        veh = DomainFactory.CreateVehicle(vinDB, brandModel, plate, vehicleType, fuelType, color, doors, dId);
+
+                    }
+                    reader.Close();
+                }
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("VehicleRepo-GetVehicle", ex);
+        }
+        return veh;
+    }
     #endregion
 
     #region post
@@ -132,27 +177,21 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                bool existingButDeleted = ((GetVehicleByVIN(vehicle.VinNumber) != null) ? true : false);
+                bool existingButDeleted = ((GetDeletedVehicleByExistingParam(vehicle) != null) ? true : false);
 
-                if (!existingButDeleted)
-                {
-                    cmd = new("INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did, @del);", conn);
+                string sql = (existingButDeleted ? "UPDATE Vehicle SET VIN=@vin, BrandModel=@bm, LicensePlate=@lp, FuelType=@ft, VehicleType = @vtype, Color=@clr, Doors=@drs, DriverID=@did, Deleted=@del WHERE VIN=@vin;"
+                    : "INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vtype, @clr, @drs, @did, @del);");
 
-                    cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
-                    cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
-                    cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
-                    cmd.Parameters.AddWithValue("@ft", vehicle.Fuel);
-                    cmd.Parameters.AddWithValue("@vt", vehicle.Category);
-                    cmd.Parameters.AddWithValue("@clr", vehicle.Color);
-                    cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
-                    cmd.Parameters.AddWithValue("@did", vehicle.DriverID);
-                    cmd.Parameters.AddWithValue("@del", 0);
-                }
-                else
-                {
-                    cmd = new("UPDATE Vehicle SET Deleted=0 WHERE VIN=@vin;", conn);
-                    cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
-                }
+                cmd = new(sql, conn);
+                cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
+                cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
+                cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
+                cmd.Parameters.AddWithValue("@ft", vehicle.Fuel.ToString());
+                cmd.Parameters.AddWithValue("@vtype", vehicle.Category.ToString());
+                cmd.Parameters.AddWithValue("@clr", vehicle.Color);
+                cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
+                cmd.Parameters.AddWithValue("@did", vehicle.DriverID);
+                cmd.Parameters.AddWithValue("@del", 0);
 
                 cmd.ExecuteNonQuery();
 
