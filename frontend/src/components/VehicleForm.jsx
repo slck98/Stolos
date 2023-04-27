@@ -68,7 +68,7 @@ const VehicleForm = ({ method, vehicle }) => {
             name="vin"
             required
             defaultValue={vehicle ? vehicle.vin : ""}
-            onChange={changeHandler}
+            readOnly
           />
           <label htmlFor="vehicletype">Type:</label>
           <select

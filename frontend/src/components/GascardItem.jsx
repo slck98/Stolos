@@ -27,7 +27,7 @@ const GascardItem = ({ gascard }) => {
                 <p>
                   Bestuurder:{' '}
                   <NavLink to={`/drivers/${gascard.driverId}`}>
-                    {gascard.driverid}
+                    {gascard.driverId}
                   </NavLink>
                 </p>
               )}

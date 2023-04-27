@@ -19,7 +19,7 @@ const VehicleItem = ({ vehicle }) => {
   if (vehicle.driverId !== null) {
     getDriver(vehicle.driverId);
   } else {
-    setName("");
+    setName("")
   }
 
   return (
@@ -41,7 +41,7 @@ const VehicleItem = ({ vehicle }) => {
               {vehicle.driverId && (
                 <p>
                   Bestuurder:
-                  <NavLink to={`/drivers/${vehicle.driverId}`}>{name}</NavLink>
+                   <NavLink to={`/drivers/${vehicle.driverId}`}>{name}</NavLink>
                 </p>
               )}
             </div>
