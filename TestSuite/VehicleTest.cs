@@ -46,7 +46,7 @@ namespace TestSuite
 
             Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, color, null);
 
-            Assert.Equal(null, v.Doors);
+            Assert.Null(v.Doors);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace TestSuite
 
             Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, null, doors);
 
-            Assert.Equal(null, v.Color);
+            Assert.Null(v.Color);
         }
     }
 }
