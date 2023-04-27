@@ -29,9 +29,9 @@ public class DriverRepository : IDriverRepository
     #endregion
 
     #region get
-    public List<DriverInfo> GetAllDriverInfos()
+    public List<Driver> GetAllDrivers()
     {
-        List<DriverInfo> drivers = new();
+        List<Driver> drivers = new();
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -58,26 +58,12 @@ public class DriverRepository : IDriverRepository
                         string natRegNum = (string)reader["NationalRegistrationNumber"];
 
                         List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
+                        string? vin = null, gcNum = null;
 
-                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
-                        Vehicle? v = null;
-                        GasCard? gc = null;
-                        string? vin = null, licensePlate = null, gcNum = null;
-
-                        if (reader["VIN"] is not DBNull)
-                        {
-                            //vehicle
-                            vin = (string?)reader["VIN"];
-                            licensePlate = (string?)reader["LicensePlate"];
-                        }
-                        if (reader["CardNumber"] is not DBNull)
-                        {
-                            //gascard
-                            gcNum = (string?)reader["CardNumber"];
-                        }
-
-                        DriverInfo di = DriverMapper.MapEntityToDto(d, vin, licensePlate, gcNum);
-                        drivers.Add(di);
+                        vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
+                        gcNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
+                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, gcNum);
+                        drivers.Add(d);
                     }
                     reader.Close();
                 }
@@ -92,9 +78,9 @@ public class DriverRepository : IDriverRepository
         return drivers;
     }
 
-    public DriverInfo GetDriverInfoById(int driverId)
+    public Driver GetDriverById(int driverId)
     {
-        DriverInfo? di = null;
+        Driver? d = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -120,26 +106,11 @@ public class DriverRepository : IDriverRepository
                         DateTime birthDate = (DateTime)reader["BirthDate"];
                         string natRegNum = (string)reader["NationalRegistrationNumber"];
                         List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
+                        string? vin = null, cardNum = null;
 
-                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
-                        Vehicle? v = null;
-                        GasCard? gc = null;
-
-                        string? vin = null, licensePlate = null, cardNum = null;
-
-                        if (reader["VIN"] is not DBNull)
-                        {
-                            //vehicle
-                            vin = (string?)reader["VIN"];
-                            licensePlate = (string?)reader["LicensePlate"];
-                        }
-                        if (reader["CardNumber"] is not DBNull)
-                        {
-                            //gascard
-                            cardNum = (string?)reader["CardNumber"];
-                        }
-
-                        di = DriverMapper.MapEntityToDto(d, vin, licensePlate, cardNum);
+                        vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
+                        cardNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
+                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, vin, cardNum);
                     }
                     reader.Close();
                 }
@@ -150,12 +121,12 @@ public class DriverRepository : IDriverRepository
         {
             throw new DataException("DriverRepo-GetDriver", ex);
         }
-        return di;
+        return d;
     }
 
-    public DriverInfo GetDriverInfoByNatRegNum(string natRegNum)
+    private Driver GetDriverInfoByNatRegNum(string natRegNum)
     {
-        DriverInfo? di = null;
+        Driver? d = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -182,25 +153,12 @@ public class DriverRepository : IDriverRepository
                         natRegNum = (string)reader["NationalRegistrationNumber"];
                         List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
 
-                        Driver d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address);
-                        Vehicle? v = null;
-                        GasCard? gc = null;
+                        string? vin = null, cardNum = null;
 
-                        string? vin = null, licensePlate = null, cardNum = null;
+                        vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
+                        cardNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
 
-                        if (reader["VIN"] is not DBNull)
-                        {
-                            //vehicle
-                            vin = (string?)reader["VIN"];
-                            licensePlate = (string?)reader["LicensePlate"];
-                        }
-                        if (reader["CardNumber"] is not DBNull)
-                        {
-                            //gascard
-                            cardNum = (string?)reader["CardNumber"];
-                        }
-
-                        di = DriverMapper.MapEntityToDto(d, vin, licensePlate, cardNum);
+                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, cardNum);
                     }
                     reader.Close();
                 }
@@ -211,7 +169,7 @@ public class DriverRepository : IDriverRepository
         {
             throw new DataException("DriverRepo-GetDriver", ex);
         }
-        return di;
+        return d;
     }
     #endregion
 
@@ -227,8 +185,6 @@ public class DriverRepository : IDriverRepository
                 conn.Open();
 
                 bool existingButDeleted = ((GetDriverInfoByNatRegNum(d.NatRegNumber) != null) ? true : false);
-                string sql = "";
-                cmd = new(sql, conn);
 
                 if (!existingButDeleted)
                 {
@@ -245,7 +201,6 @@ public class DriverRepository : IDriverRepository
                 else
                 {
                     cmd = new("UPDATE Driver SET Deleted=0 WHERE NationalRegistrationNumber=@rrn;", conn);
-
                     cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
                 }
 

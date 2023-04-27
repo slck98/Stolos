@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTO;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Mappers;
 using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -17,30 +18,42 @@ namespace BusinessLayer.Managers
             _repo = repo;
         }
 
+        #region GET
         public List<VehicleInfo> GetAllVehicleInfos()
         {
-            return _repo.GetAllVehicleInfos();
+            List<VehicleInfo> vehicleInfos = new List<VehicleInfo>();
+            foreach (Vehicle vehicle in _repo.GetAllVehicles())
+            {
+                vehicleInfos.Add(VehicleMapper.MapEntityToDto(vehicle));
+            }
+            return vehicleInfos;
         }
 
         public VehicleInfo GetVehicleByVIN(string vin)
         {
-            return _repo.GetVehicleByVIN(vin);
+            return VehicleMapper.MapEntityToDto(_repo.GetVehicleByVIN(vin));
         }
+        #endregion
 
-       
-        public void AddVehicle(Vehicle vehicle)
-        {
-            _repo.AddVehicle(vehicle);
-        }
-
+        #region ADD
         public void AddVehicle(VehicleInfo vehicleInfo)
         {
-            _repo.AddVehicle(vehicleInfo);
+            _repo.AddVehicle(VehicleMapper.MapDtoToEntity(vehicleInfo));
         }
+        #endregion
 
+        #region UPDATE
         public void UpdateVehicle(VehicleInfo vehicleInfo)
         {
-            _repo. UpdateVehicle(vehicleInfo);
+            _repo.UpdateVehicle(VehicleMapper.MapDtoToEntity(vehicleInfo));
         }
+        #endregion
+
+        #region DELETE (soft)
+        public void DeleteVehicle(VehicleInfo vehicleInfo)
+        {
+            _repo.DeleteVehicle(vehicleInfo.VIN);
+        }
+        #endregion
     }
 }

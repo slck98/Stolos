@@ -13,8 +13,8 @@ namespace BusinessLayer.Interfaces;
  */
 public interface IDriverRepository
 {
-    List<DriverInfo> GetAllDriverInfos();
-    DriverInfo GetDriverInfoById(int id);
+    List<Driver> GetAllDrivers();
+    Driver GetDriverById(int id);
     void AddDriver(Driver d);
     void UpdateDriver(Driver d);
     void DeleteDriver(int id);

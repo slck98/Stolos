@@ -9,7 +9,7 @@ namespace BusinessLayer.DTO;
 
 public class VehicleInfo
 {
-	public VehicleInfo(string vin, string brandModel, string licensePlate, FuelType fuel, VehicleType vehicleType, string? color, int? doors, int? dId)
+	public VehicleInfo(string? vin, string brandModel, string licensePlate, string fuel, string vehicleType, string? color, int? doors, int? dId)
 	{
 		VIN = vin;
 		BrandModel = brandModel;

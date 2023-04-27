@@ -62,7 +62,7 @@ namespace API.Controllers
         {
             try
             {
-                DriverInfo di = new(null, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
+                DriverInfo di = new(null, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null);
                 _driverManager.AddDriver(di);
                 return Ok();
             }
@@ -78,7 +78,7 @@ namespace API.Controllers
             try
             {
                 if (_driverManager.GetDriverInfoById(id) == null) return NotFound();
-                DriverInfo di = new(id, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null, null);
+                DriverInfo di = new(id, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null);
 
                 _driverManager.UpdateDriver(di);
                 return Ok();

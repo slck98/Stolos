@@ -32,7 +32,7 @@ public class VehicleController : ControllerBase
         {
             List<VehicleInfo> vis = _vehicleManager.GetAllVehicleInfos();
             if (vis == null) return NotFound();
-            return vis;
+            return Ok(vis);
         }
         catch (Exception ex)
         {
@@ -47,7 +47,7 @@ public class VehicleController : ControllerBase
         {
             VehicleInfo vi = _vehicleManager.GetVehicleByVIN(vin);
             if (vi == null) return NotFound();
-            return vi;
+            return Ok(vi);
         }
         catch (Exception ex)
         {
@@ -56,18 +56,11 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPost(Name = "addVehicle")]
-    public ActionResult Add(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
+    public ActionResult Add(string vin, string brandModel, string licensePlate, string fuelType, string vehicleType, string? color, int? doors, int? driverId = null)
     {
         try
         {
-            if (string.IsNullOrEmpty(vin)) throw new Exception();
-            Vehicle v = DomainFactory.CreateVehicle(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
-            Driver? d = null;
-            if (driverId != null)
-            {
-                d = DomainFactory.CreateDriver(driverId, lname, fname, natRegNum, driversLicenses, birthDate, address);
-            }
-            VehicleInfo vi = new(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, d.Id);
+            VehicleInfo vi = new VehicleInfo(vin, brandModel, licensePlate, fuelType, vehicleType, color, doors, driverId);
             _vehicleManager.AddVehicle(vi);
             return Ok();
         }
@@ -78,19 +71,12 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPut (Name = "updateVehicles")]
-    public ActionResult Put(string vin, string brandModel, string licensePlate, FuelType fuelType, VehicleType vehicleType, string? color, int? doors, int? driverId, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<DriversLicense> driversLicenses)
+    public ActionResult Put(string vin, string brandModel, string licensePlate, string fuelType, string vehicleType, string? color, int? doors, int? driverId = null)
     {
         try
         {
-            if (string.IsNullOrEmpty(vin)) throw new Exception();
-            Vehicle v = DomainFactory.CreateVehicle(vin, brandModel, licensePlate, vehicleType, fuelType, color, doors);
-            Driver? d = null;
-            if (driverId != null)
-            {
-                d = DomainFactory.CreateDriver(driverId, lname, fname, natRegNum, driversLicenses, birthDate, address);
-            }
-            VehicleInfo vi = new(v.VinNumber, v.BrandModel, v.LicensePlate, v.Fuel, v.Category, v.Color, v.Doors, d.Id);
-            _vehicleManager.AddVehicle(vi);
+            VehicleInfo vi = new VehicleInfo(vin, brandModel, licensePlate, fuelType, vehicleType, color, doors, driverId);
+            _vehicleManager.UpdateVehicle(vi);
             return Ok();
         }
         catch (Exception ex)
@@ -99,4 +85,19 @@ public class VehicleController : ControllerBase
         }
     }
 
+    [HttpDelete(Name = "DeleteVehicle")]
+    public ActionResult Delete(string vin)
+    {
+        try
+        {
+            VehicleInfo vi = _vehicleManager.GetVehicleByVIN(vin);
+            if (vi == null) return NotFound();
+            _vehicleManager.DeleteVehicle(vi);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            throw new APIException("VehicleController DeleteVehicle", ex);
+        }
+    }
 }
