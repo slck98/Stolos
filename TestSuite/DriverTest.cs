@@ -10,7 +10,7 @@ public class DriverTest {
         // Arrange
         string firstName = "Morgan";
         string lastName = "Freeman";
-        string rrn = "85.10.23-059.39";
+        string rrn = "69.10.11-848.50";
         List<DriversLicense> licenses = new() {
             DriversLicense.B
         };
@@ -28,7 +28,7 @@ public class DriverTest {
         // Arrange
         string firstName = "Bobby";
         string lastName = "Tables";
-        string rrn = "85.10.23-059.39";
+        string rrn = "69.10.11-848.50";
         List<DriversLicense> licenses = new() {
             DriversLicense.B
         };
@@ -50,7 +50,7 @@ public class DriverTest {
     public void TestDriver_InvalidId_ThrowException(int id) {
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
-        Assert.Throws<DomainException>(() => DomainFactory.CreateDriver(id, "voornaam", "achternaam", "85.10.23-059.39", licenses, new DateTime(1985, 10, 23), null));
+        Assert.Throws<DomainException>(() => DomainFactory.CreateDriver(id, "voornaam", "achternaam", "69.10.11-848.50", licenses, new DateTime(1985, 10, 23), null));
     }
 
     [Theory]
@@ -64,7 +64,7 @@ public class DriverTest {
     public void TestDriver_InvalidNames_ThrowException(string firstname, string lastname) {
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
-        Assert.Throws<DomainException>(() => DomainFactory.CreateDriver(1, firstname, lastname, "85.10.23-059.39", licenses, new DateTime(1985, 10, 23), null));
+        Assert.Throws<DomainException>(() => DomainFactory.CreateDriver(1, firstname, lastname, "69.10.11-848.50", licenses, new DateTime(1985, 10, 23), null));
     }
 
     [Fact]
