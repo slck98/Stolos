@@ -9,7 +9,7 @@ namespace BusinessLayer.DTO;
 
 public class DriverInfo
 {
-    public DriverInfo(int? id, string fname, string lname, DateTime birthDate, string natRegNum, List<string> licenses, string address, string? vehVin, string? vehLP, string? gcNum)
+    public DriverInfo(int? id, string fname, string lname, DateTime birthDate, string natRegNum, List<string> licenses, string address, string? vehVin, string? gcNum)
     {
         DriverID = id;
         FirstName = fname;
@@ -18,11 +18,7 @@ public class DriverInfo
         NatRegNum = natRegNum;
         Licenses = licenses;
         Address = address;
-        if ((!string.IsNullOrEmpty(vehVin)) && (!string.IsNullOrEmpty(vehLP)))
-        {
-            VehicleVin = vehVin;
-            VehicleLicensePlate = vehLP;
-        }
+        if (!string.IsNullOrEmpty(vehVin)) VehicleVin = vehVin;
 
         if (gcNum != null) GasCardNum = gcNum;
     }
@@ -37,6 +33,5 @@ public class DriverInfo
 
 	//foreign obj data
 	public string? VehicleVin { get; set; }
-	public string? VehicleLicensePlate { get; set; }
 	public string? GasCardNum { get; set; }
 }

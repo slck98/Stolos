@@ -97,10 +97,12 @@ public class Driver
         }
     }
     public List<DriversLicense> Licenses { get; set; }
+    public string? VIN { get; set; }
+    public string? GasCardNum { get; set; }
     #endregion
 
     #region ctor
-    internal Driver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, DateTime? birthDate = null, string? address = null)
+    internal Driver(int? id, string lastName, string firstName, string natRegNumber, List<DriversLicense> licenses, DateTime? birthDate = null, string? address = null, string? vin = null, string? gasCardNum = null)
     {
         Id = id;
         LastName = lastName;
@@ -110,6 +112,8 @@ public class Driver
         NatRegNumber = natRegNumber;
         BirthDate = (birthDate is null) ? GetDateFromRRN(NatRegNumber) : (DateTime)birthDate;
         Address = address;
+        VIN = vin;
+        GasCardNum = gasCardNum;
     }
     #endregion
 

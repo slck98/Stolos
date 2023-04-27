@@ -22,12 +22,17 @@ public class DriverManager
     #region GET
     public List<DriverInfo> GetDriverInfos()
 	{
-		return _repo.GetAllDriverInfos();
+        List<DriverInfo> driverInfos = new List<DriverInfo>();
+        foreach (Driver driver in _repo.GetAllDrivers())
+        {
+            driverInfos.Add(DriverMapper.MapEntityToDto(driver));
+        }
+        return driverInfos;
 	}
 
 	public DriverInfo GetDriverInfoById(int id)
 	{
-		return _repo.GetDriverInfoById(id);
+		return DriverMapper.MapEntityToDto(_repo.GetDriverById(id));
 	}
     #endregion
 
