@@ -2,8 +2,26 @@ import DetailCard from "./DetailCard";
 import { NavLink } from "react-router-dom";
 import classes from "../css/Detail.module.css";
 import foto from "../images/notAvailable.png";
+import axios from "axios";
+import { useState } from "react";
 
 const VehicleItem = ({ vehicle }) => {
+  const [name, setName] = useState("");
+
+  async function getDriver(data) {
+    try {
+      const req = await axios.get("https://localhost:7144/driver/" + data);
+      setName(req.data.firstName + " " + req.data.lastName);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  if (vehicle.driverId !== null) {
+    getDriver(vehicle.driverId);
+  } else {
+    setName("");
+  }
+
   return (
     <>
       <DetailCard type="vehicle" id={vehicle.vin}>
@@ -22,10 +40,8 @@ const VehicleItem = ({ vehicle }) => {
               <p>Aantal deuren: {vehicle.doors}</p>
               {vehicle.driverId && (
                 <p>
-                  Bestuurder: 
-                   <NavLink to={`/drivers/${vehicle.driverId}`}>
-                      {vehicle.driverId}
-                  </NavLink>
+                  Bestuurder:
+                  <NavLink to={`/drivers/${vehicle.driverId}`}>{name}</NavLink>
                 </p>
               )}
             </div>
