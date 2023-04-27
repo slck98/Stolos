@@ -60,6 +60,8 @@ namespace TestSuite
             int doors = 3;
 
             Vehicle v = DomainFactory.CreateVehicle(vin, brandmodel, licenseplate, vtype, ftype, null, doors);
+
+            Assert.Equal(null, v.Color);
         }
     }
 }
