@@ -1,26 +1,80 @@
 .container {
-    background-color: #ccc;
-    width: 80%;
-    margin: auto;
-    border-radius: 10px;
-    padding: 10px;
-  }
+  background-color: #ccc;
+  width: 80%;
+  margin: auto;
+  border-radius: 10px;
+  padding: 10px;
+}
+.container li {
+  padding: 0;
+  font-size: 1.2vw;
+}
+.container a span{
+  visibility: hidden;
+  color: white;
+  display: block;
+}
+
+.container a,.container a:link,.container a:visited{
+  text-decoration: none;
+  color: black;
+  padding: 1vw;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container a:hover span{
+  visibility: visible;
+}
+
+.container a:hover{
+  color: white;
+  background-color: #2397d3;
+  border-radius: 25px;
+}
+.update{
+  text-decoration: none;
+  color: #ccc !important;
+  margin: 0;
+  display: inline !important;
+}
+.update:hover{
+  color: white !important;
+}
   
-  .container li {
-    margin: 10px;
+.headerPage {
+  display: flex;
+  align-items: flex-end;
+}
+    
+.headerPage h1 {
+  margin-bottom: 0;
+  font-size: 2vw;
+  margin-left: 20px;
+}
+    
+.headerPage img {
+  height: 4vw;
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.columns{
+  columns: 3;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width:600px) {
+  .columns{
+    columns: 2;
+    width: 90%;
   }
-  
-  .headerPage {
-      display: flex;
-      align-items: flex-end;
-    }
-    
-    .headerPage h1 {
-      margin-bottom: 0;
-    }
-    
-    .headerPage img {
-      height: 50px;
-      margin-right: 0;
-      margin-left: auto;
-    }
+  .container li{
+    font-size: 3vw;
+  }
+  .container h1{
+    font-size: 3vw;
+  }
+}

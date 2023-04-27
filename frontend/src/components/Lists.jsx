@@ -4,6 +4,8 @@ import vehicleClasses from '../css/VehicleList.module.css';
 import driverClasses from '../css/DriverList.module.css';
 import gasCardClasses from '../css/GascardList.module.css';
 import logo from '../images/logoLong.png';
+import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const DriverList = ({ drivers }) => {
   return (
@@ -12,12 +14,18 @@ const DriverList = ({ drivers }) => {
         <h1>Bestuurders</h1>
         <img src={logo} alt="logo"></img>
       </article>
-
       <hr className={driverClasses.line} />
-      <ul>
+      <ul className={driverClasses.columns}>
         {drivers.map(driver => (
           <li key={driver.driverID.toString()}>
-            <Link to={driver.driverID.toString()}>{driver.firstName}</Link>
+            <Link to={driver.driverID.toString()}>
+              {driver.firstName} {driver.lastName} 
+              <span>
+                <FontAwesomeIcon title='bekijken' className={driverClasses.eye} icon={faEye} />&nbsp;&nbsp;&nbsp;|
+                <Link className={driverClasses.update} to={`/drivers/${driver.driverID}/edit`}><FontAwesomeIcon title='bewerken' icon={faPen}/></Link>
+              </span>
+            </Link>
+            
           </li>
         ))}
       </ul>

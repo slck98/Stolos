@@ -22,3 +22,9 @@
 .list a.active {
   background-color: var(--color-primary-600);
 }
+
+@media (max-width:600px){
+  .list a{
+    font-size: 10px;
+  }
+}
