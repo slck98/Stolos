@@ -1,10 +1,13 @@
 ﻿using API.Exceptions;
 using BusinessLayer;
 using BusinessLayer.DTO;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.X509;
 using System.Drawing;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
@@ -36,7 +39,8 @@ public class VehicleController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new APIException("VehicleController GetAllVehiclesInfos", ex);
+            return StatusCode(500);
+            //throw new APIException("VehicleController GetAllVehiclesInfos", ex);
         }
     }
 
@@ -51,7 +55,8 @@ public class VehicleController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new APIException("VehicleController GetVehicleByVin", ex);
+            return StatusCode(500);
+            //throw new APIException("VehicleController GetVehicleByVin", ex);
         }
     }
 
@@ -66,7 +71,30 @@ public class VehicleController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new APIException("VehicleController AddVehicle", ex);
+            int code = 500;
+            object? value = null;
+            if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.PRIMARY"))
+            {
+                code = 400;
+                value = $"A vehicle with vin {vin} already exists.";
+            }
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_licenseplate"))
+            {
+                code = 400;
+                value = $"A vehicle with lp {licensePlate} already exists.";
+            }
+            else if (ex.InnerException is DomainException || ex.InnerException is MySqlException && ex.InnerException.Message.Contains("VIN"))
+            {
+                code = 400;
+                value = $"{vin} is an invalid vin number.";
+            }
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_driverid"))
+            {
+                code = 400;
+                value = $"DriverID {driverId} already has a car.";
+            }
+            return StatusCode(code, value);
+            //throw new APIException("VehicleController AddVehicle", ex);
         }
     }
 
@@ -82,7 +110,30 @@ public class VehicleController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new APIException("VehicleController updateVehicle", ex);
+            int code = 500;
+            object? value = null;
+            if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.PRIMARY"))
+            {
+                code = 400;
+                value = $"A vehicle with vin {vin} already exists.";
+            }
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_licenseplate"))
+            {
+                code = 400;
+                value = $"A vehicle with lp {licensePlate} already exists.";
+            }
+            else if (ex.InnerException is DomainException || ex.InnerException is MySqlException && ex.InnerException.Message.Contains("VIN"))
+            {
+                code = 400;
+                value = $"{vin} is an invalid vin number.";
+            }
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_driverid"))
+            {
+                code = 400;
+                value = $"DriverID {driverId} already has a car.";
+            }
+            return StatusCode(code, value);
+            //throw new APIException("VehicleController updateVehicle", ex);
         }
     }
 
@@ -98,7 +149,8 @@ public class VehicleController : ControllerBase
         }
         catch (Exception ex)
         {
-            throw new APIException("VehicleController DeleteVehicle", ex);
+            return StatusCode(500);
+            //throw new APIException("VehicleController DeleteVehicle", ex);
         }
     }
 }

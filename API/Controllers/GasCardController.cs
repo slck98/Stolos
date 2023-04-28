@@ -1,10 +1,12 @@
 ﻿using API.Exceptions;
 using BusinessLayer;
 using BusinessLayer.DTO;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Managers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace API.Controllers;
 
@@ -55,8 +57,25 @@ public class GasCardController : Controller {
             _gasCardManager.AddGasCard(gci);
             return Ok();
         } catch (Exception ex) {
-
-            throw new APIException("GasCardController AddGasCard", ex);
+            int code = 500;
+            object? value = null;
+            if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("GasCard.PRIMARY"))
+            {
+                code = 400;
+                value = $"A gascard with card number {cardNumber} already exists.";
+            }
+            else if (ex.InnerException is DomainException || ex.InnerException is MySqlException && ex.InnerException.Message.Contains("CardNumber"))
+            {
+                code = 400;
+                value = $"{cardNumber} is an invalid card number.";
+            }
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("GasCard.uc_gascard_driverid"))
+            {
+                code = 400;
+                value = $"DriverID {driverId} already has a gas card.";
+            }
+            return StatusCode(code, value);
+            //throw new APIException("GasCardController AddGasCard", ex);
         }
     }
 
@@ -72,7 +91,25 @@ public class GasCardController : Controller {
         }
         catch (Exception ex)
         {
-            throw new APIException("GasCardController updateGasCard", ex);
+            int code = 500;
+            object? value = null;
+            if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("GasCard.PRIMARY"))
+            {
+                code = 400;
+                value = $"A gascard with card number {cardNumber} already exists.";
+            }
+            else if (ex.InnerException is DomainException || ex.InnerException is MySqlException && ex.InnerException.Message.Contains("CardNumber"))
+            {
+                code = 400;
+                value = $"{cardNumber} is an invalid card number.";
+            }
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("GasCard.uc_gascard_driverid"))
+            {
+                code = 400;
+                value = $"DriverID {driverId} already has a gas card.";
+            }
+            return StatusCode(code, value);
+            //throw new APIException("GasCardController updateGasCard", ex);
         }
     }
 
