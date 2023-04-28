@@ -110,7 +110,7 @@ public class DriverRepository : IDriverRepository
 
                         vin = ((reader["VIN"] is not DBNull) ? (string?)reader["VIN"] : null);
                         cardNum = ((reader["CardNumber"] is not DBNull) ? (string?)reader["CardNumber"] : null);
-                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, vin, cardNum);
+                        d = DomainFactory.CreateDriver(id, lName, fName, natRegNum, licenseList, birthDate, address, vin, cardNum);
                     }
                     reader.Close();
                 }
