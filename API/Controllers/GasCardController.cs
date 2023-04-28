@@ -29,7 +29,8 @@ public class GasCardController : Controller {
             if (gcis == null) return NotFound();
             return Ok(gcis);
         } catch (Exception ex) {
-            throw new APIException("GasCardController GetAllGasCardInfos", ex);
+            return StatusCode(500);
+            //throw new APIException("GasCardController GetAllGasCardInfos", ex);
         }
     }
 
@@ -41,7 +42,8 @@ public class GasCardController : Controller {
             if (gci == null) return NotFound();
             return Ok(gci);
         } catch (Exception ex) {
-            throw new APIException($"DriverController GetDriverInfoById({cardNum})", ex);
+            return StatusCode(500);
+            //throw new APIException($"DriverController GetDriverInfoById({cardNum})", ex);
         }
     }
 
@@ -53,11 +55,11 @@ public class GasCardController : Controller {
             _gasCardManager.AddGasCard(gci);
             return Ok();
         } catch (Exception ex) {
+
             throw new APIException("GasCardController AddGasCard", ex);
         }
     }
 
-    //
     [HttpPut(Name = "updateGasCard")]
     public ActionResult Put(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<string> fuel, int? driverId = null)
     {
@@ -86,7 +88,8 @@ public class GasCardController : Controller {
         }
         catch (Exception ex)
         {
-            throw new APIException("GasCardController DeleteGasCard", ex);
+            return StatusCode(500);
+            //throw new APIException("GasCardController DeleteGasCard", ex);
         }
     }
 }

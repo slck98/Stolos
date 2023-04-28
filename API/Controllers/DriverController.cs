@@ -1,11 +1,13 @@
 ﻿using API.Exceptions;
 using BusinessLayer;
 using BusinessLayer.DTO;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Managers;
 using BusinessLayer.Mappers;
 using BusinessLayer.Model;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 
 namespace API.Controllers
@@ -38,7 +40,8 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                throw new APIException("DriverController GetDriverInfos", ex);
+                return StatusCode(500);
+                //throw new APIException("DriverController GetDriverInfos", ex);
             }
         }
 
@@ -53,7 +56,8 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                throw new APIException($"DriverController GetDriverInfoById({id})", ex);
+                return StatusCode(500);
+                //throw new APIException($"DriverController GetDriverInfoById({id})", ex);
             }
         }
 
@@ -68,7 +72,20 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                throw new APIException("DriverController AddDriver", ex);
+                int code = 500;
+                object? value = null;
+                if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Driver.uc_driver_natregnum"))
+                {
+                    code = 400;
+                    value = $"A driver with National Registration Number {natRegNum} already exists.";
+                }
+                else if (ex.InnerException is DomainException && ex.InnerException.Message.Contains("NatRegNumber"))
+                {
+                    code = 400;
+                    value = $"{natRegNum} is an invalid National Registration number.";
+                }
+                return StatusCode(code, value);
+                //throw new APIException("DriverController AddDriver", ex);
             }
         }
 
@@ -85,7 +102,20 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                throw new APIException("DriverController UpdateDriver", ex);
+                int code = 500;
+                object? value = null;
+                if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Driver.uc_driver_natregnum"))
+                {
+                    code = 400;
+                    value = $"A different driver already has {natRegNum} as their National Registration Number.";
+                }
+                else if (ex.InnerException is DomainException && ex.InnerException.Message.Contains("NatRegNumber"))
+                {
+                    code = 400;
+                    value = $"{natRegNum} is an invalid National Registration number.";
+                }
+                return StatusCode(code, value);
+                //throw new APIException("DriverController UpdateDriver", ex);
             }
         }
 
@@ -102,7 +132,8 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                throw new APIException("DriverController DeleteDriver", ex);
+                return StatusCode(500);
+                //throw new APIException("DriverController DeleteDriver", ex);
             }
         }
     }
