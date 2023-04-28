@@ -19,13 +19,14 @@ public class GasCard
 
     #region ctor
     //ctor
-    internal GasCard(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel)
+    internal GasCard(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel, int? driverID = null)
     {
         CardNumber = cardNumber;
         ExpiringDate = expiringDate;
         Pincode = pincode;
         Blocked = blocked;
         Fuel = fuel;
+        DriverID = driverID;
     }
     #endregion
 
@@ -69,5 +70,6 @@ public class GasCard
     }
     public bool Blocked { get; set; }
     public List<FuelType> Fuel { get; set; }
+    public int? DriverID { get; set; }
     #endregion
 }

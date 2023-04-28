@@ -11,7 +11,7 @@ namespace BusinessLayer.DTO;
 
 public class GasCardInfo
 {
-	public GasCardInfo(string gcNum, DateTime expiringDate, int? pin, List<FuelType> fuelTypes, bool blocked, int? dId)
+	public GasCardInfo(string gcNum, DateTime expiringDate, int? pin, List<string> fuelTypes, bool blocked, int? dId)
 	{
 		CardNumber = gcNum;
 		ExpiringDate = expiringDate;

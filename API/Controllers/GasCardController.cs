@@ -23,10 +23,11 @@ public class GasCardController : Controller {
 
     [HttpGet(Name = "GetGasCards")]
     public ActionResult<List<GasCardInfo>> Get() {
-        try {
+        try
+        {
             List<GasCardInfo> gcis = _gasCardManager.GetAllGasCardsInfos();
             if (gcis == null) return NotFound();
-            return gcis;
+            return Ok(gcis);
         } catch (Exception ex) {
             throw new APIException("GasCardController GetAllGasCardInfos", ex);
         }
@@ -34,24 +35,58 @@ public class GasCardController : Controller {
 
     [HttpGet("{cardNum}", Name = "GetGasCardsInfos")]
     public ActionResult<GasCardInfo> Get(string cardNum) {
-        try {
+        try
+        {
             GasCardInfo gci = _gasCardManager.GetGasCardInfo(cardNum);
             if (gci == null) return NotFound();
-            return gci;
+            return Ok(gci);
         } catch (Exception ex) {
             throw new APIException($"DriverController GetDriverInfoById({cardNum})", ex);
         }
     }
 
     [HttpPost(Name = "addGasCard")]
-    public ActionResult Add(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<FuelType> fuel) {
-        try {
-            if (string.IsNullOrEmpty(cardNumber)) throw new Exception();
-            GasCard gc = DomainFactory.CreateGasCard(cardNumber, expiringDate, pincode, fuel, blocked);
-            _gasCardManager.AddGasCard(gc);
+    public ActionResult Add(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<string> fuel, int? driverId = null) {
+        try
+        {
+            GasCardInfo gci = new GasCardInfo(cardNumber, expiringDate, pincode, fuel, blocked, driverId);
+            _gasCardManager.AddGasCard(gci);
             return Ok();
         } catch (Exception ex) {
             throw new APIException("GasCardController AddGasCard", ex);
+        }
+    }
+
+    //
+    [HttpPut(Name = "updateGasCard")]
+    public ActionResult Put(string cardNumber, DateTime expiringDate, int? pincode, bool blocked, List<string> fuel, int? driverId = null)
+    {
+        try
+        {
+            if (_gasCardManager.GetGasCardInfo(cardNumber) == null) return NotFound();
+            GasCardInfo gci = new GasCardInfo(cardNumber, expiringDate, pincode, fuel, blocked, driverId);
+            _gasCardManager.UpdateGasCard(gci);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            throw new APIException("GasCardController updateGasCard", ex);
+        }
+    }
+
+    [HttpDelete(Name = "DeleteGasCard")]
+    public ActionResult Delete(string cn)
+    {
+        try
+        {
+            GasCardInfo gci = _gasCardManager.GetGasCardInfo(cn);
+            if (gci == null) return NotFound();
+            _gasCardManager.DeleteGasCard(gci);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            throw new APIException("GasCardController DeleteGasCard", ex);
         }
     }
 }

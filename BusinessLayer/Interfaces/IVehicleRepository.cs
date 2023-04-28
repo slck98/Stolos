@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces;
 
-/*
- * Adrian B on 17/03
- */
 public interface IVehicleRepository
 {
     List<Vehicle> GetAllVehicles();

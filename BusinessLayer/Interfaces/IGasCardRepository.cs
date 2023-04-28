@@ -8,14 +8,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces;
 
-/*
- * Adrian B on 17/03
- */
 public interface IGasCardRepository
 {
     List<GasCard> GetAllGasCards();
     GasCard GetGasCard(string cardNum);
-    List<GasCardInfo> GetGasCardInfos();
-    GasCardInfo GetGasCardInfo(string cardNum);
     void AddGasCard(GasCard gc);
+    void UpdateGasCard(GasCard gc);
+    void DeleteGasCard(string cardNum);
 }

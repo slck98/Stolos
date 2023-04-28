@@ -179,15 +179,15 @@ public class VehicleRepository : IVehicleRepository
 
                 bool existingButDeleted = ((GetDeletedVehicleByExistingParam(vehicle) != null) ? true : false);
 
-                string sql = (existingButDeleted ? "UPDATE Vehicle SET VIN=@vin, BrandModel=@bm, LicensePlate=@lp, FuelType=@ft, VehicleType = @vtype, Color=@clr, Doors=@drs, DriverID=@did, Deleted=@del WHERE VIN=@vin;"
-                    : "INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vtype, @clr, @drs, @did, @del);");
+                string sql = (existingButDeleted ? "UPDATE Vehicle SET VIN=@vin, BrandModel=@bm, LicensePlate=@lp, FuelType=@ft, VehicleType = @vt, Color=@clr, Doors=@drs, DriverID=@did, Deleted=@del WHERE VIN=@vin;"
+                    : "INSERT INTO Vehicle (VIN, BrandModel, LicensePlate, FuelType, VehicleType, Color, Doors, DriverID, Deleted) VALUES (@vin, @bm, @lp, @ft, @vt, @clr, @drs, @did, @del);");
 
                 cmd = new(sql, conn);
                 cmd.Parameters.AddWithValue("@vin", vehicle.VinNumber);
                 cmd.Parameters.AddWithValue("@bm", vehicle.BrandModel);
                 cmd.Parameters.AddWithValue("@lp", vehicle.LicensePlate);
                 cmd.Parameters.AddWithValue("@ft", vehicle.Fuel.ToString());
-                cmd.Parameters.AddWithValue("@vtype", vehicle.Category.ToString());
+                cmd.Parameters.AddWithValue("@vt", vehicle.Category.ToString());
                 cmd.Parameters.AddWithValue("@clr", vehicle.Color);
                 cmd.Parameters.AddWithValue("@drs", vehicle.Doors);
                 cmd.Parameters.AddWithValue("@did", vehicle.DriverID);

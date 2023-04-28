@@ -36,11 +36,11 @@ public class DomainFactory
         }
     }
 
-    public static GasCard CreateGasCard(string cardNum, DateTime expiringDate, int? pin, List<FuelType> fuelTypes, bool blocked)
+    public static GasCard CreateGasCard(string cardNum, DateTime expiringDate, int? pin, List<FuelType> fuelTypes, bool blocked, int? driverId)
     {
         try
         {
-            return new GasCard(cardNum, expiringDate, pin, blocked, fuelTypes);
+            return new GasCard(cardNum, expiringDate, pin, blocked, fuelTypes, driverId);
         }
         catch (Exception ex)
         {

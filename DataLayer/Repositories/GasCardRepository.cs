@@ -30,7 +30,7 @@ public class GasCardRepository : IGasCardRepository
     #region get
     public GasCard GetGasCard(string cardNum)
     {
-        GasCard card = null;
+        GasCard? gc = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -38,25 +38,25 @@ public class GasCardRepository : IGasCardRepository
         try
         {
             using (conn = new(_connectionString))
-
             {
                 conn.Open();
 
-                cmd = new("SELECT * FROM GasCard WHERE CardNumber = '@cardnum' AND Deleted=0;", conn);
-                cmd.Parameters.AddWithValue("@cardnum", cardNum);
+                cmd = new("SELECT * FROM GasCard gc LEFT JOIN Driver d ON gc.DriverID=d.DriverID WHERE CardNumber = @cn AND gc.Deleted=0;", conn);
+                cmd.Parameters.AddWithValue("@cn", cardNum);
 
                 using (reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        string cardnumber = (string)reader[1];
-                        DateTime expiringdate = (DateTime)reader[2];
-                        int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
+                        string cardnumber = (string)reader["CardNumber"];
+                        DateTime expiringdate = (DateTime)reader["ExpiringDate"];
+                        int? pincode = (int?)((reader["Pincode"] is DBNull) ? null : reader["Pincode"]);
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
-                        bool blocked = Convert.ToBoolean(reader[6]);
+                        bool blocked = Convert.ToBoolean(reader["Blocked"]);
 
+                        int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
 
-                        card = null; //new(cardnumber, expiringdate, pincode, blocked, fuels, null);
+                        gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked, dId);
                     }
                     reader.Close();
                 }
@@ -66,57 +66,15 @@ public class GasCardRepository : IGasCardRepository
         }
         catch (Exception ex)
         {
-            throw new DataException("GasCardRepo-GetAllGasCards", ex);
+            throw new DataException("GasCardRepo-GetGasCard", ex);
         }
 
-        return card;
+        return gc;
     }
 
     public List<GasCard> GetAllGasCards()
     {
-        List<GasCard> cards = new List<GasCard>();
-        MySqlConnection conn;
-        MySqlDataReader reader;
-        MySqlCommand cmd;
-        try
-        {
-            using (conn = new(_connectionString))
-
-            {
-                conn.Open();
-
-                cmd = new("SELECT * FROM GasCard WHERE Deleted=0;", conn);
-
-                using (reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        string cardnumber = (string)reader[1];
-                        DateTime expiringdate = (DateTime)reader[2];
-                        int? pincode = (int?)((reader[3] is DBNull) ? null : reader[3]);
-                        List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
-                        bool blocked = Convert.ToBoolean(reader[6]);
-
-
-                        GasCard gc = null;// new(cardnumber, expiringdate, pincode, blocked, fuels, null);
-                        cards.Add(gc);
-                    }
-                    reader.Close();
-                }
-
-                conn.Close();
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new DataException("GasCardRepo-GetAllGasCards", ex);
-        }
-        return cards;
-    }
-
-    public List<GasCardInfo> GetGasCardInfos()
-    {
-        List<GasCardInfo> cardsInfos = new List<GasCardInfo>();
+        List<GasCard> gasCards = new List<GasCard>();
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
@@ -139,27 +97,11 @@ public class GasCardRepository : IGasCardRepository
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                         bool blocked = Convert.ToBoolean(reader["Blocked"]);
 
-                        GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked);
-                        Driver d = null;
+                        int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
 
-                        if (reader["DriverID"] is not DBNull)
-                        {
-                            //driver
-                            int driverID = (int)reader["DriverID"];
-                            string fName = (string)reader["FirstName"];
-                            string lName = (string)reader["LastName"];
-                            string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
-                            DateTime birthDate = (DateTime)reader["BirthDate"];
-                            string natRegNum = (string)reader["NationalRegistrationNumber"];
-                            List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
-                            d = DomainFactory.CreateDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
-                        }
+                        GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked, dId);
 
-                        int? dId = null;
-                        if (d != null) dId= d.Id;
-
-                        GasCardInfo cardInfo = new(gc.CardNumber, gc.ExpiringDate, gc.Pincode, gc.Fuel, gc.Blocked, dId);
-                        cardsInfos.Add(cardInfo);
+                        gasCards.Add(gc);
                     }
                     reader.Close();
                 }
@@ -171,25 +113,23 @@ public class GasCardRepository : IGasCardRepository
         {
             throw new DataException("GasCardRepo-GetAllGasCards", ex);
         }
-        return cardsInfos;
+        return gasCards;
     }
 
-    public GasCardInfo GetGasCardInfo(string cardNum)
+    //
+    private GasCard GetDeletedGasCardByExistingParam(GasCard gc)
     {
-        GasCardInfo gci = null;
-        Driver? d = null;
+        GasCard? card = null;
         MySqlConnection conn;
         MySqlDataReader reader;
         MySqlCommand cmd;
-
         try
         {
             using (conn = new(_connectionString))
             {
                 conn.Open();
-
-                cmd = new("SELECT * FROM GasCard gc LEFT JOIN Driver d ON gc.DriverID=d.DriverID WHERE CardNumber = @cn AND gc.Deleted=0;", conn);
-                cmd.Parameters.AddWithValue("@cn", cardNum.ToLower());
+                cmd = new("SELECT * FROM GasCard gc LEFT JOIN Driver d ON gc.DriverID=d.DriverID WHERE CardNumber = @cn AND gc.Deleted=1;", conn);
+                cmd.Parameters.AddWithValue("@cn", gc.CardNumber);
 
                 using (reader = cmd.ExecuteReader())
                 {
@@ -201,25 +141,9 @@ public class GasCardRepository : IGasCardRepository
                         List<FuelType> fuels = new List<FuelType>(reader["FuelTypes"].ToString().Split(",").Select(ft => (FuelType)Enum.Parse(typeof(FuelType), ft)));
                         bool blocked = Convert.ToBoolean(reader["Blocked"]);
 
-                        GasCard gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked);
+                        int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
 
-                        if (reader["DriverID"] is not DBNull)
-                        {
-                            //driver
-                            int driverID = (int)reader["DriverID"];
-                            string fName = (string)reader["FirstName"];
-                            string lName = (string)reader["LastName"];
-                            string? address = (string?)((reader["Address"] is DBNull) ? null : reader["Address"]);
-                            DateTime birthDate = (DateTime)reader["BirthDate"];
-                            string natRegNum = (string)reader["NationalRegistrationNumber"];
-                            List<DriversLicense> licenseList = new List<DriversLicense>(reader["DriversLicenses"].ToString().Split(",").Select(dl => (DriversLicense)Enum.Parse(typeof(DriversLicense), dl)));
-                            d = DomainFactory.CreateDriver(driverID, lName, fName, natRegNum, licenseList, birthDate, address);
-                        }
-
-                        int? dId = null;
-                        if (d != null) dId = d.Id;
-
-                        gci = new(gc.CardNumber, gc.ExpiringDate, gc.Pincode, gc.Fuel, gc.Blocked, dId);
+                        gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked, dId);
                     }
                     reader.Close();
                 }
@@ -229,10 +153,9 @@ public class GasCardRepository : IGasCardRepository
         }
         catch (Exception ex)
         {
-            throw new DataException("GasCardRepo-GetAllGasCards", ex);
+            throw new DataException("GasCardRepo-GetGCbyParam", ex);
         }
-
-        return gci;
+        return gc;
     }
     #endregion
 
@@ -247,16 +170,20 @@ public class GasCardRepository : IGasCardRepository
             {
                 conn.Open();
 
-                cmd = new("INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, Blocked, Deleted) VALUES (@cn, @ed, @pc, @ft, @bl, @del);", conn);
+                bool existingButDeleted = (GetDeletedGasCardByExistingParam(gc) != null ? true : false);
+
+                string sql = (existingButDeleted ? "UPDATE GasCard SET CardNumber = @cn, ExpiringDate = @ed, Pincode = @pc, FuelTypes = @ft, DriverID = @did, Blocked=@bl, Deleted=@del WHERE CardNumber = @cn" 
+                    : "INSERT INTO GasCard (CardNumber, ExpiringDate, Pincode, FuelTypes, DriverID, Blocked, Deleted) VALUES (@cn, @ed, @pc, @ft, @did, @bl, @del);");
+
+                cmd = new(sql, conn);
 
                 cmd.Parameters.AddWithValue("@cn", gc.CardNumber);
                 cmd.Parameters.AddWithValue("@ed", gc.ExpiringDate);
                 cmd.Parameters.AddWithValue("@pc", gc.Pincode);
-                List<string> stringList = gc.Fuel.ConvertAll(f => f.ToString());
-                string fueltypes = string.Join(",", stringList);
-                cmd.Parameters.AddWithValue("@ft", fueltypes);
+                cmd.Parameters.AddWithValue("@ft", string.Join(",", gc.Fuel.ConvertAll(f => f.ToString())));
+                cmd.Parameters.AddWithValue("@did", gc.DriverID);
                 cmd.Parameters.AddWithValue("@bl", gc.Blocked);
-                cmd.Parameters.AddWithValue("@del", false);
+                cmd.Parameters.AddWithValue("@del", 0);
 
                 cmd.ExecuteNonQuery();
 
@@ -266,6 +193,66 @@ public class GasCardRepository : IGasCardRepository
         catch (Exception ex)
         {
             throw new DataException("GasCardRepo-AddGasCard", ex);
+        }
+    }
+    #endregion
+
+    #region put
+    public void UpdateGasCard(GasCard gc)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("UPDATE GasCard SET CardNumber = @cn, ExpiringDate = @ed, Pincode = @pc, FuelTypes = @ft, DriverID = @did, Blocked=@bl, Deleted=@del WHERE CardNumber = @cn", conn);
+
+                cmd.Parameters.AddWithValue("@cn", gc.CardNumber);
+                cmd.Parameters.AddWithValue("@ed", gc.ExpiringDate);
+                cmd.Parameters.AddWithValue("@pc", gc.Pincode);
+                cmd.Parameters.AddWithValue("@ft", string.Join(",", gc.Fuel.ConvertAll(f => f.ToString())));
+                cmd.Parameters.AddWithValue("@did", gc.DriverID);
+                cmd.Parameters.AddWithValue("@bl", gc.Blocked);
+                cmd.Parameters.AddWithValue("@del", 0);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("GasCardRepo-UpdateGasCard", ex);
+        }
+    }
+    #endregion
+
+    #region delete (soft)
+    public void DeleteGasCard(string cn)
+    {
+        MySqlConnection conn;
+        MySqlCommand cmd;
+        try
+        {
+            using (conn = new(_connectionString))
+            {
+                conn.Open();
+
+                cmd = new("UPDATE GasCard SET Deleted=1 WHERE CardNumber=@cn;", conn);
+
+                cmd.Parameters.AddWithValue("@cn", cn);
+
+                cmd.ExecuteNonQuery();
+
+                conn.Close();
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new DataException("GasCardRepo-DeleteGasCard", ex);
         }
     }
     #endregion

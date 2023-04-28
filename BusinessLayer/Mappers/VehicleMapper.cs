@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Mappers;
 
-internal class VehicleMapper
+public static class VehicleMapper
 {
     public static Vehicle MapDtoToEntity(VehicleInfo vi)
     {
-        return new Vehicle(vi.VIN, vi.BrandModel, vi.LicensePlate, (VehicleType)Enum.Parse(typeof(VehicleType), vi.VehicleType.ToString()), (FuelType)Enum.Parse(typeof(FuelType), vi.FuelType.ToString()), vi.Color, vi.Doors, vi.DriverId);
+        return DomainFactory.CreateVehicle(vi.VIN, vi.BrandModel, vi.LicensePlate, (VehicleType)Enum.Parse(typeof(VehicleType), vi.VehicleType.ToString()), (FuelType)Enum.Parse(typeof(FuelType), vi.FuelType.ToString()), vi.Color, vi.Doors, vi.DriverId);
     }
     public static VehicleInfo? MapEntityToDto(Vehicle v)
     {

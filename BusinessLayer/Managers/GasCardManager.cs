@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.DTO;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Mappers;
 using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
@@ -17,29 +18,43 @@ namespace BusinessLayer.Managers
         {
             _repo = repo;
         }
-        public List<GasCard> GetAllGasCards()
-        {
-            return _repo.GetAllGasCards();
-        }
 
-        public GasCard GetGasCard(string cn)
-        {
-            return _repo.GetGasCard(cn);
-        }
-
+        #region GET
         public List<GasCardInfo> GetAllGasCardsInfos()
         {
-            return _repo.GetGasCardInfos();
+            List<GasCardInfo> gasCardInfos = new List<GasCardInfo>();
+            foreach (GasCard gc in _repo.GetAllGasCards())
+            {
+                gasCardInfos.Add(GasCardMapper.MapEntityToDto(gc));
+            }
+            return gasCardInfos;
         }
 
         public GasCardInfo GetGasCardInfo(string cn)
         {
-            return _repo.GetGasCardInfo(cn);
+            return GasCardMapper.MapEntityToDto(_repo.GetGasCard(cn));
         }
+        #endregion
 
-        public void AddGasCard(GasCard gasCard)
+        #region ADD
+        public void AddGasCard(GasCardInfo gci)
         {
-            _repo.AddGasCard(gasCard);
+            _repo.AddGasCard(GasCardMapper.MapDtoToEntity(gci));
         }
+        #endregion
+
+        #region UPDATE
+        public void UpdateGasCard(GasCardInfo gci)
+        {
+            _repo.UpdateGasCard(GasCardMapper.MapDtoToEntity(gci));
+        }
+        #endregion
+
+        #region DELETE (soft)
+        public void DeleteGasCard(GasCardInfo gci)
+        {
+            _repo.DeleteGasCard(gci.CardNumber);
+        }
+        #endregion
     }
 }
