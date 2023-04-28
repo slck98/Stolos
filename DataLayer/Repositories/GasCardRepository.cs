@@ -143,7 +143,7 @@ public class GasCardRepository : IGasCardRepository
 
                         int? dId = (reader["DriverID"] is not DBNull) ? (int?)reader["DriverID"] : null;
 
-                        gc = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked, dId);
+                        card = DomainFactory.CreateGasCard(cardnumber, expiringdate, pincode, fuels, blocked, dId);
                     }
                     reader.Close();
                 }
@@ -155,7 +155,7 @@ public class GasCardRepository : IGasCardRepository
         {
             throw new DataException("GasCardRepo-GetGCbyParam", ex);
         }
-        return gc;
+        return card;
     }
     #endregion
 
@@ -241,11 +241,10 @@ public class GasCardRepository : IGasCardRepository
             {
                 conn.Open();
 
-                cmd = new("UPDATE GasCard SET Deleted=1 WHERE CardNumber=@cn;", conn);
-
+                cmd = new("UPDATE GasCard SET Deleted=1, DriverID=NULL WHERE CardNumber=@cn;", conn);
                 cmd.Parameters.AddWithValue("@cn", cn);
-
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
 
                 conn.Close();
             }

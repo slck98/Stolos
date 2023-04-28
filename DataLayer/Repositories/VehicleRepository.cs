@@ -250,11 +250,10 @@ public class VehicleRepository : IVehicleRepository
             {
                 conn.Open();
 
-                cmd = new("UPDATE Vehicle SET Deleted=1 WHERE VIN=@vin;", conn);
-
+                cmd = new("UPDATE Vehicle SET Deleted=1, DriverID=NULL WHERE VIN=@vin;", conn);
                 cmd.Parameters.AddWithValue("@vin", vin);
-
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
 
                 conn.Close();
             }

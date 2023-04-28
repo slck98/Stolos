@@ -255,10 +255,17 @@ public class DriverRepository : IDriverRepository
                 conn.Open();
 
                 cmd = new("UPDATE Driver SET Deleted=1 WHERE DriverID=@did;", conn);
-
                 cmd.Parameters.AddWithValue("@did", id);
-
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                cmd = new("UPDATE Vehicle SET DriverID=NULL WHERE DriverID=@did;", conn);
+                cmd.Parameters.AddWithValue("@did", id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                cmd = new("UPDATE GasCard SET DriverID=NULL WHERE DriverID=@did;", conn);
+                cmd.Parameters.AddWithValue("@did", id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
 
                 conn.Close();
             }
