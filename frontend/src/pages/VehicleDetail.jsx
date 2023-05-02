@@ -7,7 +7,7 @@ import {
   Await,
 } from 'react-router-dom';
 import VehicleItem from '../components/VehicleItem';
-import {VehicleList} from '../components/Lists';
+import { VehicleList } from '../components/Lists';
 
 const VehicleDetailPage = () => {
   const { vehicles, vehicle } = useRouteLoaderData('vehicle-detail');
@@ -30,7 +30,7 @@ const VehicleDetailPage = () => {
 export default VehicleDetailPage;
 
 async function loadVehicle(vin) {
-  const response = await fetch('https://localhost:7144/vehicle/' + vin);
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL + vin);
   if (!response.ok) {
     throw json(
       { message: 'Kon de details van het voertuig niet ophalen' },
@@ -43,7 +43,7 @@ async function loadVehicle(vin) {
 }
 
 async function loadVehicles() {
-  const response = await fetch('https://localhost:7144/vehicle');
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL);
 
   if (!response.ok) {
     return json({ message: 'Voertuigen ophalen mislukt.' }, { status: 500 });
@@ -62,7 +62,7 @@ export async function loader({ req, params }) {
 }
 
 export async function action({ params, request }) {
-  const response = await fetch('https://localhost:7144/vehicle/' + params.vin, {
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL + params.vin, {
     method: request.method,
   });
   if (!response.ok) {

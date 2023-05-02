@@ -22,7 +22,7 @@ const EditVehiclePage = () => {
 export default EditVehiclePage;
 
 async function loadVehicle(vin) {
-  const response = await fetch('https://localhost:7144/vehicle/' + vin);
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL + vin);
   if (!response.ok) {
     throw json(
       { message: 'Kon de details van het voertuig niet ophalen' },
@@ -42,7 +42,7 @@ export async function loader({ req, params }) {
 }
 
 export async function action({ params, request }) {
-  const response = await fetch('https://localhost:7144/vehicle/' + params.vin, {
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL + params.vin, {
     method: request.method,
   });
   if (!response.ok) {

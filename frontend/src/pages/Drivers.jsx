@@ -1,14 +1,15 @@
-import React, { Suspense } from "react";
-import { useLoaderData, json, defer, Await } from "react-router-dom";
-import DriverList from "../components/Lists";
+import React, { Suspense } from 'react';
+import { useLoaderData, json, defer, Await } from 'react-router-dom';
+import DriverList from '../components/Lists';
 
 const DriversPage = () => {
   const { drivers } = useLoaderData();
+  console.log(process.env.REACT_APP_DRIVER_URL);
 
   return (
     <Suspense fallback={<p>Laden...</p>}>
       <Await resolve={drivers}>
-        {(loadedDrivers) => <DriverList drivers={loadedDrivers} />}
+        {loadedDrivers => <DriverList drivers={loadedDrivers} />}
       </Await>
     </Suspense>
   );
@@ -17,9 +18,9 @@ const DriversPage = () => {
 export default DriversPage;
 
 const loadDrivers = async () => {
-  const response = await fetch("https://localhost:7144/driver");
+  const response = await fetch(process.env.REACT_APP_DRIVER_URL);
   if (!response.ok) {
-    return json({ message: "Chauffeurs ophalen mislukt." }, { status: 500 });
+    return json({ message: 'Chauffeurs ophalen mislukt.' }, { status: 500 });
   } else {
     const res = await response.json();
     return res;

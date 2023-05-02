@@ -1,17 +1,17 @@
-import DetailCard from "./DetailCard";
-import { NavLink } from "react-router-dom";
-import classes from "../css/Detail.module.css";
-import foto from "../images/notAvailable.png";
-import axios from "axios";
-import { useState } from "react";
+import DetailCard from './DetailCard';
+import { NavLink } from 'react-router-dom';
+import classes from '../css/Detail.module.css';
+import foto from '../images/notAvailable.png';
+import axios from 'axios';
+import { useState } from 'react';
 
 const VehicleItem = ({ vehicle }) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
 
   async function getDriver(data) {
     try {
-      const req = await axios.get("https://localhost:7144/driver/" + data);
-      setName(req.data.firstName + " " + req.data.lastName);
+      const req = await axios.get(process.env.REACT_APP_DRIVER_URL + data);
+      setName(req.data.firstName + ' ' + req.data.lastName);
     } catch (error) {
       console.error(error);
     }
@@ -19,7 +19,7 @@ const VehicleItem = ({ vehicle }) => {
   if (vehicle.driverId !== null) {
     getDriver(vehicle.driverId);
   } else {
-    setName("")
+    setName('');
   }
 
   return (
@@ -41,7 +41,7 @@ const VehicleItem = ({ vehicle }) => {
               {vehicle.driverId && (
                 <p>
                   Bestuurder:
-                   <NavLink to={`/drivers/${vehicle.driverId}`}>{name}</NavLink>
+                  <NavLink to={`/drivers/${vehicle.driverId}`}>{name}</NavLink>
                 </p>
               )}
             </div>

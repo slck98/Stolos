@@ -23,7 +23,7 @@ export default EditDriverPage;
 
 async function loadDriver(driverID) {
   const response = await fetch(
-    'https://localhost:7144/driver/' + driverID.toString()
+    process.env.REACT_APP_DRIVER_URL + driverID.toString()
   );
   if (!response.ok) {
     throw json(
@@ -45,7 +45,7 @@ export async function loader({ req, params }) {
 
 export async function action({ params, request }) {
   const response = await fetch(
-    'https://localhost:7144/driver/' + params.driverID.toString(),
+    process.env.REACT_APP_DRIVER_URL + params.driverID.toString(),
     {
       method: request.method,
     }

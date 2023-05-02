@@ -31,7 +31,7 @@ export default DriverDetailPage;
 
 async function loadDriver(driverID) {
   const response = await fetch(
-    'https://localhost:7144/driver/' + driverID.toString()
+    process.env.REACT_APP_DRIVER_URL + driverID.toString()
   );
   if (!response.ok) {
     throw json(
@@ -45,7 +45,7 @@ async function loadDriver(driverID) {
 }
 
 async function loadDrivers() {
-  const response = await fetch('https://localhost:7144/driver');
+  const response = await fetch(process.env.REACT_APP_DRIVER_URL);
 
   if (!response.ok) {
     return json({ message: 'Chauffeurs ophalen mislukt.' }, { status: 500 });
@@ -65,7 +65,7 @@ export async function loader({ req, params }) {
 
 export async function action({ params, request }) {
   const response = await fetch(
-    'https://localhost:7144/driver/' + params.driverID.toString(),
+    process.env.REACT_APP_DRIVER_URL + params.driverID.toString(),
     {
       method: request.method,
     }

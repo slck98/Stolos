@@ -113,7 +113,7 @@ export async function action({ request, params }) {
     address: data.get('address'),
   };
 
-  let url = 'https://localhost:7144/driver';
+  let url = process.env.REACT_APP_DRIVER_URL;
 
   if (method === 'PUT') {
     const { driverID } = params;

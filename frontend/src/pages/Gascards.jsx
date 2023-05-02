@@ -1,6 +1,6 @@
-import React, { Suspense } from "react";
-import { Await, useLoaderData, json, defer } from "react-router-dom";
-import {GascardList} from "../components/Lists";
+import React, { Suspense } from 'react';
+import { Await, useLoaderData, json, defer } from 'react-router-dom';
+import { GascardList } from '../components/Lists';
 
 const GascardPage = () => {
   const { gascards } = useLoaderData();
@@ -8,7 +8,7 @@ const GascardPage = () => {
   return (
     <Suspense fallback={<p>Laden...</p>}>
       <Await resolve={gascards}>
-        {(loadedGascards) => <GascardList gascards={loadedGascards} />}
+        {loadedGascards => <GascardList gascards={loadedGascards} />}
       </Await>
     </Suspense>
   );
@@ -17,10 +17,10 @@ const GascardPage = () => {
 export default GascardPage;
 
 const loadGascards = async () => {
-  const response = await fetch("https://localhost:7144/gascard");
+  const response = await fetch(process.env.REACT_APP_GASCARD_URL);
   if (!response.ok) {
     return json(
-      { message: "Brandstofkaarten ophalen mislukt." },
+      { message: 'Brandstofkaarten ophalen mislukt.' },
       { status: 500 }
     );
   } else {

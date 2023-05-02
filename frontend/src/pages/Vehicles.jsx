@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { useLoaderData, defer, Await, json } from 'react-router-dom';
-import {VehicleList} from '../components/Lists';
+import { VehicleList } from '../components/Lists';
 
 const VehiclesPage = () => {
   const { vehicles } = useLoaderData();
@@ -17,7 +17,7 @@ const VehiclesPage = () => {
 export default VehiclesPage;
 
 const loadVehicles = async () => {
-  const response = await fetch('https://localhost:7144/vehicle');
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL);
   if (!response.ok) {
     return json({ message: 'Voertuigen ophalen mislukt.' }, { status: 500 });
   } else {

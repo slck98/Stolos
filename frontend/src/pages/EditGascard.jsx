@@ -22,7 +22,7 @@ const EditGascardPage = () => {
 export default EditGascardPage;
 
 async function loadGascard(cardNumber) {
-  const response = await fetch('https://localhost:7144/gascard/' + cardNumber);
+  const response = await fetch(process.env.REACT_APP_GASCARD_URL + cardNumber);
   if (!response.ok) {
     throw json(
       { message: 'Kon de details van de tankkaart niet ophalen' },
@@ -43,7 +43,7 @@ export async function loader({ req, params }) {
 
 export async function action({ params, request }) {
   const response = await fetch(
-    'https://localhost:7144/gascard/' + params.cardNumber,
+    process.env.REACT_APP_GASCARD_URL + params.cardNumber,
     {
       method: request.method,
     }
