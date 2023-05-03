@@ -88,6 +88,7 @@ const DriverForm = ({ method, driver }) => {
           />
         </div>
         <div className={classes.buttons}>
+        <p></p>
           <button disabled={isSubmitting} className={classes.save}>
             <FontAwesomeIcon icon={faFloppyDisk} /> Opslaan
           </button>

@@ -32,21 +32,20 @@
   height: 35px;
 }
 
-.data Select{
-
-}
-
 .buttons {
-  display: flex;
-  margin: 0 auto;
   margin-top: 0.5vw;
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1vw;
+  padding-left: 1vw;
 }
 
 .save,
 .cancel {
   text-decoration: none;
-  margin: 10px;
-  padding: 3px;
+  border-style: none;
+  padding: 1vw;
   border-radius: 25px;
   background-color: #2397d3;
   color: white;

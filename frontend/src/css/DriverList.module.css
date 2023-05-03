@@ -44,19 +44,19 @@
   
 .headerPage {
   display: flex;
-  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 1vw;
 }
-    
+  
 .headerPage h1 {
-  margin-bottom: 0;
   font-size: 2vw;
-  margin-left: 20px;
+  margin: auto;
 }
-    
+  
 .headerPage img {
-  height: 4vw;
-  margin-right: 0;
-  margin-left: auto;
+  height: 40px;
+  margin-left: 1vw;
+  margin-right: 1vw;
 }
 
 .columns{

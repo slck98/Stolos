@@ -114,6 +114,7 @@ const VehicleForm = ({ method, vehicle }) => {
           <Select id="driverId" name="driverId" onChange={changeHandler} />
         </div>
         <div className={classes.buttons}>
+        <p></p>
           <button disabled={isSubmitting} className={classes.save}>
             <FontAwesomeIcon icon={faFloppyDisk} /> Opslaan
           </button>

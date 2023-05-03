@@ -75,6 +75,7 @@ const GascardForm = ({ method, gascard }) => {
           </select>
         </div>
         <div className={classes.buttons}>
+          <p></p>
           <button disabled={isSubmitting} className={classes.save}>
             <FontAwesomeIcon icon={faFloppyDisk} /> Opslaan
           </button>

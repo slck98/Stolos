@@ -16,8 +16,9 @@
 .edit,
 .back {
   text-decoration: none;
+  border-style: none;
   margin: 10px;
-  padding: 3px;
+  padding: 5px;
   border-radius: 25px;
   background-color: #2397d3;
   color: white;
