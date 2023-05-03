@@ -32,12 +32,14 @@
     * Pincode
     * Blocked
     * DriverId
+    * An array of FeulTypes
 * /GasCard (PUT)
     * Cardnumber
     * ExpiringDate
     * Pincode
     * Blocked
     * DriverId
+    * An array of FeulTypes
 * /GasCard (DELETE)
     * Cardnumber
 * /GasCard/{cardnum}
