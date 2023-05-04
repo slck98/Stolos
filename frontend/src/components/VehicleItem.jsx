@@ -18,8 +18,6 @@ const VehicleItem = ({ vehicle }) => {
   }
   if (vehicle.driverId !== null) {
     getDriver(vehicle.driverId);
-  } else {
-    setName('');
   }
 
   return (

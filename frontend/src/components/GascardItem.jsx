@@ -2,8 +2,23 @@ import DetailCard from './DetailCard';
 import { NavLink } from 'react-router-dom';
 import classes from '../css/Detail.module.css';
 import foto from '../images/notAvailable.png';
+import { useState } from 'react';
+import axios from 'axios';
 
 const GascardItem = ({ gascard }) => {
+  const [name, setName] = useState('');
+  async function getDriver(data) {
+    try {
+      const req = await axios.get(process.env.REACT_APP_DRIVER_URL + data);
+      setName(req.data.firstName + ' ' + req.data.lastName);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  if (gascard.driverId !== null) {
+    getDriver(gascard.driverId);
+  }
+
   return (
     <>
       <DetailCard type="gascard" id={gascard.cardNumber}>
@@ -27,7 +42,7 @@ const GascardItem = ({ gascard }) => {
                 <p>
                   Bestuurder:{' '}
                   <NavLink to={`/drivers/${gascard.driverId}`}>
-                    {gascard.driverId}
+                    {name}
                   </NavLink>
                 </p>
               )}

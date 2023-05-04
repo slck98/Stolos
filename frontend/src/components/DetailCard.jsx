@@ -18,8 +18,7 @@ const DetailCard = props => {
       {props.children}
       <div className={classes.buttons}>
         <button className={classes.back} onClick={() => navigate(-1)}>
-          <FontAwesomeIcon icon={faCircleArrowLeft} />
-          Terug
+          <FontAwesomeIcon icon={faCircleArrowLeft} /> Terug
         </button>
         <button
           onClick={() => navigate(`/${props.type}s/${props.id}/edit`)}

@@ -2,8 +2,26 @@ import { NavLink } from 'react-router-dom';
 import classes from '../css/Detail.module.css';
 import foto from '../images/user.png';
 import DetailCard from './DetailCard';
+import { useState } from 'react';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const DriverItem = ({ driver }) => {
+  const [vehicleVin, setVehicleVin] = useState('');
+  async function getVehicleVin(data) {
+    try {
+      const req = await axios.get(process.env.REACT_APP_VEHICLE_URL + data);
+      setVehicleVin(req.data.licensePlate);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  if (driver.vehicleVin !== null) {
+    getVehicleVin(driver.vehicleVin);
+    console.log(driver.vehicleVin);
+  }
+
   return (
     <>
       <DetailCard type="driver" id={driver.driverID}>
@@ -23,19 +41,19 @@ const DriverItem = ({ driver }) => {
               <p>Rijksregisternummer: {driver.natRegNum}</p>
               <p>Adres: {driver.address}</p>
               <p>Rijbewijs: {driver.licenses.toString()}</p>
-              {driver.vehicleLicensePlate && (
+              {driver.vehicleVin && (
                 <p>
-                  Nummerplaat:{' '}
+                  Nummerplaat:{' '}{vehicleVin}{' '}
                   <NavLink to={`/vehicles/${driver.vehicleVin}`}>
-                    {driver.vehicleLicensePlate}
+                    <FontAwesomeIcon icon={faArrowRight} />
                   </NavLink>
                 </p>
               )}
               {driver.gasCardNum && (
                 <p>
-                  Tankkaart:{' '}
+                  Tankkaart:{' '}{driver.gasCardNum}{' '}
                   <NavLink to={`/gascards/${driver.gasCardNum}`}>
-                    {driver.gasCardNum}
+                    <FontAwesomeIcon icon={faArrowRight} />
                   </NavLink>
                 </p>
               )}
