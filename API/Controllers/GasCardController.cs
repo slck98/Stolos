@@ -11,7 +11,7 @@ using MySql.Data.MySqlClient;
 namespace API.Controllers;
 
 [ApiController] // voor DI
-[Route("[controller]")] // wordt .../GasCard
+[Route("api/[controller]s")] // wordt .../GasCard
 public class GasCardController : Controller {
     private readonly ILogger<GasCardController> logger;
     private IConfiguration iConfig;
@@ -111,7 +111,7 @@ public class GasCardController : Controller {
         }
     }
 
-    [HttpDelete(Name = "DeleteGasCard")]
+    [HttpDelete("{cn}", Name = "DeleteGasCard")]
     public ActionResult Delete(string cn)
     {
         try

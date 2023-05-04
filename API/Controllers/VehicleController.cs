@@ -14,7 +14,7 @@ using static Org.BouncyCastle.Math.EC.ECCurve;
 namespace API.Controllers;
 
 [ApiController] // voor DI
-[Route("[controller]")] // wordt .../vehicle
+[Route("api/[controller]s")] // wordt .../vehicle
 public class VehicleController : ControllerBase
 {
     private readonly ILogger<VehicleController> logger;
@@ -135,7 +135,7 @@ public class VehicleController : ControllerBase
         }
     }
 
-    [HttpDelete(Name = "DeleteVehicle")]
+    [HttpDelete("{vin}", Name = "DeleteVehicle")]
     public ActionResult Delete(string vin)
     {
         try

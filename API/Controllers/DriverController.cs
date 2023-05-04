@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace API.Controllers
 {
     [ApiController] // voor DI
-    [Route("[controller]")] // wordt .../Driver
+    [Route("api/[controller]s")] // wordt .../Driver
 
     public class DriverController : Controller
     {
@@ -116,7 +116,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try
