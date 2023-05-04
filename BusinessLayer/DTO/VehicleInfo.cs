@@ -9,16 +9,16 @@ namespace BusinessLayer.DTO;
 
 public class VehicleInfo
 {
-	public VehicleInfo(string? vin, string brandModel, string licensePlate, string fuel, string vehicleType, string? color, int? doors, int? dId)
+	public VehicleInfo(string? vin, string brandModel, string licensePlate, string fuelType, string vehicleType, string? color, int? doors, int? driverId)
 	{
 		VIN = vin;
 		BrandModel = brandModel;
 		LicensePlate = licensePlate;
-		FuelType = fuel.ToString();
+		FuelType = fuelType.ToString();
 		VehicleType = vehicleType.ToString();
 		Color = color;
 		Doors = doors;
-        if (dId != null) DriverId = dId;
+        if (driverId != null) DriverId = driverId;
     }
 
     public string VIN { get; set; }

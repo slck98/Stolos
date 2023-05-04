@@ -11,15 +11,15 @@ namespace BusinessLayer.DTO;
 
 public class GasCardInfo
 {
-	public GasCardInfo(string gcNum, DateTime expiringDate, int? pin, List<string> fuelTypes, bool blocked, int? dId)
+	public GasCardInfo(string cardNumber, DateTime expiringDate, int? pinCode, List<string> fuelTypes, bool blocked, int? driverId)
 	{
-		CardNumber = gcNum;
+		CardNumber = cardNumber;
 		ExpiringDate = expiringDate;
-		Pincode = pin;
+		Pincode = pinCode;
 		FuelTypes = fuelTypes.ConvertAll(l => l.ToString());
 		Blocked = blocked;
 
-		if (dId != null) DriverId= dId;
+		if (driverId != null) DriverId= driverId;
     }
 
     public string CardNumber { get; set; }

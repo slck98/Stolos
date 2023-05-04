@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,29 +10,47 @@ namespace BusinessLayer.DTO;
 
 public class DriverInfo
 {
-    public DriverInfo(int? id, string fname, string lname, DateTime birthDate, string natRegNum, List<string> licenses, string address, string? vehVin, string? gcNum)
+    public int? DriverID { get; set; }
+    [Required]
+    public string FirstName { get; set; }
+    [Required]
+    public string LastName { get; set; }
+    [Required]
+    public DateTime BirthDate { get; set; }
+    [Required]
+    public string NatRegNum { get; set; }
+    [Required]
+    public List<string> Licenses { get; set; }
+    [Required]
+    public string Address { get; set; }
+
+    //foreign obj data
+    public string? VehicleVin { get; set; }
+    public string? GasCardNum { get; set; }
+
+    //ctor
+    public DriverInfo(int? driverId, string firstName, string lastName, DateTime birthDate, string natRegNum, List<string> licenses, string address, string? vehicleVin = null, string? gasCardNum = null)
     {
-        DriverID = id;
-        FirstName = fname;
-        LastName = lname;
+        DriverID = driverId;
+        FirstName = firstName;
+        LastName = lastName;
         BirthDate = birthDate;
         NatRegNum = natRegNum;
         Licenses = licenses;
         Address = address;
-        if (!string.IsNullOrEmpty(vehVin)) VehicleVin = vehVin;
+        if (!string.IsNullOrEmpty(vehicleVin)) VehicleVin = vehicleVin;
 
-        if (gcNum != null) GasCardNum = gcNum;
+        if (!string.IsNullOrEmpty(gasCardNum)) GasCardNum = gasCardNum;
     }
 
-	public int? DriverID { get; set; }
-	public string FirstName { get; set; }
-	public string LastName { get; set; }
-	public DateTime BirthDate { get; set; }
-	public string NatRegNum { get; set; }
-	public List<string> Licenses { get;set; }
-	public string Address { get; set; }
-
-	//foreign obj data
-	public string? VehicleVin { get; set; }
-	public string? GasCardNum { get; set; }
+    //props to match ctor param
+    public int? DriverDriverID => DriverID;
+    public string DriverFirstName => FirstName;
+    public string DriverLastName => LastName;
+    public DateTime DriverBirthDate => BirthDate;
+    public string DriverNatRegNum => NatRegNum;
+    public List<string> DriverLicenses => Licenses;
+    public string DriverAddress => Address;
+    public string? DriverVehicleVin => VehicleVin;
+    public string? DriverGasCardNum => GasCardNum;
 }
