@@ -42,15 +42,4 @@ public class DriverInfo
 
         if (!string.IsNullOrEmpty(gasCardNum)) GasCardNum = gasCardNum;
     }
-
-    //props to match ctor param
-    public int? DriverDriverID => DriverID;
-    public string DriverFirstName => FirstName;
-    public string DriverLastName => LastName;
-    public DateTime DriverBirthDate => BirthDate;
-    public string DriverNatRegNum => NatRegNum;
-    public List<string> DriverLicenses => Licenses;
-    public string DriverAddress => Address;
-    public string? DriverVehicleVin => VehicleVin;
-    public string? DriverGasCardNum => GasCardNum;
 }

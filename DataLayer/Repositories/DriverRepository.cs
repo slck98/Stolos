@@ -198,6 +198,33 @@ public class DriverRepository : IDriverRepository
                 cmd.Parameters.AddWithValue("@del", 0);
 
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
+
+                if (d.VIN != null)
+                {
+                    cmd = new("UPDATE Vehicle SET DriverID=@did WHERE VIN=@vin;", conn);
+                    cmd.Parameters.AddWithValue("@vin", d.VIN);
+                }
+                else
+                {
+                    cmd = new("UPDATE Vehicle SET DriverID=NULL WHERE DriverID=@did;", conn);
+                }
+                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+
+                if (d.GasCardNum != null)
+                {
+                    cmd = new("UPDATE GasCard SET DriverID=@did WHERE CardNumber=@gc;", conn);
+                    cmd.Parameters.AddWithValue("@gc", d.GasCardNum);
+                }
+                else
+                {
+                    cmd = new("UPDATE GasCard SET DriverID=NULL WHERE DriverID=@did;", conn);
+                }
+                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
 
                 conn.Close();
             }
@@ -232,6 +259,33 @@ public class DriverRepository : IDriverRepository
                 cmd.Parameters.AddWithValue("@dls", string.Join(",", d.Licenses.ConvertAll(dl => dl.ToString())));
 
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
+
+                if (d.VIN!=null)
+                {
+                    cmd = new("UPDATE Vehicle SET DriverID=@did WHERE VIN=@vin;", conn);
+                    cmd.Parameters.AddWithValue("@vin", d.VIN);
+                }
+                else
+                {
+                    cmd = new("UPDATE Vehicle SET DriverID=NULL WHERE DriverID=@did;", conn);
+                }
+                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+
+                if (d.GasCardNum!=null)
+                {
+                    cmd = new("UPDATE GasCard SET DriverID=@did WHERE CardNumber=@gc;", conn);
+                    cmd.Parameters.AddWithValue("@gc", d.GasCardNum);
+                }
+                else
+                {
+                    cmd = new("UPDATE GasCard SET DriverID=NULL WHERE DriverID=@did;", conn);
+                }
+                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
 
                 conn.Close();
             }
