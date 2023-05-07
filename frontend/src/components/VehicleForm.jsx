@@ -10,22 +10,51 @@ import {
   useNavigate,
   useNavigation,
 } from 'react-router-dom';
-
 import classes from '../css/Edit.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
 const VehicleForm = ({ method, vehicle }) => {
+  const [input, setInput] = useState();
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
+
+  const loadDrivers = async () => {
+    const response = await fetch(process.env.REACT_APP_DRIVER_URL);
+    if (!response.ok) {
+      return json({ message: 'Chauffeurs ophalen mislukt.' }, { status: 500 });
+    } else {
+      const res = await response.json();
+      return res;
+    }
+  };
+  const loadedDrivers = [];
+  loadDrivers().then(res => {
+    if (vehicle && vehicle.driverId !== null) {
+      const currentDriver = res.filter(
+        driver => driver.vehicleVin === vehicle.vin
+      )[0];
+      loadedDrivers.push({
+        value: vehicle.driverId,
+        label: `${currentDriver.firstName} ${currentDriver.lastName} - Huidige bestuurder`,
+      });
+    }
+    res
+      .filter(driver => driver.vehicleVin === null)
+      .forEach(selectedDrivers => {
+        loadedDrivers.push({
+          value: selectedDrivers.driverID,
+          label: `${selectedDrivers.firstName} ${selectedDrivers.lastName}`,
+        });
+      });
+  });
 
   const isSubmitting = navigation.state === 'submitting';
 
   function cancelHandler() {
     navigate('..');
   }
-  const [input, setInput] = useState();
 
   const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -111,7 +140,20 @@ const VehicleForm = ({ method, vehicle }) => {
             onChange={changeHandler}
           />
           <label htmlFor="driverId">Bestuurder:</label>
-          <Select id="driverId" name="driverId" onChange={changeHandler} />
+          <Select
+            id="driverId"
+            name="driverId"
+            options={loadedDrivers}
+            defaultValue={loadedDrivers[0]}
+            required={method === 'post' ? false : true}
+          />
+          {/* <AsyncSelect
+            id="driverId"
+            name="driverId"
+            loadOptions={loadDrivers2}
+            defaultOptions
+            cacheOptions
+          /> */}
         </div>
         <div className={classes.buttons}>
           <p></p>

@@ -4,7 +4,6 @@ import DriverList from '../components/Lists';
 
 const DriversPage = () => {
   const { drivers } = useLoaderData();
-  console.log(process.env.REACT_APP_DRIVER_URL);
 
   return (
     <Suspense fallback={<p>Laden...</p>}>
