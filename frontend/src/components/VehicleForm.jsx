@@ -13,7 +13,6 @@ import {
 import classes from '../css/Edit.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
 
 const VehicleForm = ({ method, vehicle, drivers }) => {
   const [input, setInput] = useState();
