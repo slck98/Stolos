@@ -68,7 +68,7 @@ const VehicleForm = ({ method, vehicle }) => {
             name="vin"
             required
             defaultValue={vehicle ? vehicle.vin : ''}
-            readOnly
+            readOnly={vehicle ? true : false}
           />
           <label htmlFor="vehicletype">Type:</label>
           <select
@@ -136,7 +136,7 @@ export async function action({ request, params }) {
     brandModel: data.get('brandmodel'),
     licensePlate: data.get('licenseplate'),
     vin: data.get('vin'),
-    type: data.get('type'),
+    vehicleType: data.get('vehicletype'),
     fuelType: data.get('fueltype'),
     color: data.get('color'),
     doors: data.get('doors'),
@@ -157,7 +157,7 @@ export async function action({ request, params }) {
     body: JSON.stringify(vehicleData),
   });
 
-  if (response.status === 422 || response.ok) {
+  if (response.status === 422) {
     return response;
   }
 

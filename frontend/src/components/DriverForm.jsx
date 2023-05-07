@@ -131,7 +131,7 @@ export async function action({ request, params }) {
     body: JSON.stringify(driverData),
   });
 
-  if (response.status === 422 || response.ok) {
+  if (response.status === 422) {
     return response;
   }
 
