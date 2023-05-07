@@ -48,7 +48,7 @@ const GascardForm = ({ method, gascard }) => {
             type="text"
             name="cardnumber"
             defaultValue={gascard ? gascard.cardNumber : ''}
-            readOnly
+            readOnly={gascard ? true : false}
             required
           />
           <label htmlFor="pincode">Pincode:</label>
