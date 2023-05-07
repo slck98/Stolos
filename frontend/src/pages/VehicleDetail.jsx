@@ -10,12 +10,14 @@ import VehicleItem from '../components/VehicleItem';
 import { VehicleList } from '../components/Lists';
 
 const VehicleDetailPage = () => {
-  const { vehicles, vehicle } = useRouteLoaderData('vehicle-detail');
+  const { vehicles, vehicle, drivers } = useRouteLoaderData('vehicle-detail');
   return (
     <>
       <Suspense>
-        <Await resolve={vehicle}>
-          {loadedVehicle => <VehicleItem vehicle={loadedVehicle} />}
+        <Await resolve={[vehicle, drivers]}>
+          {(loadedVehicle, loadedDrivers) => (
+            <VehicleItem vehicle={loadedVehicle} drivers={loadedDrivers} />
+          )}
         </Await>
       </Suspense>
       <Suspense>
@@ -53,11 +55,23 @@ async function loadVehicles() {
   }
 }
 
+async function loadDrivers() {
+  const response = await fetch(process.env.REACT_APP_DRIVER_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Bestuurders ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData;
+  }
+}
+
 export async function loader({ req, params }) {
   const { vin } = params;
   return defer({
     vehicle: await loadVehicle(vin),
     vehicles: loadVehicles(),
+    drivers: await loadDrivers(),
   });
 }
 

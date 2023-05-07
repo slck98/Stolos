@@ -9,11 +9,17 @@ import {
 import VehicleForm from '../components/VehicleForm';
 
 const EditVehiclePage = () => {
-  const { vehicle } = useRouteLoaderData('vehicle-detail');
+  const { vehicle, drivers } = useRouteLoaderData('vehicle-detail');
   return (
     <Suspense>
-      <Await resolve={vehicle}>
-        {loadVehicle => <VehicleForm vehicle={loadVehicle} method="put" />}
+      <Await resolve={[vehicle, drivers]}>
+        {loadData => (
+          <VehicleForm
+            vehicle={loadData[0]}
+            drivers={loadData[1]}
+            method="put"
+          />
+        )}
       </Await>
     </Suspense>
   );
@@ -34,10 +40,22 @@ async function loadVehicle(vin) {
   }
 }
 
+async function loadDrivers() {
+  const response = await fetch(process.env.REACT_APP_DRIVER_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Bestuurders ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData.drivers;
+  }
+}
+
 export async function loader({ req, params }) {
   const { vin } = params;
   return defer({
     vehicle: await loadVehicle(vin),
+    drivers: loadDrivers(),
   });
 }
 
