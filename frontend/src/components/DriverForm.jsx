@@ -67,7 +67,7 @@ const DriverForm = ({ method, driver }) => {
             type="text"
             name="birthDate"
             required
-            defaultValue={driver ? driver.birthDate : ''}
+            defaultValue={driver ? driver.birthDate.split('T', 1) : ''}
             onChange={changeHandler}
           />
           <label htmlFor="natregnumber">Rijksregisternummer:</label>
@@ -86,6 +86,15 @@ const DriverForm = ({ method, driver }) => {
             defaultValue={driver ? driver.address : ''}
             onChange={changeHandler}
           />
+          <label htmlFor="address">Voertuig:</label>
+          <select
+            id="vehicle"
+            name="vehicle"
+            defaultValue={driver ? driver.gascardNum : ''}
+            onChange={changeHandler}
+          >
+          
+          </select>
         </div>
         <div className={classes.buttons}>
         <p></p>
