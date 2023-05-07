@@ -171,7 +171,7 @@ export async function action({ request, params }) {
     fuelType: data.get('fueltype'),
     color: data.get('color'),
     doors: data.get('doors'),
-    driverId: data.get('driverId'),
+    driverId: data.get('driverId') === '0' ? null : data.get('driverId'),
   };
 
   let url = process.env.REACT_APP_VEHICLE_URL;
