@@ -86,6 +86,15 @@ const DriverForm = ({ method, driver }) => {
             defaultValue={driver ? driver.address : ''}
             onChange={changeHandler}
           />
+          <label htmlFor="address">Voertuig:</label>
+          <select
+            id="vehicle"
+            name="vehicle"
+            defaultValue={driver ? driver.gascardNum : ''}
+            onChange={changeHandler}
+          >
+          
+          </select>
         </div>
         <div className={classes.buttons}>
           <p></p>
