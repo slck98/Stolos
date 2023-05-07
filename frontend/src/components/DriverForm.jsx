@@ -64,10 +64,10 @@ const DriverForm = ({ method, driver }) => {
           <label htmlFor="birthdate">Geboortedatum:</label>
           <input
             id="birthdate"
-            type="text"
+            type="date"
             name="birthDate"
             required
-            defaultValue={driver ? driver.birthDate : ''}
+            defaultValue={driver ? driver.birthDate.split('T')[0] : ''}
             onChange={changeHandler}
           />
           <label htmlFor="natregnumber">Rijksregisternummer:</label>
@@ -88,7 +88,7 @@ const DriverForm = ({ method, driver }) => {
           />
         </div>
         <div className={classes.buttons}>
-        <p></p>
+          <p></p>
           <button disabled={isSubmitting} className={classes.save}>
             <FontAwesomeIcon icon={faFloppyDisk} /> Opslaan
           </button>
@@ -112,13 +112,15 @@ export async function action({ request, params }) {
     birthDate: data.get('birthDate'),
     natRegNum: data.get('natregnumber'),
     address: data.get('address'),
+    licenses: ['A1', 'B'],
   };
 
   let url = process.env.REACT_APP_DRIVER_URL;
 
   if (method === 'PUT') {
     const { driverID } = params;
-    url = `${url}/${driverID}`;
+    driverData.driverID = driverID;
+    url = `${url}${driverID}`;
   }
 
   const response = await fetch(url, {

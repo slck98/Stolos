@@ -114,7 +114,7 @@ const VehicleForm = ({ method, vehicle }) => {
           <Select id="driverId" name="driverId" onChange={changeHandler} />
         </div>
         <div className={classes.buttons}>
-        <p></p>
+          <p></p>
           <button disabled={isSubmitting} className={classes.save}>
             <FontAwesomeIcon icon={faFloppyDisk} /> Opslaan
           </button>
@@ -146,7 +146,7 @@ export async function action({ request, params }) {
 
   if (method === 'PUT') {
     const { vin } = params;
-    url = `${url}/${vin}`;
+    url = `${url}${vin}`;
   }
 
   const response = await fetch(url, {

@@ -104,7 +104,7 @@ export async function action({ request, params }) {
 
   if (method === 'PUT') {
     const { cardNumber } = params;
-    url = `${url}/${cardNumber}`;
+    url = `${url}${cardNumber}`;
   }
 
   const response = await fetch(url, {
