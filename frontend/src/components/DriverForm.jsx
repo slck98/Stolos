@@ -92,9 +92,7 @@ const DriverForm = ({ method, driver }) => {
             name="vehicle"
             defaultValue={driver ? driver.gascardNum : ''}
             onChange={changeHandler}
-          >
-          
-          </select>
+          ></select>
         </div>
         <div className={classes.buttons}>
           <p></p>
@@ -129,7 +127,6 @@ export async function action({ request, params }) {
   if (method === 'PUT') {
     const { driverID } = params;
     driverData.driverID = driverID;
-    url = `${url}${driverID}`;
   }
 
   const response = await fetch(url, {

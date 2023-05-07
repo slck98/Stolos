@@ -13,6 +13,7 @@ import {
 import classes from '../css/Edit.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
 const VehicleForm = ({ method, vehicle, drivers }) => {
   const [input, setInput] = useState();
@@ -163,13 +164,6 @@ export async function action({ request, params }) {
   const method = request.method;
   const data = await request.formData();
 
-  const getDriverIdFormData = () => {
-    let driverId = data.get('driverId');
-    if (driverId === '' && method === 'POST') return null;
-    if (driverId === '0' && method === 'PUT') return null;
-    return driverId;
-  };
-
   const vehicleData = {
     brandModel: data.get('brandmodel'),
     licensePlate: data.get('licenseplate'),
@@ -178,15 +172,10 @@ export async function action({ request, params }) {
     fuelType: data.get('fueltype'),
     color: data.get('color'),
     doors: data.get('doors'),
-    driverId: getDriverIdFormData(),
+    driverId: data.get('driverId'),
   };
 
   let url = process.env.REACT_APP_VEHICLE_URL;
-
-  if (method === 'PUT') {
-    const { vin } = params;
-    url = `${url}${vin}`;
-  }
 
   const response = await fetch(url, {
     method: method,

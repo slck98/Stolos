@@ -102,11 +102,6 @@ export async function action({ request, params }) {
 
   let url = process.env.REACT_APP_GASCARD_URL;
 
-  if (method === 'PUT') {
-    const { cardNumber } = params;
-    url = `${url}${cardNumber}`;
-  }
-
   const response = await fetch(url, {
     method: method,
     headers: {
