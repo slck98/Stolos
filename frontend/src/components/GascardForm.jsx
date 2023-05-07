@@ -48,7 +48,7 @@ const GascardForm = ({ method, gascard }) => {
             type="text"
             name="cardnumber"
             defaultValue={gascard ? gascard.cardNumber : ''}
-            readOnly
+            readOnly={gascard ? true : false}
             required
           />
           <label htmlFor="pincode">Pincode:</label>
@@ -104,7 +104,7 @@ export async function action({ request, params }) {
 
   if (method === 'PUT') {
     const { cardNumber } = params;
-    url = `${url}/${cardNumber}`;
+    url = `${url}${cardNumber}`;
   }
 
   const response = await fetch(url, {
@@ -115,7 +115,7 @@ export async function action({ request, params }) {
     body: JSON.stringify(gascardData),
   });
 
-  if (response.status === 422 || response.ok) {
+  if (response.status === 422) {
     return response;
   }
 

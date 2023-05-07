@@ -71,7 +71,7 @@ export async function action({ params, request }) {
     }
   );
   if (!response.ok) {
-    throw json({ message: 'Error' }, { status: 500 });
+    throw json({ message: 'Kon bestuurder niet verwijderen' }, { status: 500 });
   }
   return redirect('/drivers');
 }

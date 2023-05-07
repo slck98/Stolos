@@ -14,7 +14,7 @@ using static Org.BouncyCastle.Math.EC.ECCurve;
 namespace API.Controllers;
 
 [ApiController] // voor DI
-[Route("[controller]")] // wordt .../vehicle
+[Route("api/[controller]s")] // wordt .../vehicle
 public class VehicleController : ControllerBase
 {
     private readonly ILogger<VehicleController> logger;
@@ -61,11 +61,10 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPost(Name = "addVehicle")]
-    public ActionResult Add(string vin, string brandModel, string licensePlate, string fuelType, string vehicleType, string? color, int? doors, int? driverId = null)
+    public ActionResult Add([FromBody]VehicleInfo vi)
     {
         try
         {
-            VehicleInfo vi = new VehicleInfo(vin, brandModel, licensePlate, fuelType, vehicleType, color, doors, driverId);
             _vehicleManager.AddVehicle(vi);
             return Ok();
         }
@@ -73,25 +72,25 @@ public class VehicleController : ControllerBase
         {
             int code = 500;
             object? value = null;
-            if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.PRIMARY"))
+            if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.PRIMARY"))
             {
                 code = 400;
-                value = $"A vehicle with vin {vin} already exists.";
+                value = $"A vehicle with vin {vi.VIN} already exists.";
             }
-            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_licenseplate"))
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_licenseplate"))
             {
                 code = 400;
-                value = $"A vehicle with lp {licensePlate} already exists.";
+                value = $"A vehicle with lp {vi.LicensePlate} already exists.";
             }
             else if (ex.InnerException is DomainException || ex.InnerException is MySqlException && ex.InnerException.Message.Contains("VIN"))
             {
                 code = 400;
-                value = $"{vin} is an invalid vin number.";
+                value = $"{vi.VIN} is an invalid vin number.";
             }
-            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Error Code: 1062. Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_driverid"))
+            else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_driverid"))
             {
                 code = 400;
-                value = $"DriverID {driverId} already has a car.";
+                value = $"DriverID {vi.DriverId} already has a car.";
             }
             return StatusCode(code, value);
             //throw new APIException("VehicleController AddVehicle", ex);
@@ -99,12 +98,11 @@ public class VehicleController : ControllerBase
     }
 
     [HttpPut (Name = "updateVehicles")]
-    public ActionResult Put(string vin, string brandModel, string licensePlate, string fuelType, string vehicleType, string? color, int? doors, int? driverId = null)
+    public ActionResult Put([FromBody] VehicleInfo vi)
     {
         try
         {
-            if (_vehicleManager.GetVehicleByVIN(vin) == null) return NotFound();
-            VehicleInfo vi = new VehicleInfo(vin, brandModel, licensePlate, fuelType, vehicleType, color, doors, driverId);
+            if (_vehicleManager.GetVehicleByVIN(vi.VIN) == null) return NotFound();
             _vehicleManager.UpdateVehicle(vi);
             return Ok();
         }
@@ -115,29 +113,29 @@ public class VehicleController : ControllerBase
             if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.PRIMARY"))
             {
                 code = 400;
-                value = $"A vehicle with vin {vin} already exists.";
+                value = $"A vehicle with vin {vi.VIN} already exists.";
             }
             else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_licenseplate"))
             {
                 code = 400;
-                value = $"A vehicle with lp {licensePlate} already exists.";
+                value = $"A vehicle with lp {vi.LicensePlate} already exists.";
             }
             else if (ex.InnerException is DomainException || ex.InnerException is MySqlException && ex.InnerException.Message.Contains("VIN"))
             {
                 code = 400;
-                value = $"{vin} is an invalid vin number.";
+                value = $"{vi.VIN} is an invalid vin number.";
             }
             else if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Vehicle.uc_vehicle_driverid"))
             {
                 code = 400;
-                value = $"DriverID {driverId} already has a car.";
+                value = $"DriverID {vi.DriverId} already has a car.";
             }
             return StatusCode(code, value);
             //throw new APIException("VehicleController updateVehicle", ex);
         }
     }
 
-    [HttpDelete(Name = "DeleteVehicle")]
+    [HttpDelete("{vin}", Name = "DeleteVehicle")]
     public ActionResult Delete(string vin)
     {
         try

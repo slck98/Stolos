@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace API.Controllers
 {
     [ApiController] // voor DI
-    [Route("[controller]")] // wordt .../Driver
+    [Route("api/[controller]s")] // wordt .../Driver
 
     public class DriverController : Controller
     {
@@ -62,11 +62,10 @@ namespace API.Controllers
         }
 
         [HttpPost(Name = "AddDriver")]
-        public ActionResult Add(string fname, string lname, string address, DateTime birthDate, string natRegNum, List<string> driversLicenses)
+        public ActionResult Add([FromBody]DriverInfo di)
         {
             try
             {
-                DriverInfo di = new(null, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null);
                 _driverManager.AddDriver(di);
                 return Ok();
             }
@@ -77,12 +76,12 @@ namespace API.Controllers
                 if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Driver.uc_driver_natregnum"))
                 {
                     code = 400;
-                    value = $"A driver with National Registration Number {natRegNum} already exists.";
+                    value = $"A driver with National Registration Number {di.NatRegNum} already exists.";
                 }
                 else if (ex.InnerException is DomainException && ex.InnerException.Message.Contains("NatRegNumber"))
                 {
                     code = 400;
-                    value = $"{natRegNum} is an invalid National Registration number.";
+                    value = $"{di.NatRegNum} is an invalid National Registration number.";
                 }
                 return StatusCode(code, value);
                 //throw new APIException("DriverController AddDriver", ex);
@@ -90,13 +89,11 @@ namespace API.Controllers
         }
 
         [HttpPut(Name = "UpdateDriver")]
-        public ActionResult Put(int id, string fname, string lname, string address, DateTime birthDate, string natRegNum, List<string> driversLicenses)
+        public ActionResult Put([FromBody]DriverInfo di)
         {
             try
             {
-                if (_driverManager.GetDriverInfoById(id) == null) return NotFound();
-                DriverInfo di = new(id, fname, lname, birthDate, natRegNum, driversLicenses, address, null, null);
-
+                if (_driverManager.GetDriverInfoById((int)di.DriverID) == null) return NotFound();
                 _driverManager.UpdateDriver(di);
                 return Ok();
             }
@@ -107,19 +104,19 @@ namespace API.Controllers
                 if (ex.InnerException is MySqlException && ex.InnerException.Message.Contains("Duplicate entry") && ex.InnerException.Message.Contains("Driver.uc_driver_natregnum"))
                 {
                     code = 400;
-                    value = $"A different driver already has {natRegNum} as their National Registration Number.";
+                    value = $"A different driver already has {di.NatRegNum} as their National Registration Number.";
                 }
                 else if (ex.InnerException is DomainException && ex.InnerException.Message.Contains("NatRegNumber"))
                 {
                     code = 400;
-                    value = $"{natRegNum} is an invalid National Registration number.";
+                    value = $"{di.NatRegNum} is an invalid National Registration number.";
                 }
                 return StatusCode(code, value);
                 //throw new APIException("DriverController UpdateDriver", ex);
             }
         }
 
-        [HttpDelete(Name = "DeleteDriver")]
+        [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
             try
