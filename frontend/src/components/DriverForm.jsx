@@ -29,17 +29,16 @@ const DriverForm = ({ method, driver }) => {
   const [input, setInput] = useState();
   let listLicense = [...driver.licenses];
 
-  const remove = (option) => {
+  const handleOnRemove = (option) => {
     listLicense = option;
     console.log(listLicense);
   };
 
-  const addL = (option) => {
+  const handeOnSelect = (option) => {
     listLicense = [...option];
     console.log(listLicense);
   };
 
-  console.log(listLicense);
 
   const changeHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -107,9 +106,8 @@ const DriverForm = ({ method, driver }) => {
             isObject={false}
             options={Licenses}
             selectedValues={driver.licenses}
-            onRemove={remove}
-            onSelect={addL}
-            defaultValue={listLicense}
+            onRemove={handleOnRemove}
+            onSelect={handeOnSelect}
           />
           <label htmlFor="address">Voertuig:</label>
           <select
