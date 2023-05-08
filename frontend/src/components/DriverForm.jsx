@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import foto from '../images/user.png';
-import classes from '../css/Edit.module.css';
-import EditCard from './EditCard';
+import React, { useState } from "react";
+import foto from "../images/user.png";
+import classes from "../css/Edit.module.css";
+import EditCard from "./EditCard";
+import { Licenses } from "./DataLicenses";
 import {
   Form,
   json,
@@ -9,25 +10,38 @@ import {
   useActionData,
   useNavigate,
   useNavigation,
-} from 'react-router-dom';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+} from "react-router-dom";
+import Multiselect from "multiselect-react-dropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBan, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 
 const DriverForm = ({ method, driver }) => {
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
 
-  const isSubmitting = navigation.state === 'submitting';
+  const isSubmitting = navigation.state === "submitting";
 
   function cancelHandler() {
-    navigate('..');
+    navigate("..");
   }
 
   const [input, setInput] = useState();
+  let listLicense = [...driver.licenses];
 
-  const changeHandler = e => {
+  const remove = (option) => {
+    listLicense = option;
+    console.log(listLicense);
+  };
+
+  const addL = (option) => {
+    listLicense = [...option];
+    console.log(listLicense);
+  };
+
+  console.log(listLicense);
+
+  const changeHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
@@ -36,7 +50,7 @@ const DriverForm = ({ method, driver }) => {
       <Form method={method} className={classes.table}>
         {data && data.errors && (
           <ul>
-            {Object.values(data.errors).map(err => (
+            {Object.values(data.errors).map((err) => (
               <li key={err}>{err}</li>
             ))}
           </ul>
@@ -49,7 +63,7 @@ const DriverForm = ({ method, driver }) => {
             type="text"
             name="firstName"
             required
-            defaultValue={driver ? driver.firstName : ''}
+            defaultValue={driver ? driver.firstName : ""}
             onChange={changeHandler}
           />
           <label htmlFor="lastname">Familienaam:</label>
@@ -58,7 +72,7 @@ const DriverForm = ({ method, driver }) => {
             type="text"
             name="lastName"
             required
-            defaultValue={driver ? driver.lastName : ''}
+            defaultValue={driver ? driver.lastName : ""}
             onChange={changeHandler}
           />
           <label htmlFor="birthdate">Geboortedatum:</label>
@@ -67,7 +81,7 @@ const DriverForm = ({ method, driver }) => {
             type="date"
             name="birthDate"
             required
-            defaultValue={driver ? driver.birthDate.split('T')[0] : ''}
+            defaultValue={driver ? driver.birthDate.split("T")[0] : ""}
             onChange={changeHandler}
           />
           <label htmlFor="natregnumber">Rijksregisternummer:</label>
@@ -75,7 +89,7 @@ const DriverForm = ({ method, driver }) => {
             id="natregnumber"
             type="text"
             name="natregnumber"
-            defaultValue={driver ? driver.natRegNum : ''}
+            defaultValue={driver ? driver.natRegNum : ""}
             onChange={changeHandler}
           />
           <label htmlFor="address">Adres:</label>
@@ -83,14 +97,25 @@ const DriverForm = ({ method, driver }) => {
             id="address"
             type="text"
             name="address"
-            defaultValue={driver ? driver.address : ''}
+            defaultValue={driver ? driver.address : ""}
             onChange={changeHandler}
+          />
+          <label htmlFor="licenses">Rijbewijzen: </label>
+          <Multiselect
+            className={classes.multi}
+            id="licences"
+            isObject={false}
+            options={Licenses}
+            selectedValues={driver.licenses}
+            onRemove={remove}
+            onSelect={addL}
+            defaultValue={listLicense}
           />
           <label htmlFor="address">Voertuig:</label>
           <select
             id="vehicle"
             name="vehicle"
-            defaultValue={driver ? driver.gascardNum : ''}
+            defaultValue={driver ? driver.gascardNum : ""}
             onChange={changeHandler}
           ></select>
         </div>
@@ -114,17 +139,17 @@ export async function action({ request, params }) {
   const method = request.method;
   const data = await request.formData();
   const driverData = {
-    firstName: data.get('firstName'),
-    lastName: data.get('lastName'),
-    birthDate: data.get('birthDate'),
-    natRegNum: data.get('natregnumber'),
-    address: data.get('address'),
-    licenses: ['A1', 'B'],
+    firstName: data.get("firstName"),
+    lastName: data.get("lastName"),
+    birthDate: data.get("birthDate"),
+    natRegNum: data.get("natregnumber"),
+    address: data.get("address"),
+    license: data.get("licenses"),
   };
 
   let url = process.env.REACT_APP_DRIVER_URL;
 
-  if (method === 'PUT') {
+  if (method === "PUT") {
     const { driverID } = params;
     driverData.driverID = driverID;
   }
@@ -132,7 +157,7 @@ export async function action({ request, params }) {
   const response = await fetch(url, {
     method: method,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(driverData),
   });
@@ -142,8 +167,8 @@ export async function action({ request, params }) {
   }
 
   if (!response.ok) {
-    throw json({ message: 'Kon de bestuurder niet opslaan' }, { status: 500 });
+    throw json({ message: "Kon de bestuurder niet opslaan" }, { status: 500 });
   }
 
-  return redirect('/drivers');
+  return redirect("/drivers");
 }
