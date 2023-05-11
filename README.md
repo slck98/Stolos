@@ -93,3 +93,13 @@ mysql> FLUSH PRIVILEGES;
 Run Api InDev:
 - Clone repo into desired folder.
 - Adjust appsettings.json (connectionstring) to match MySql Setup.
+- CD to API.
+stolos@server:~$ dotnet build
+stolos@server:~$ dotnet run
+
+If you want to keep the InDev running on ssh close; use tmux
+stolos@server:~$ tmux new -s {tmuxsessionname}
+stolos@server:~$ dotnet run
+CTRL+B, D: detach from tmux session
+to reattach:
+stolos@server:~$ tmux a -t {tmuxsessionname}
