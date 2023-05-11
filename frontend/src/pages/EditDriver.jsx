@@ -9,14 +9,15 @@ import {
 import DriverForm from '../components/DriverForm';
 
 const EditDriverPage = () => {
-  const { driver, vehicles } = useRouteLoaderData('driver-detail');
+  const { driver, vehicles, gascards } = useRouteLoaderData('driver-detail');
   return (
     <Suspense>
-      <Await resolve={[driver, vehicles]}>
+      <Await resolve={[driver, vehicles, gascards]}>
         {loadDriver => (
           <DriverForm
             driver={loadDriver[0]}
             vehicles={loadDriver[1]}
+            gascards={loadDriver[2]}
             method="put"
           />
         )}
@@ -53,11 +54,23 @@ async function loadVehicles() {
   }
 }
 
+async function loadGascards() {
+  const response = await fetch(process.env.REACT_APP_GASCARD_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Tankkaarten ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData.gascards;
+  }
+}
+
 export async function loader({ req, params }) {
   const { driverID } = params;
   return defer({
     driver: await loadDriver(driverID.toString()),
     vehicles: loadVehicles(),
+    gascards: loadGascards(),
   });
 }
 

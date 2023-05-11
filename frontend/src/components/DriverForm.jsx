@@ -16,7 +16,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
-const DriverForm = ({ method, driver, vehicles }) => {
+const DriverForm = ({ method, driver, vehicles, gascards }) => {
   const [input, setInput] = useState();
   const data = useActionData();
   const navigate = useNavigate();
@@ -44,6 +44,32 @@ const DriverForm = ({ method, driver, vehicles }) => {
         availableVehicles.push({
           value: selectedVehicles.vehicleVin,
           label: `${selectedVehicles.brandModel} ${selectedVehicles.licensePlate}`,
+        });
+      });
+  }
+
+  const availableGascards = [];
+  if (method === 'put') {
+    if (driver && driver.gascardNum !== null) {
+      const currentGascard = gascards.filter(
+        gascard => gascard.cardNumber === driver.gasCardNum
+      )[0];
+      availableGascards.push({
+        value: driver.gascardNum,
+        label: `${currentGascard.cardNumber} - Huidige kaart`,
+      });
+      availableGascards.push({
+        value: 0,
+        label: 'X Kaart verwijderen',
+      });
+    }
+
+    gascards
+      .filter(gascard => gascard.driverId === null)
+      .forEach(selectedGascards => {
+        availableGascards.push({
+          value: selectedGascards.cardNumber,
+          label: `${selectedGascards.cardNumber}`,
         });
       });
   }
@@ -130,6 +156,7 @@ const DriverForm = ({ method, driver, vehicles }) => {
           <Multiselect
             className={classes.multi}
             id="licences"
+            name="licenses"
             isObject={false}
             options={Licenses}
             selectedValues={driver ? driver.licenses : ''}
@@ -142,6 +169,13 @@ const DriverForm = ({ method, driver, vehicles }) => {
             name="vehicle"
             options={availableVehicles}
             defaultValue={availableVehicles[0]}
+          />
+          <label htmlFor="gascard">Tankkaart:</label>
+          <Select
+            id="gascard"
+            name="gascard"
+            options={availableGascards}
+            defaultValue={availableGascards[0]}
           />
         </div>
         <div className={classes.buttons}>
@@ -163,14 +197,16 @@ export default DriverForm;
 export async function action({ request, params }) {
   const method = request.method;
   const data = await request.formData();
+  console.log(data);
   const driverData = {
     firstName: data.get('firstName'),
     lastName: data.get('lastName'),
     birthDate: data.get('birthDate'),
     natRegNum: data.get('natregnumber'),
     address: data.get('address'),
-    license: data.get('licenses'),
+    licenses: data.get('licenses'),
     vehicleVin: data.get('vehicle') === '0' ? null : data.get('vehicle'),
+    gasCardNum: data.get('gascard') === '0' ? null : data.get('gascard'),
   };
 
   let url = process.env.REACT_APP_DRIVER_URL;
