@@ -73,3 +73,23 @@
   - Vinnumber
 - /Vehicle/{vin}
   - Vinnumber
+
+
+## Server Setup
+
+### Required Packages
+- dotnet-sdk-7.0
+- mysql-server-8.0
+
+### Setup Server
+
+#### MySql Setup
+mysql> CREATE DATABASE db_allphifm;
+mysql> CREATE USER '{username}' IDENTIFIED BY '{password}';
+mysql> GRANT ALL PRIVILEGES ON db_allphifm.* TO '{username}';
+mysql> FLUSH PRIVILEGES;
+
+#### API Setup
+Run Api InDev:
+- Clone repo into desired folder.
+- Adjust appsettings.json (connectionstring) to match MySql Setup.
