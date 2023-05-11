@@ -6,6 +6,7 @@ import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 import classes from '../css/Edit.module.css';
 
 import EditCard from './EditCard';
+import { FuelTypes } from './DataFuelTypes';
 import {
   Form,
   json,
@@ -19,6 +20,16 @@ const GascardForm = ({ method, gascard, drivers }) => {
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
+
+  let currentFuelTypes = [];
+  if (gascard) {
+    gascard.fuelTypes.forEach(fueltype => {
+      currentFuelTypes.push({
+        value: fueltype,
+        label: FuelTypes.filter(type => type.value === fueltype)[0].label,
+      });
+    });
+  }
 
   const availableDrivers = [];
   if (method === 'put') {
@@ -53,8 +64,6 @@ const GascardForm = ({ method, gascard, drivers }) => {
   }
   const [input, setInput] = useState();
 
-  const listFuelTypes = ['Petrol', 'Diesel', 'Electric'];
-
   const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -88,11 +97,28 @@ const GascardForm = ({ method, gascard, drivers }) => {
             defaultValue={gascard ? gascard.pincode : ''}
             onChange={changeHandler}
           />
+          <label htmlFor="expiry">Geboortedatum:</label>
+          <input
+            id="expiry"
+            type="date"
+            name="expiry"
+            required
+            defaultValue={gascard ? gascard.expiringDate.split('T')[0] : ''}
+            onChange={changeHandler}
+          />
           <label htmlFor="fueltypes">Brandstoftypes:</label>
-          <Select />
+          <Select
+            id="fueltypes"
+            name="fueltypes"
+            isMulti
+            options={FuelTypes}
+            defaultValue={gascard ? currentFuelTypes : ''}
+          />
           <label htmlFor="blocked">Geblokkeerd:</label>
-          <select id="blocked">
-            <option value="false">Nee</option>
+          <select id="blocked" name="blocked">
+            <option value="false" defaultChecked>
+              Nee
+            </option>
             <option value="true">Ja</option>
           </select>
           <label htmlFor="driverId">Bestuurder:</label>
@@ -125,8 +151,10 @@ export async function action({ request, params }) {
   const gascardData = {
     cardNumber: data.get('cardnumber'),
     pincode: data.get('pincode'),
-    fuelTypes: data.get('fueltypes'),
-    blocked: data.get('blocked'),
+    fuelTypes: data.getAll('fueltypes'),
+    blocked: data.get('blocked') === 'true',
+    expiringDate: data.get('expiry'),
+    driverId: data.get('driverId') === '0' ? null : data.get('driverId'),
   };
 
   let url = process.env.REACT_APP_GASCARD_URL;
