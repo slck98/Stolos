@@ -51,7 +51,7 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
       .filter(vehicle => vehicle.driverId === null)
       .forEach(selectedVehicles => {
         availableVehicles.push({
-          value: selectedVehicles.vehicleVin,
+          value: selectedVehicles.vin,
           label: `${selectedVehicles.brandModel} ${selectedVehicles.licensePlate}`,
         });
       });
@@ -64,7 +64,7 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
         gascard => gascard.cardNumber === driver.gasCardNum
       )[0];
       availableGascards.push({
-        value: driver.gascardNum,
+        value: driver.gasCardNum,
         label: `${currentGascard.cardNumber} - Huidige kaart`,
       });
       availableGascards.push({
@@ -149,18 +149,6 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
             onChange={changeHandler}
           />
           <label htmlFor="licenses">Rijbewijzen: </label>
-          {/* <Multiselect
-            className={classes.multi}
-            id="licenses"
-            name="licenses"
-            isObject={false}
-            options={Licenses}
-            selectedValues={driver ? driver.licenses : ''}
-            onRemove={handleOnRemove}
-            onSelect={handleOnSelect}
-            ref={selectedLicenses}
-            value={selectedLicenses}
-          /> */}
           <Select
             id="licenses"
             name="licenses"
@@ -173,14 +161,28 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
             id="vehicle"
             name="vehicle"
             options={availableVehicles}
-            defaultValue={availableVehicles[0]}
+            defaultValue={
+              driver && driver.vehicleVin
+                ? availableVehicles[0]
+                : method === 'post'
+                ? { value: 0, label: 'Maak eerst de bestuurder aan' }
+                : ''
+            }
+            isDisabled={method === 'post' ? true : false}
           />
           <label htmlFor="gascard">Tankkaart:</label>
           <Select
             id="gascard"
             name="gascard"
             options={availableGascards}
-            defaultValue={availableGascards[0]}
+            defaultValue={
+              driver && driver.gasCardNum
+                ? availableGascards[0]
+                : method === 'post'
+                ? { value: 0, label: 'Maak eerst de bestuurder aan' }
+                : ''
+            }
+            isDisabled={method === 'post' ? true : false}
           />
         </div>
         <div className={classes.buttons}>
