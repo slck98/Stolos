@@ -19,7 +19,6 @@ const DriverItem = ({ driver }) => {
   }
   if (driver.vehicleVin !== null) {
     getVehicleVin(driver.vehicleVin);
-    console.log(driver.vehicleVin);
   }
 
   return (
@@ -43,7 +42,7 @@ const DriverItem = ({ driver }) => {
               <p>Rijbewijs: {driver.licenses.toString()}</p>
               {driver.vehicleVin && (
                 <p>
-                  Nummerplaat:{' '}{vehicleVin}{' '}
+                  Nummerplaat: {vehicleVin}{' '}
                   <NavLink to={`/vehicles/${driver.vehicleVin}`}>
                     <FontAwesomeIcon icon={faArrowRight} />
                   </NavLink>
@@ -51,7 +50,7 @@ const DriverItem = ({ driver }) => {
               )}
               {driver.gasCardNum && (
                 <p>
-                  Tankkaart:{' '}{driver.gasCardNum}{' '}
+                  Tankkaart: {driver.gasCardNum}{' '}
                   <NavLink to={`/gascards/${driver.gasCardNum}`}>
                     <FontAwesomeIcon icon={faArrowRight} />
                   </NavLink>

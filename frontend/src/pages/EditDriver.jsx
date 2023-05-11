@@ -9,11 +9,17 @@ import {
 import DriverForm from '../components/DriverForm';
 
 const EditDriverPage = () => {
-  const { driver } = useRouteLoaderData('driver-detail');
+  const { driver, vehicles } = useRouteLoaderData('driver-detail');
   return (
     <Suspense>
-      <Await resolve={driver}>
-        {loadDriver => <DriverForm driver={loadDriver} method="put" />}
+      <Await resolve={[driver, vehicles]}>
+        {loadDriver => (
+          <DriverForm
+            driver={loadDriver[0]}
+            vehicles={loadDriver[1]}
+            method="put"
+          />
+        )}
       </Await>
     </Suspense>
   );
@@ -36,10 +42,22 @@ async function loadDriver(driverID) {
   }
 }
 
+async function loadVehicles() {
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Voertuigen ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData.vehicles;
+  }
+}
+
 export async function loader({ req, params }) {
   const { driverID } = params;
   return defer({
     driver: await loadDriver(driverID.toString()),
+    vehicles: loadVehicles(),
   });
 }
 

@@ -13,10 +13,10 @@ const EditVehiclePage = () => {
   return (
     <Suspense>
       <Await resolve={[vehicle, drivers]}>
-        {loadData => (
+        {loadVehicle => (
           <VehicleForm
-            vehicle={loadData[0]}
-            drivers={loadData[1]}
+            vehicle={loadVehicle[0]}
+            drivers={loadVehicle[1]}
             method="put"
           />
         )}

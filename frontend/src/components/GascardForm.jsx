@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import foto from "../images/notAvailable.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
-import classes from "../css/Edit.module.css";
+import React, { useState } from 'react';
+import foto from '../images/notAvailable.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
+import classes from '../css/Edit.module.css';
 
-import EditCard from "./EditCard";
+import EditCard from './EditCard';
 import {
   Form,
   json,
@@ -12,35 +12,33 @@ import {
   useActionData,
   useNavigate,
   useNavigation,
-} from "react-router-dom";
-import Multiselect from "multiselect-react-dropdown";
+} from 'react-router-dom';
+import Multiselect from 'multiselect-react-dropdown';
 
 const GascardForm = ({ method, gascard }) => {
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
 
-  const isSubmitting = navigation.state === "submitting";
+  const isSubmitting = navigation.state === 'submitting';
 
   function cancelHandler() {
-    navigate("..");
+    navigate('..');
   }
   const [input, setInput] = useState();
 
-  const listFuelTypes = ["Petrol", "Diesel", "Electric"];
+  const listFuelTypes = ['Petrol', 'Diesel', 'Electric'];
   let selectedTypes = [...gascard.fuelTypes];
 
-    const handleOnRemove = (option) => {
+  const handleOnRemove = option => {
     selectedTypes = option;
-    console.log(selectedTypes);
   };
 
-  const handeOnSelect = (option) => {
+  const handeOnSelect = option => {
     selectedTypes = [...option];
-    console.log(selectedTypes);
   };
 
-  const changeHandler = (e) => {
+  const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
@@ -49,7 +47,7 @@ const GascardForm = ({ method, gascard }) => {
       <Form method={method} className={classes.table}>
         {data && data.errors && (
           <ul>
-            {Object.values(data.errors).map((err) => (
+            {Object.values(data.errors).map(err => (
               <li key={err}>{err}</li>
             ))}
           </ul>
@@ -61,7 +59,7 @@ const GascardForm = ({ method, gascard }) => {
             id="cardnumber"
             type="text"
             name="cardnumber"
-            defaultValue={gascard ? gascard.cardNumber : ""}
+            defaultValue={gascard ? gascard.cardNumber : ''}
             readOnly={gascard ? true : false}
             required
           />
@@ -70,7 +68,7 @@ const GascardForm = ({ method, gascard }) => {
             id="pincode"
             type="text"
             name="pincode"
-            defaultValue={gascard ? gascard.pincode : ""}
+            defaultValue={gascard ? gascard.pincode : ''}
             onChange={changeHandler}
           />
           <label htmlFor="fueltypes">Brandstoftypes:</label>
@@ -117,10 +115,10 @@ export async function action({ request, params }) {
   const method = request.method;
   const data = await request.formData();
   const gascardData = {
-    cardNumber: data.get("cardnumber"),
-    pincode: data.get("pincode"),
-    fuelTypes: data.get("fueltypes"),
-    blocked: data.get("blocked"),
+    cardNumber: data.get('cardnumber'),
+    pincode: data.get('pincode'),
+    fuelTypes: data.get('fueltypes'),
+    blocked: data.get('blocked'),
   };
 
   let url = process.env.REACT_APP_GASCARD_URL;
@@ -128,7 +126,7 @@ export async function action({ request, params }) {
   const response = await fetch(url, {
     method: method,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(gascardData),
   });
@@ -138,8 +136,8 @@ export async function action({ request, params }) {
   }
 
   if (!response.ok) {
-    throw json({ message: "Kon de tankkaart niet opslaan" }, { status: 500 });
+    throw json({ message: 'Kon de tankkaart niet opslaan' }, { status: 500 });
   }
 
-  return redirect("/gascards");
+  return redirect('/gascards');
 }

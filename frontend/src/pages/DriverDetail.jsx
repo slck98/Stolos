@@ -10,12 +10,14 @@ import DriverItem from '../components/DriverItem';
 import DriverList from '../components/Lists';
 
 const DriverDetailPage = () => {
-  const { drivers, driver } = useRouteLoaderData('driver-detail');
+  const { drivers, driver, vehicles } = useRouteLoaderData('driver-detail');
   return (
     <>
       <Suspense>
-        <Await resolve={driver}>
-          {loadedDriver => <DriverItem driver={loadedDriver} />}
+        <Await resolve={[driver, vehicles]}>
+          {([loadedDriver, loadedVehicles]) => (
+            <DriverItem driver={loadedDriver} vehicles={loadedVehicles} />
+          )}
         </Await>
       </Suspense>
       <Suspense>
@@ -44,6 +46,17 @@ async function loadDriver(driverID) {
   }
 }
 
+async function loadVehicles() {
+  const response = await fetch(process.env.REACT_APP_VEHICLE_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Voertuigen ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData;
+  }
+}
+
 async function loadDrivers() {
   const response = await fetch(process.env.REACT_APP_DRIVER_URL);
 
@@ -60,6 +73,7 @@ export async function loader({ req, params }) {
   return defer({
     driver: await loadDriver(driverID.toString()),
     drivers: loadDrivers(),
+    vehicles: await loadVehicles(),
   });
 }
 

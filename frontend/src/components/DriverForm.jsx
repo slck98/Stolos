@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
 import foto from '../images/user.png';
 import classes from '../css/Edit.module.css';
 import EditCard from './EditCard';
@@ -15,11 +16,37 @@ import Multiselect from 'multiselect-react-dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
-const DriverForm = ({ method, driver }) => {
+const DriverForm = ({ method, driver, vehicles }) => {
   const [input, setInput] = useState();
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
+
+  const availableVehicles = [];
+  if (method === 'put') {
+    if (driver && driver.vehicleVin !== null) {
+      const currentVehicle = vehicles.filter(
+        vehicle => vehicle.vin === driver.vehicleVin
+      )[0];
+      availableVehicles.push({
+        value: driver.vehicleVin,
+        label: `${currentVehicle.brandModel} - ${currentVehicle.licensePlate} - Huidig voertuig`,
+      });
+      availableVehicles.push({
+        value: 0,
+        label: 'X Voertuig verwijderen',
+      });
+    }
+
+    vehicles
+      .filter(vehicle => vehicle.driverId === null)
+      .forEach(selectedVehicles => {
+        availableVehicles.push({
+          value: selectedVehicles.vehicleVin,
+          label: `${selectedVehicles.brandModel} ${selectedVehicles.licensePlate}`,
+        });
+      });
+  }
 
   const isSubmitting = navigation.state === 'submitting';
 
@@ -109,13 +136,19 @@ const DriverForm = ({ method, driver }) => {
             onRemove={handleOnRemove}
             onSelect={handeOnSelect}
           />
-          <label htmlFor="address">Voertuig:</label>
-          <select
+          <label htmlFor="vehicle">Voertuig:</label>
+          {/* <select
             id="vehicle"
             name="vehicle"
             defaultValue={driver ? driver.gascardNum : ''}
             onChange={changeHandler}
-          ></select>
+          ></select> */}
+          <Select
+            id="vehicle"
+            name="vehicle"
+            options={availableVehicles}
+            defaultValue={availableVehicles[0]}
+          />
         </div>
         <div className={classes.buttons}>
           <p></p>
@@ -143,6 +176,7 @@ export async function action({ request, params }) {
     natRegNum: data.get('natregnumber'),
     address: data.get('address'),
     license: data.get('licenses'),
+    vehicleVin: data.get('vehicle') === '0' ? null : data.get('vehicle'),
   };
 
   let url = process.env.REACT_APP_DRIVER_URL;
