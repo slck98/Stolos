@@ -4,6 +4,11 @@ import foto from '../images/user.png';
 import classes from '../css/Edit.module.css';
 import EditCard from './EditCard';
 import { Licenses } from './DataLicenses';
+import React, { useState } from 'react';
+import foto from '../images/user.png';
+import classes from '../css/Edit.module.css';
+import EditCard from './EditCard';
+import { Licenses } from './DataLicenses';
 import {
   Form,
   json,
@@ -81,7 +86,7 @@ const DriverForm = ({ method, driver, vehicles }) => {
             ))}
           </ul>
         )}
-        <img src={foto} alt="notAvailable" />
+        <img className={classes.tablePicture} src={foto} alt="notAvailable" />
         <div className={classes.data}>
           <label htmlFor="firstname">Voornaam:</label>
           <input
@@ -137,12 +142,6 @@ const DriverForm = ({ method, driver, vehicles }) => {
             onSelect={handeOnSelect}
           />
           <label htmlFor="vehicle">Voertuig:</label>
-          {/* <select
-            id="vehicle"
-            name="vehicle"
-            defaultValue={driver ? driver.gascardNum : ''}
-            onChange={changeHandler}
-          ></select> */}
           <Select
             id="vehicle"
             name="vehicle"
