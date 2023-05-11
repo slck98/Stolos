@@ -126,7 +126,14 @@ const GascardForm = ({ method, gascard, drivers }) => {
             id="driverId"
             name="driverId"
             options={availableDrivers}
-            defaultValue={availableDrivers[0]}
+            defaultValue={
+              gascard && gascard.driverId
+                ? availableDrivers[0]
+                : method === 'post'
+                ? { value: 0, label: 'Maak eerst de tankkaart aan' }
+                : ''
+            }
+            isDisabled={method === 'post' ? true : false}
           />
         </div>
         <div className={classes.buttons}>

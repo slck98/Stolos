@@ -140,7 +140,14 @@ const VehicleForm = ({ method, vehicle, drivers }) => {
             id="driverId"
             name="driverId"
             options={availableDrivers}
-            defaultValue={availableDrivers[0]}
+            defaultValue={
+              vehicle && vehicle.driverId
+                ? availableDrivers[0]
+                : method === 'post'
+                ? { value: 0, label: 'Maak eerst het voertuig aan' }
+                : ''
+            }
+            isDisabled={method === 'post' ? true : false}
           />
         </div>
         <div className={classes.buttons}>
