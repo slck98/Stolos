@@ -20,13 +20,22 @@ const DriverList = ({ drivers }) => {
         {drivers.map(driver => (
           <li key={driver.driverID.toString()}>
             <Link to={driver.driverID.toString()}>
-              {driver.firstName} {driver.lastName} 
+              {driver.firstName} {driver.lastName}
               <span>
-                <FontAwesomeIcon title='bekijken' className={driverClasses.eye} icon={faEye} />&nbsp;&nbsp;&nbsp;|
-                <Link className={driverClasses.update} to={`/drivers/${driver.driverID}/edit`}><FontAwesomeIcon title='bewerken' icon={faPen}/></Link>
+                <FontAwesomeIcon
+                  title="bekijken"
+                  className={driverClasses.eye}
+                  icon={faEye}
+                />
+                &nbsp;&nbsp;&nbsp;|
+                <Link
+                  className={driverClasses.update}
+                  to={`/drivers/${driver.driverID}/edit`}
+                >
+                  <FontAwesomeIcon title="bewerken" icon={faPen} />
+                </Link>
               </span>
             </Link>
-            
           </li>
         ))}
       </ul>
@@ -38,7 +47,7 @@ export const VehicleList = ({ vehicles }) => {
   return (
     <header className={vehicleClasses.container}>
       <article className={vehicleClasses.headerPage}>
-      <img src={logo} alt="logo"></img>
+        <img src={logo} alt="logo"></img>
         <h1>VOERTUIGEN</h1>
         <img src={logo} alt="logo"></img>
       </article>
@@ -50,8 +59,18 @@ export const VehicleList = ({ vehicles }) => {
             <Link to={vehicle.vin}>
               {vehicle.licensePlate}
               <span>
-                <FontAwesomeIcon title='bekijken' className={vehicleClasses.eye} icon={faEye} />&nbsp;&nbsp;&nbsp;|
-                <Link className={vehicleClasses.update} to={`/vehicles/${vehicle.vin}/edit`}><FontAwesomeIcon title='bewerken' icon={faPen}/></Link>
+                <FontAwesomeIcon
+                  title="bekijken"
+                  className={vehicleClasses.eye}
+                  icon={faEye}
+                />
+                &nbsp;&nbsp;&nbsp;|
+                <Link
+                  className={vehicleClasses.update}
+                  to={`/vehicles/${vehicle.vin}/edit`}
+                >
+                  <FontAwesomeIcon title="bewerken" icon={faPen} />
+                </Link>
               </span>
             </Link>
           </li>
@@ -77,8 +96,18 @@ export const GascardList = ({ gascards }) => {
             <Link to={gascard.cardNumber.toString()}>
               {gascard.cardNumber}
               <span>
-                <FontAwesomeIcon title='bekijken' className={gasCardClasses.eye} icon={faEye} />&nbsp;&nbsp;&nbsp;|
-                <Link className={gasCardClasses.update} to={`/gascards/${gascard.cardNumber}/edit`}><FontAwesomeIcon title='bewerken' icon={faPen}/></Link>
+                <FontAwesomeIcon
+                  title="bekijken"
+                  className={gasCardClasses.eye}
+                  icon={faEye}
+                />
+                &nbsp;&nbsp;&nbsp;|
+                <Link
+                  className={gasCardClasses.update}
+                  to={`/gascards/${gascard.cardNumber}/edit`}
+                >
+                  <FontAwesomeIcon title="bewerken" icon={faPen} />
+                </Link>
               </span>
             </Link>
           </li>
