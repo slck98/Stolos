@@ -4,11 +4,6 @@ import foto from '../images/user.png';
 import classes from '../css/Edit.module.css';
 import EditCard from './EditCard';
 import { Licenses } from './DataLicenses';
-import React, { useState } from 'react';
-import foto from '../images/user.png';
-import classes from '../css/Edit.module.css';
-import EditCard from './EditCard';
-import { Licenses } from './DataLicenses';
 import {
   Form,
   json,
