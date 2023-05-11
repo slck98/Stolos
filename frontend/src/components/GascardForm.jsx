@@ -97,7 +97,7 @@ const GascardForm = ({ method, gascard, drivers }) => {
             defaultValue={gascard ? gascard.pincode : ''}
             onChange={changeHandler}
           />
-          <label htmlFor="expiry">Geboortedatum:</label>
+          <label htmlFor="expiry">Vervaldatum:</label>
           <input
             id="expiry"
             type="date"
