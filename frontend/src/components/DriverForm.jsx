@@ -12,7 +12,6 @@ import {
   useNavigate,
   useNavigation,
 } from 'react-router-dom';
-import Multiselect from 'multiselect-react-dropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
@@ -21,6 +20,16 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
+
+  let currentLicenses = [];
+  if (driver) {
+    driver.licenses.forEach(license => {
+      currentLicenses.push({
+        value: license,
+        label: license,
+      });
+    });
+  }
 
   const availableVehicles = [];
   if (method === 'put') {
@@ -50,7 +59,7 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
 
   const availableGascards = [];
   if (method === 'put') {
-    if (driver && driver.gascardNum !== null) {
+    if (driver && driver.gasCardNum !== null) {
       const currentGascard = gascards.filter(
         gascard => gascard.cardNumber === driver.gasCardNum
       )[0];
@@ -79,19 +88,6 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
   function cancelHandler() {
     navigate('..');
   }
-
-  let listLicense;
-  if (driver) {
-    listLicense = [...driver.licenses];
-  }
-
-  const handleOnRemove = option => {
-    listLicense = option;
-  };
-
-  const handeOnSelect = option => {
-    listLicense = [...option];
-  };
 
   const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -153,15 +149,24 @@ const DriverForm = ({ method, driver, vehicles, gascards }) => {
             onChange={changeHandler}
           />
           <label htmlFor="licenses">Rijbewijzen: </label>
-          <Multiselect
+          {/* <Multiselect
             className={classes.multi}
-            id="licences"
+            id="licenses"
             name="licenses"
             isObject={false}
             options={Licenses}
             selectedValues={driver ? driver.licenses : ''}
             onRemove={handleOnRemove}
-            onSelect={handeOnSelect}
+            onSelect={handleOnSelect}
+            ref={selectedLicenses}
+            value={selectedLicenses}
+          /> */}
+          <Select
+            id="licenses"
+            name="licenses"
+            isMulti
+            options={Licenses}
+            defaultValue={driver ? currentLicenses : ''}
           />
           <label htmlFor="vehicle">Voertuig:</label>
           <Select
@@ -197,14 +202,13 @@ export default DriverForm;
 export async function action({ request, params }) {
   const method = request.method;
   const data = await request.formData();
-  console.log(data);
   const driverData = {
     firstName: data.get('firstName'),
     lastName: data.get('lastName'),
     birthDate: data.get('birthDate'),
     natRegNum: data.get('natregnumber'),
     address: data.get('address'),
-    licenses: data.get('licenses'),
+    licenses: data.getAll('licenses'),
     vehicleVin: data.get('vehicle') === '0' ? null : data.get('vehicle'),
     gasCardNum: data.get('gascard') === '0' ? null : data.get('gascard'),
   };
@@ -231,6 +235,5 @@ export async function action({ request, params }) {
   if (!response.ok) {
     throw json({ message: 'Kon de bestuurder niet opslaan' }, { status: 500 });
   }
-
   return redirect('/drivers');
 }
