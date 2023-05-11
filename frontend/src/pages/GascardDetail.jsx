@@ -10,12 +10,14 @@ import GascardItem from '../components/GascardItem';
 import { GascardList } from '../components/Lists';
 
 const GascardDetail = () => {
-  const { gascard, gascards } = useRouteLoaderData('gascard-detail');
+  const { gascard, gascards, drivers } = useRouteLoaderData('gascard-detail');
   return (
     <>
       <Suspense>
-        <Await resolve={gascard}>
-          {loadedGascard => <GascardItem gascard={loadedGascard} />}
+        <Await resolve={[gascard, drivers]}>
+          {([loadedGascard, loadedDrivers]) => (
+            <GascardItem gascard={loadedGascard} drivers={loadedDrivers} />
+          )}
         </Await>
       </Suspense>
       <Suspense>
@@ -53,11 +55,23 @@ async function loadGascards() {
   }
 }
 
+async function loadDrivers() {
+  const response = await fetch(process.env.REACT_APP_DRIVER_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Bestuurders ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData;
+  }
+}
+
 export async function loader({ req, params }) {
   const { cardNumber } = params;
   return defer({
     gascard: await loadGascard(cardNumber),
     gascards: loadGascards(),
+    drivers: await loadDrivers(),
   });
 }
 

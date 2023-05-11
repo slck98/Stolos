@@ -9,11 +9,17 @@ import {
 import GascardForm from '../components/GascardForm';
 
 const EditGascardPage = () => {
-  const { gascard } = useRouteLoaderData('gascard-detail');
+  const { gascard, drivers } = useRouteLoaderData('gascard-detail');
   return (
     <Suspense>
-      <Await resolve={gascard}>
-        {loadGascard => <GascardForm gascard={loadGascard} method="put" />}
+      <Await resolve={[gascard, drivers]}>
+        {loadGascard => (
+          <GascardForm
+            gascard={loadGascard[0]}
+            drivers={loadGascard[1]}
+            method="put"
+          />
+        )}
       </Await>
     </Suspense>
   );
@@ -34,10 +40,22 @@ async function loadGascard(cardNumber) {
   }
 }
 
+async function loadDrivers() {
+  const response = await fetch(process.env.REACT_APP_DRIVER_URL);
+
+  if (!response.ok) {
+    return json({ message: 'Bestuurders ophalen mislukt.' }, { status: 500 });
+  } else {
+    const resData = await response.json();
+    return resData.drivers;
+  }
+}
+
 export async function loader({ req, params }) {
   const { cardNumber } = params;
   return defer({
     vehicle: await loadGascard(cardNumber),
+    drivers: loadDrivers(),
   });
 }
 

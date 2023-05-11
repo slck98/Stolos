@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
 import foto from '../images/notAvailable.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
@@ -13,12 +14,37 @@ import {
   useNavigate,
   useNavigation,
 } from 'react-router-dom';
-import Multiselect from 'multiselect-react-dropdown';
 
-const GascardForm = ({ method, gascard }) => {
+const GascardForm = ({ method, gascard, drivers }) => {
   const data = useActionData();
   const navigate = useNavigate();
   const navigation = useNavigation();
+
+  const availableDrivers = [];
+  if (method === 'put') {
+    if (gascard && gascard.driverId !== null) {
+      const currentDriver = drivers.filter(
+        driver => driver.gasCardNum === gascard.cardNumber
+      )[0];
+      availableDrivers.push({
+        value: gascard.driverId,
+        label: `${currentDriver.firstName} ${currentDriver.lastName} - Huidige bestuurder`,
+      });
+      availableDrivers.push({
+        value: 0,
+        label: 'X Bestuurder verwijderen',
+      });
+    }
+
+    drivers
+      .filter(driver => driver.gasCardNum === null)
+      .forEach(selectedDrivers => {
+        availableDrivers.push({
+          value: selectedDrivers.driverID,
+          label: `${selectedDrivers.firstName} ${selectedDrivers.lastName}`,
+        });
+      });
+  }
 
   const isSubmitting = navigation.state === 'submitting';
 
@@ -28,15 +54,6 @@ const GascardForm = ({ method, gascard }) => {
   const [input, setInput] = useState();
 
   const listFuelTypes = ['Petrol', 'Diesel', 'Electric'];
-  let selectedTypes = [...gascard.fuelTypes];
-
-  const handleOnRemove = option => {
-    selectedTypes = option;
-  };
-
-  const handeOnSelect = option => {
-    selectedTypes = [...option];
-  };
 
   const changeHandler = e => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -72,28 +89,19 @@ const GascardForm = ({ method, gascard }) => {
             onChange={changeHandler}
           />
           <label htmlFor="fueltypes">Brandstoftypes:</label>
-          {/* <input
-            id="fueltypes"
-            type="text"
-            name="fueltypes"
-            required
-            defaultValue={gascard ? gascard.fuelTypes : ''}
-            onChange={changeHandler}
-          /> */}
-          <Multiselect
-            className={classes.multi}
-            id="fueltypes"
-            isObject={false}
-            options={listFuelTypes}
-            selectedValues={gascard.fuelTypes}
-            onRemove={handleOnRemove}
-            onSelect={handeOnSelect}
-          />
+          <Select />
           <label htmlFor="blocked">Geblokkeerd:</label>
           <select id="blocked">
             <option value="false">Nee</option>
             <option value="true">Ja</option>
           </select>
+          <label htmlFor="driverId">Bestuurder:</label>
+          <Select
+            id="driverId"
+            name="driverId"
+            options={availableDrivers}
+            defaultValue={availableDrivers[0]}
+          />
         </div>
         <div className={classes.buttons}>
           <p></p>
