@@ -25,20 +25,19 @@
   margin-right: 8px;
 }
 
-.data input, .data select {
+.data input,
+.data select {
   font-size: 1vw;
   border: 1px solid lightgrey;
   border-radius: 5px;
   height: 2vw;
 }
 
-.multi{
+.multi {
   background-color: white;
   border: 1px solid lightgray;
   border-radius: 5px;
 }
-
-
 
 .buttons {
   margin-top: 0.5vw;
@@ -75,12 +74,12 @@
     align-items: center;
     position: relative;
   }
-  .data{
+  .data {
     width: 60%;
     margin-top: 2vw;
     margin-left: 0;
   }
-  .buttons{
+  .buttons {
     width: 50%;
     margin-top: 1vw;
     margin-left: auto;

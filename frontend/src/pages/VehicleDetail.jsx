@@ -10,7 +10,7 @@ import VehicleItem from '../components/VehicleItem';
 import { VehicleList } from '../components/Lists';
 
 const VehicleDetailPage = () => {
-  const { vehicle, drivers } = useRouteLoaderData('vehicle-detail');
+  const { vehicles, vehicle, drivers } = useRouteLoaderData('vehicle-detail');
   return (
     <>
       <Suspense>
@@ -20,11 +20,11 @@ const VehicleDetailPage = () => {
           )}
         </Await>
       </Suspense>
-      {/* <Suspense>
+      <Suspense>
         <Await resolve={vehicles}>
           {loadedVehicles => <VehicleList vehicles={loadedVehicles} />}
         </Await>
-      </Suspense> */}
+      </Suspense>
     </>
   );
 };
@@ -40,7 +40,6 @@ async function loadVehicle(vin) {
     );
   } else {
     const resData = await response.json();
-    console.log(resData);
     return resData;
   }
 }
@@ -71,7 +70,7 @@ export async function loader({ req, params }) {
   const { vin } = params;
   return defer({
     vehicle: await loadVehicle(vin),
-    // vehicles: loadVehicles(),
+    vehicles: loadVehicles(),
     drivers: await loadDrivers(),
   });
 }
