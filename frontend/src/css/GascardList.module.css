@@ -6,6 +6,18 @@
   padding: 10px;
   margin-bottom: 1vw;
 }
+.search{
+  border-radius: 25px;
+  text-decoration: none;
+  padding: 0.5vw;
+  padding-left: 2vw;
+  width: 67vw;
+  display: block;
+  margin: auto;
+  background-color: white;
+  border: 0px solid;
+  margin-bottom: 1vw;
+}
 .container li {
   padding: 0;
   font-size: 1.2vw;
@@ -58,14 +70,14 @@
 }
 .columns{
   columns: 3;
-  width: 85%;
+  width: 70vw;
   margin-left: auto;
   margin-right: auto;
 }
 @media (max-width:600px) {
   .columns{
     columns: 2;
-    width: 90%;
+    width: 70vw;
   }
   .container li{
     font-size: 3vw;

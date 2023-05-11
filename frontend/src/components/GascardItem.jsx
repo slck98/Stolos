@@ -2,8 +2,8 @@ import DetailCard from './DetailCard';
 import { NavLink } from 'react-router-dom';
 import classes from '../css/Detail.module.css';
 import foto from '../images/notAvailable.png';
-import { useState } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
 
 const GascardItem = ({ gascard }) => {
   const [name, setName] = useState('');

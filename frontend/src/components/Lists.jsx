@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import vehicleClasses from '../css/VehicleList.module.css';
 import driverClasses from '../css/DriverList.module.css';
@@ -8,6 +8,8 @@ import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const DriverList = ({ drivers }) => {
+  const [query,setQuery] = useState("");
+
   return (
     <header className={driverClasses.container}>
       <article className={driverClasses.headerPage}>
@@ -16,8 +18,10 @@ const DriverList = ({ drivers }) => {
         <img src={logo} alt="logo"></img>
       </article>
       <hr className={driverClasses.line} />
-      <ul className={driverClasses.columns}>
-        {drivers.map(driver => (
+      <input type="text" className={driverClasses.search} placeholder="Zoeken..." onChange={l => setQuery(l.target.value)}/>
+      <div>
+        <ul className={driverClasses.columns}>
+        {drivers.filter(driver => driver.firstName.toLowerCase().includes(query.toLowerCase().trim())||driver.lastName.toLowerCase().includes(query.toLowerCase().trim())).map((driver) => (
           <li key={driver.driverID.toString()}>
             <Link to={driver.driverID.toString()}>
               {driver.firstName} {driver.lastName}
@@ -39,11 +43,13 @@ const DriverList = ({ drivers }) => {
           </li>
         ))}
       </ul>
+    </div>
     </header>
   );
 };
 
 export const VehicleList = ({ vehicles }) => {
+  const [query,setQuery] = useState("");
   return (
     <header className={vehicleClasses.container}>
       <article className={vehicleClasses.headerPage}>
@@ -53,8 +59,9 @@ export const VehicleList = ({ vehicles }) => {
       </article>
 
       <hr className={vehicleClasses.line} />
+      <input type="text" className={vehicleClasses.search} placeholder="Zoeken..." onChange={l => setQuery(l.target.value)}/>
       <ul className={vehicleClasses.columns}>
-        {vehicles.map(vehicle => (
+        {vehicles.filter(vehicle => vehicle.licensePlate.toLowerCase().includes(query.toLowerCase().trim())).map((vehicle) => (
           <li key={vehicle.vin}>
             <Link to={vehicle.vin}>
               {vehicle.licensePlate}
@@ -81,6 +88,7 @@ export const VehicleList = ({ vehicles }) => {
 };
 
 export const GascardList = ({ gascards }) => {
+  const [query,setQuery] = useState("");
   return (
     <header className={gasCardClasses.container}>
       <article className={gasCardClasses.headerPage}>
@@ -90,8 +98,9 @@ export const GascardList = ({ gascards }) => {
       </article>
 
       <hr className={gasCardClasses.line} />
+      <input type="text" className={gasCardClasses.search} placeholder="Zoeken..." onChange={l => setQuery(l.target.value)}/>
       <ul className={gasCardClasses.columns}>
-        {gascards.map(gascard => (
+      {gascards.filter(gascard => gascard.cardNumber.toLowerCase().includes(query.toLowerCase().trim())).map((gascard) => (
           <li key={gascard.cardNumber.toString()}>
             <Link to={gascard.cardNumber.toString()}>
               {gascard.cardNumber}

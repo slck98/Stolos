@@ -78,7 +78,6 @@ public class DriverTest {
     [Theory]
     [InlineData(null)]
     [InlineData("0.0.0-000.00")]
-    // [InlineData("00.00.00-000.00")] // TODO: this should not work
     public void TestDriver_InvalidRRN_ThrowException(string rrn) {
         List<DriversLicense> licenses = new List<DriversLicense>();
         licenses.Add(DriversLicense.B);
