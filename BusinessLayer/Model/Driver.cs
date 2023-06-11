@@ -137,19 +137,18 @@ public class Driver
         #endregion
         if (monthNum < 1 || monthNum > 12) throw new DomainException("Driver: GetDateFromRRN: Invalid month");
         if (dayNum < 1 || dayNum > 31) throw new DomainException("Driver: GetDateFromRRN: Invalid day");
-        bool pre = false;
         bool valid = false;
         string allButControl = year + month + day + id;
         uint res = (uint)(97 - (int.Parse(allButControl) % 97));
         if (controlNum == (int)res) valid = true;
+        string yearBeginning = "19";
         if (!valid)
         {
             const uint magicNum = 2000000000; // gebruikt voor mensen die in/na 2000 zijn geboren
             res = 97 - ((magicNum + uint.Parse(allButControl)) % 97);
             if (controlNum == (int)res) valid = true;
-            pre = false;
+            yearBeginning = "20";
         }
-        string yearBeginning = (pre == true ? "20" : "19");
         return new DateTime(int.Parse(yearBeginning + year), monthNum, dayNum);
     }
 
