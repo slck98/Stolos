@@ -111,6 +111,7 @@ public class Driver
 
         NatRegNumber = natRegNumber;
         BirthDate = (birthDate is null) ? GetDateFromRRN(NatRegNumber) : (DateTime)birthDate;
+        if (!IsMatchingBirthDateAndRRN(NatRegNumber)) throw new DomainException("BirthDate and RRN do not match!");
         Address = address;
         VIN = vin;
         GasCardNum = gasCardNum;
@@ -179,6 +180,15 @@ public class Driver
             if (controlNum == (int)res) valid = true;
         }
         return valid;
+    }
+
+    private bool IsMatchingBirthDateAndRRN(string natRegNum)
+    {
+        DateTime dtFromRRN = GetDateFromRRN(natRegNum);
+
+        DateOnly doFromRRN = new DateOnly(dtFromRRN.Year, dtFromRRN.Month, dtFromRRN.Day);
+        DateOnly doFromBD = new DateOnly(BirthDate.Year, BirthDate.Month, BirthDate.Day);
+        return doFromRRN.Equals(doFromBD);
     }
     #endregion
 

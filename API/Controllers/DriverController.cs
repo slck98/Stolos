@@ -83,6 +83,11 @@ namespace API.Controllers
                     code = 400;
                     value = $"{di.NatRegNum} is an invalid National Registration number.";
                 }
+                else if (ex.InnerException is DomainException && ex.InnerException.Message.Contains("BirthDate and RRN do not match"))
+                {
+                    code = 422;
+                    value = $"{di.NatRegNum} BirthDate and RRN do not match.";
+                }
                 return StatusCode(code, value);
                 //throw new APIException("DriverController AddDriver", ex);
             }

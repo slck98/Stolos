@@ -124,7 +124,7 @@ public class DriverRepository : IDriverRepository
         return d;
     }
 
-    private Driver GetDeletedDriverByExistingDriverParam(Driver d)
+    private Driver GetDriverByExistingDriverParam(Driver d)
     {
         Driver? driver = null;
         MySqlConnection conn;
@@ -137,7 +137,7 @@ public class DriverRepository : IDriverRepository
                 conn.Open();
 
                 cmd = new("SELECT d.DriverID, d.FirstName, d.LastName, d.Address, d.BirthDate, d.NationalRegistrationNumber, d.DriversLicenses, v.VIN, v.LicensePlate, gc.CardNumber " +
-                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.NationalRegistrationNumber = @rrn AND d.Deleted=1;", conn);
+                    "FROM GasCard gc RIGHT JOIN Driver d ON gc.DriverID=d.DriverID LEFT JOIN Vehicle v ON v.DriverID = d.DriverID WHERE d.NationalRegistrationNumber = @rrn;", conn);
                 cmd.Parameters.AddWithValue("@rrn", d.NatRegNumber);
 
                 using (reader = cmd.ExecuteReader())
@@ -184,7 +184,7 @@ public class DriverRepository : IDriverRepository
             {
                 conn.Open();
 
-                bool existingButDeleted = ((GetDeletedDriverByExistingDriverParam(d) != null) ? true : false);//atm still gives 200 when you try to add an already added but not deleted driver
+                bool existingButDeleted = ((GetDriverByExistingDriverParam(d) != null) ? true : false);//atm still gives 200 when you try to add an already added but not deleted driver
 
                 string sql = (existingButDeleted ? "UPDATE Driver SET FirstName=@fn, LastName=@ln, Address=@ad, BirthDate=@bd, NationalRegistrationNumber=@rrn, DriversLicenses=@dls, Deleted=@del WHERE NationalRegistrationNumber=@rrn;" 
                     : "INSERT INTO Driver(FirstName, LastName, Address, BirthDate, NationalRegistrationNumber, DriversLicenses, Deleted) VALUES (@fn, @ln, @ad, @bd, @rrn, @dls, @del);");
@@ -200,6 +200,8 @@ public class DriverRepository : IDriverRepository
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
 
+                Driver createdDriver = GetDriverByExistingDriverParam(d);
+
                 if (d.VIN != null)
                 {
                     cmd = new("UPDATE Vehicle SET DriverID=@did WHERE VIN=@vin;", conn);
@@ -209,7 +211,7 @@ public class DriverRepository : IDriverRepository
                 {
                     cmd = new("UPDATE Vehicle SET DriverID=NULL WHERE DriverID=@did;", conn);
                 }
-                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.Parameters.AddWithValue("@did", createdDriver.Id);
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
 
@@ -222,7 +224,7 @@ public class DriverRepository : IDriverRepository
                 {
                     cmd = new("UPDATE GasCard SET DriverID=NULL WHERE DriverID=@did;", conn);
                 }
-                cmd.Parameters.AddWithValue("@did", d.Id);
+                cmd.Parameters.AddWithValue("@did", createdDriver.Id);
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
 

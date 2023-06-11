@@ -21,8 +21,7 @@ public class DriverInfo
     public string NatRegNum { get; set; }
     [Required]
     public List<string> Licenses { get; set; }
-    [Required]
-    public string Address { get; set; }
+    public string? Address { get; set; }
 
     //foreign obj data
     public string? VehicleVin { get; set; }
