@@ -265,6 +265,10 @@ public class DriverRepository : IDriverRepository
 
                 if (d.VIN!=null)
                 {
+                    cmd = new("UPDATE Vehicle SET DriverID=NULL WHERE DriverID=@did;", conn);
+                    cmd.Parameters.AddWithValue("@did", d.Id);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
                     cmd = new("UPDATE Vehicle SET DriverID=@did WHERE VIN=@vin;", conn);
                     cmd.Parameters.AddWithValue("@vin", d.VIN);
                 }
@@ -278,6 +282,10 @@ public class DriverRepository : IDriverRepository
 
                 if (d.GasCardNum!=null)
                 {
+                    cmd = new("UPDATE GasCard SET DriverID=NULL WHERE DriverID=@did;", conn);
+                    cmd.Parameters.AddWithValue("@did", d.Id);
+                    cmd.ExecuteNonQuery();
+                    cmd.Dispose();
                     cmd = new("UPDATE GasCard SET DriverID=@did WHERE CardNumber=@gc;", conn);
                     cmd.Parameters.AddWithValue("@gc", d.GasCardNum);
                 }
